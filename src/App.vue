@@ -1,10 +1,3 @@
-<script setup>
-import LoginView from './views/LoginView.vue';
-import Navigation from './components/Navigation.vue';
-</script>
-
-
-
 <template>
   <header>
       <div class ="navBar">
@@ -14,10 +7,19 @@ import Navigation from './components/Navigation.vue';
       </div> 
   </header>
 
+  <Routerview/>
+  
   <div class = "login"> 
-    
-  </div>
+ 
+ </div>
 </template>
+
+<script setup>
+import LoginView from './views/LoginView.vue';
+import Navigation from './components/Navigation.vue';
+import { RouterLink, RouterView } from 'vue-router';
+
+</script>
 
 
 
