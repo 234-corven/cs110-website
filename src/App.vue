@@ -7,10 +7,10 @@
       </div> 
   </header>
 
-  <Routerview/>
+  <RouterView/>
   
   <div class = "login"> 
- 
+    
  </div>
 </template>
 
@@ -18,6 +18,7 @@
 import LoginView from './views/LoginView.vue';
 import Navigation from './components/Navigation.vue';
 import { RouterLink, RouterView } from 'vue-router';
+import Login from './components/Login.vue';
 
 </script>
 

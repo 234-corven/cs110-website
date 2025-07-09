@@ -1,6 +1,4 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-import HelloWorld from '@/components/HelloWorld.vue';
 import { RouterLink, RouterView } from 'vue-router';
 </script>
 
@@ -15,6 +13,5 @@ import { RouterLink, RouterView } from 'vue-router';
 
   <RouterView/>
 
-  <HelloWorld/>
 
 </template>
