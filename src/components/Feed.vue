@@ -12,7 +12,7 @@
 
 .postBox {
   position: fixed;
-  top: 15%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 750px;

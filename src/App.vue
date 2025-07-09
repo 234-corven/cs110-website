@@ -23,7 +23,12 @@ import WhoToFollow from './components/whoToFollow.vue';
 
 
 <style>
+div.navBar {
+position: fixed;
+top: 2%;
+left: 2%; 
 
-
+color:blueviolet;
+}
 
 </style>

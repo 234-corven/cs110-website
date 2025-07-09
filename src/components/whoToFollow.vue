@@ -3,7 +3,6 @@
 </script>
 
 <template>
-
     <div class="whoToFollow">
     <h2>Who to Follow</h2>
     <ul>

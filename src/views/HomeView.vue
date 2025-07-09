@@ -16,27 +16,17 @@ import { ref } from 'vue';
 
   <Feed/>
 
-
   <whoToFollow/>
   
   <RouterView/>
-
 
 </template>
 
 <style>
 
-div.navBar {
-position: fixed;
-top: 2%;
-left: 2%; 
-
-color:blueviolet;
-}
-
 .frontLoginBox {
   position: fixed;
-  top: 15%;
+  top: 20%;
   left: 15%;
   transform: translate(-50%, -50%);
   width: 300px;
