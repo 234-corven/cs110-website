@@ -13,6 +13,10 @@ import Navigation from './components/Navigation.vue';
         </nav>
       </div> 
   </header>
+
+  <div class = "login"> 
+    
+  </div>
 </template>
 
 
