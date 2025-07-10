@@ -1,11 +1,12 @@
 <template>
   <div class="postBox"> 
     Posts
+  
   </div>
 </template>
 
 <script>
-
+import Post from './Post.vue'
 </script>
 
 <style>
