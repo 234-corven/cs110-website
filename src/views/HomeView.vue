@@ -11,13 +11,12 @@ import UserInfo from '../components/UserInfo.vue';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore();
-const isLoggedIn = ref(userStore.isLoggedIn);
 
 </script>
 
 <template>
   <div class="frontLoginBox">
-    <template v-if="!isLoggedIn">
+    <template v-if="!userStore.isLoggedIn">
       <RouterLink to="/login">Log In</RouterLink>
     </template>
     <template v-else>

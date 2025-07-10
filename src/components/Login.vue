@@ -1,6 +1,7 @@
 <template>
   <div class="backLoginBox">
-    <div class="login">
+    <div v-if="!userStore.isLoggedIn" > 
+<div class="login">
         <h2><RouterLink to="/login">Login</RouterLink></h2>
     </div>
     <div class="signup">
@@ -16,9 +17,21 @@
         <label>Password:</label>
         <input type="password" class="form-control" v-model="password" required>
       </div>
-      <button type="submit">Log In</button>
-    </form>
+        <button type="submit">Log In</button>
+      </form>
+    </div>
+    
+
+    <div class="logoutButton" v-else >
+      <div>
+        <h2> useUserStore.email </h2>
+      </div>
+      <button @click="logout">Logout</button>
+    </div>
+
   </div>
+
+
 </template>
 
 <script setup>
@@ -44,6 +57,10 @@ const login = async () => {
   }
 };
 
+const logout = () => {
+  userStore.user = null;
+  router.push('/');
+};
 </script>
 
 <style>
