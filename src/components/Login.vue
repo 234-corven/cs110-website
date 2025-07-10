@@ -24,18 +24,20 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/user'; 
+import userList from '../stores/userList.js';
 
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-
-import userList from '../stores/userList.js';
+const userStore = useUserStore(); 
 
 const login = async () => {
   const user = userList.find(
     u => u.email === email.value && u.password === password.value
   );
   if (user) {
+    userStore.user = user;
     router.push('/');
   } else {
     alert('Invalid email or password');

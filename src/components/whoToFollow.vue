@@ -1,14 +1,15 @@
 <script setup> 
-
+import { RouterLink } from 'vue-router';
+import userList from '../stores/userList.js';
 </script>
 
 <template>
     <div class="whoToFollow">
     <h2>Who to Follow</h2>
     <ul>
-      <li><RouterLink to="/profile/1">User 1</RouterLink></li>
-      <li><RouterLink to="/profile/2">User 2</RouterLink></li>
-      <li><RouterLink to="/profile/3">User 3</RouterLink></li>
+      <li v-for="user in userList" :key="user.id">
+        <RouterLink :to="`/profile/${user.id}`">{{ user.email }}</RouterLink>
+      </li>
     </ul>
   
     </div>
@@ -17,10 +18,10 @@
 <style>
 .whoToFollow {
   position: fixed;
-  top: 20%;
-  left: 85%;
+  top: 33%;
+  left: 80%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 200px;
   padding: 20px;
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
