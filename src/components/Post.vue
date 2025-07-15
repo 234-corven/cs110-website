@@ -1,7 +1,7 @@
 <template>
-    <div class="post">
+  <div class="post">
     <div class="post_info">
-        @{{ username }} on {{ date }} at {{ time }}
+      @{{ username }} on {{ date }} at {{ time }}
     </div>
     <p class="post_content">{{ content }}</p>
   </div>

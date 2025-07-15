@@ -1,4 +1,4 @@
-<script setup> 
+<script setup>
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
@@ -19,12 +19,11 @@ const userStore = useUserStore()
 
 <style>
 RouterLink {
-    text-align:top;
+  text-align: top;
 }
 
- .logo {
-    float: left;
-    width: 25%;
- }
-
+.logo {
+  float: left;
+  width: 25%;
+}
 </style>
