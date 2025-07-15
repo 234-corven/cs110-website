@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 
 export default {
@@ -66,19 +65,7 @@ export default {
       this.userStore.user = null;
       this.$router.push("/");
     },
-    signup(email, password) {
-      const user = {
-        id: this.userStore.userList.length + 1,
-        email,
-        username: email.split("@")[0],
-        posts: 0,
-        following: 0,
-        followers: 0,
-      };
-      this.userStore.userList.push(user);
-      this.userStore.user = user;
-      return true;
-    },
+  
   },
 };
 </script>

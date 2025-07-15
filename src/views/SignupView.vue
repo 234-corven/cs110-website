@@ -26,23 +26,31 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+<script>
 import { useUserStore } from '@/stores/user'
 
-const email = ref('')
-const password = ref('')
-const router = useRouter()
-const userStore = useUserStore()
-
-function handleSignup() {
-  if (email.value && password.value) {
-    userStore.signup(email.value, password.value)
-    router.push('/')
-    alert(`Signup with email: ${email.value} and password: ${password.value}`)
-  } else {
-    alert('Please fill in all fields')
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+    }
+  },
+  computed: {
+    userStore() {
+      return useUserStore()
+    }
+  },
+  methods: {
+    handleSignup() {
+      if (this.email && this.password) {
+        this.userStore.signup(this.email, this.password)
+        this.$router.push('/')
+        alert(`Signup with email: ${this.email} and password: ${this.password}`)
+      } else {
+        alert('Please fill in all fields')
+      }
+    }
   }
 }
 </script>

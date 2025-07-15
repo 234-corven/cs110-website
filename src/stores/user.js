@@ -65,5 +65,20 @@ export const useUserStore = defineStore("user", {
         }
       }
     },
+    signup(email, password) {
+      const newUser = {
+        id: this.userList.length + 1,
+        email,
+        password,
+        username: email.split("@")[0],
+        posts: 0,
+        following: 0,
+        followers: 0,
+        isLoggedIn: false,
+      };
+      this.userList.push(newUser);
+      this.user = newUser;
+      return true;
+    },
   },
 });
