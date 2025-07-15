@@ -1,24 +1,49 @@
-<script setup>
-import { ref } from 'vue'
-const content = ref('')
+<script>
+import { useUserStore } from '../stores/user'
+import { usePostStore } from '../stores/posts'
 
-const handlePost = () => {
-  if (content.value.trim() === '') {
-    alert('Post cannot be empty.')
-    return
+export default {
+  data() {
+    return {
+      content: ''
+    }
+  },
+  computed: {
+    userStore() {
+      return useUserStore()
+    },
+    postsStore() {
+      return usePostStore()
+    }
+  },
+  methods: {
+    handlePost() {
+      if (this.content.trim() === '') {
+        alert('Post cannot be empty.')
+        return
+      }
+
+      if (!this.userStore.user) {
+        alert('You must be logged in to post.')
+        return
+      }
+
+      const newPost = {
+        postID: this.postsStore.posts.length + 1,
+        username: this.userStore.user.email,
+        id: this.userStore.user.id,
+        date: new Date().toISOString().slice(0, 10),
+        time: new Date().toLocaleTimeString('en-US', { hour12: false }),
+        content: this.content
+      }
+
+      this.postsStore.posts.push(newPost)
+      this.content = ''
+
+      alert('Post created successfully!')
+    }
   }
-
-  store.posts.push({
-    id: store.posts.length + 1,
-    username: store.currentUser,
-    userId: store.users.find(u => u.username === store.currentUser)?.id,
-    date: new Date().toISOString().slice(0, 10),
-    time: new Date().toLocaleTimeString(),
-    content: content.value
-  })
-  content.value = ''
 }
-
 </script>
 
 <template>

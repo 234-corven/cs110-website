@@ -1,18 +1,30 @@
 <template>
   <div class="postBox">
     <div class="post_header">Posts</div>
-    <Post v-for="current_post in postStore.posts.slice(0, 10)" :key="current_post.id" :username="current_post.username"
-      :date="current_post.date" :time="current_post.time" :content="current_post.content" />
+    <Post v-for="current_post in postStore.posts.slice().reverse().slice(0, 10)" :key="current_post.id"
+      :username="current_post.username" :date="current_post.date" :time="current_post.time"
+      :content="current_post.content" />
   </div>
 </template>
 
-<script setup>
+<script>
 import Post from './Post.vue'
 import { usePostStore } from '../stores/posts.js'
-const postStore = usePostStore();
 import { useUserStore } from '../stores/user.js'
-const userStore = useUserStore();
 
+export default {
+  components: {
+    Post
+  },
+  computed: {
+    postStore() {
+      return usePostStore()
+    },
+    userStore() {
+      return useUserStore()
+    }
+  }
+}
 </script>
 
 <style>
