@@ -28,8 +28,8 @@ const handleSubmit = () => {
 <style> 
 .createPostBox {
  position: fixed;
-  top: 60%;
-  left: 20%;
+  top: 39%;
+  left: 17.5%;
   transform: translate(-50%, -50%);
   width: 200px;
   padding: 20px;

@@ -15,18 +15,22 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="frontLoginBox">
+  <div>
     <template v-if="!userStore.isLoggedIn">
-      <RouterLink to="/login">Log In</RouterLink>
+      <div class="frontLoginBox"> 
+        <RouterLink to="/login">Log In</RouterLink>  
+      </div>
     </template>
     <template v-else>
-      <div>
-        <UserInfo/>
-      </div>
+      
+      <UserInfo/>
     </template>
   </div>
 
-  <PostButton/>
+    
+  <template v-if="userStore.isLoggedIn">
+    <PostButton/>
+  </template>
 
   <Feed/>
 

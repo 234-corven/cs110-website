@@ -67,7 +67,7 @@ const logout = () => {
 
 .backLoginBox {
   position: fixed;
-  top: 20%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;

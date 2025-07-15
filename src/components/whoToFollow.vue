@@ -18,8 +18,8 @@ import userList from '../stores/userList.js';
 <style>
 .whoToFollow {
   position: fixed;
-  top: 33%;
-  left: 80%;
+  top: 28%;
+  left: 78%;
   transform: translate(-50%, -50%);
   width: 200px;
   padding: 20px;

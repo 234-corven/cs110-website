@@ -11,14 +11,9 @@
   <Feed/>
 
   <whoToFollow/>
-
-
-  
-
+  <PostButton/>
 
   <RouterView/>
-
-  
 
 </template>
 
