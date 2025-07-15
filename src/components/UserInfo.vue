@@ -10,11 +10,11 @@
     </div>
     <div class="userValue">
             <div>Following</div>
-        <div class="userValueDisplay">{{ userToShow.following }}</div>
+        <div class="userValueDisplay">{{ userToShow.following ? userToShow.following.length : 0 }}</div>
     </div>
     <div class="userValue">
             <div>Followers</div>
-        <div class="userValueDisplay">{{ userToShow.followers }}</div>
+        <div class="userValueDisplay">{{ userToShow.followers ? userToShow.followers.length : 0 }}</div>
     </div>
   </div>
   </div>
