@@ -20,12 +20,25 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script>
 import { useUserStore } from '../stores/user'
-const userStore = useUserStore()
 
-const userToShow = computed(() => userStore.viewingUser || userStore.user || {})
+export default {
+  props: {
+    user: {
+      type: Object,
+      default: null
+    }
+  },
+  computed: {
+    userStore() {
+      return useUserStore()
+    },
+    userToShow() {
+      return this.user || this.userStore.user || {}
+    }
+  }
+}
 </script>
 
 
