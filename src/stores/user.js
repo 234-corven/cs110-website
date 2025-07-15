@@ -98,6 +98,16 @@ export const useUserStore = defineStore("user", {
         }
       }
     },
+    incrementPostCount(userId) {
+      if (!userId && this.user) {
+        userId = this.user.id;
+      }
+      
+      const user = this.userList.find((u) => u.id === userId);
+      if (user) {
+        user.posts++;
+      }
+    },
     signup(email, password) {
       const newUser = {
         id: this.userList.length + 1,
