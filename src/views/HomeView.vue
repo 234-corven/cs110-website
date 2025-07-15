@@ -40,7 +40,7 @@ const userStore = useUserStore();
 .frontLoginBox {
   position: fixed;
   top: 20%;
-  left: 20%;
+  left: 22.55%;
   transform: translate(-50%, -50%);
   width: 200px;
   padding: 20px;

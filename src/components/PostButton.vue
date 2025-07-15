@@ -18,7 +18,7 @@ const handleSubmit = () => {
         </h1>
     <form class="PostInput">
         <input type="text" v-model="content" placeholder="What are you pondering?" />
-        <button type="button" @click="handleSubmit">Post</button>
+        <button class="post_button" type="button" @click="handleSubmit">Post</button>
     </form>
     
     </div>
@@ -29,12 +29,23 @@ const handleSubmit = () => {
 .createPostBox {
  position: fixed;
   top: 39%;
-  left: 17.5%;
+  left: 18%;
   transform: translate(-50%, -50%);
-  width: 200px;
+  width: 225px;
   padding: 20px;
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+
+.post_button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 </style>

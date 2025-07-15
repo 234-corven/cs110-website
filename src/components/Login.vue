@@ -24,9 +24,9 @@
 
     <div class="logoutButton" v-else >
       <div>
-        <h2> useUserStore.email </h2>
+        <h2>User: {{ userStore.user.email }}</h2>
       </div>
-      <button @click="logout">Logout</button>
+      <button class="logout_button" @click="logout">Logout</button>
     </div>
 
   </div>
@@ -85,5 +85,17 @@ const logout = () => {
     align:right
 }
 
-
+.logout_button{
+   display: block;
+  margin: 20px auto;
+  padding: 15px 40px;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  
+  
+}
 </style>
