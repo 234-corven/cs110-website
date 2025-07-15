@@ -1,14 +1,26 @@
-<script setup> 
+<script>
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '../stores/user';
-const userStore = useUserStore();
-const followUser = (userId) => {
-  if (userStore.isLoggedIn) {
-    userStore.follow(userId);
-  } else {
-    alert('Please log in to follow users.');
+
+export default {
+  components: {
+    RouterLink
+  },
+  computed: {
+    userStore() {
+      return useUserStore();
+    }
+  },
+  methods: {
+    followUser(userId) {
+      if (this.userStore.isLoggedIn) {
+        this.userStore.follow(userId);
+      } else {
+        alert('Please log in to follow users.');
+      }
+    }
   }
-};
+}
 </script>
 
 <template>

@@ -1,17 +1,30 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
 import Login from '../components/Login.vue';
 import WhoToFollow from '../components/whoToFollow.vue';
 import Feed from '../components/Feed.vue';
 import PostButton from '../components/PostButton.vue';
-
-import { ref } from 'vue';
 import UserInfo from '../components/UserInfo.vue';
 import { useUserStore } from '../stores/user';
 
-const userStore = useUserStore();
-
+export default {
+  components: {
+    RouterLink,
+    RouterView,
+    Navigation,
+    Login,
+    WhoToFollow,
+    Feed,
+    PostButton,
+    UserInfo
+  },
+  computed: {
+    userStore() {
+      return useUserStore();
+    }
+  }
+}
 </script>
 
 <template>
