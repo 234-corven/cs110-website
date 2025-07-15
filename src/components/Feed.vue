@@ -2,7 +2,7 @@
   <div class="postBox"> 
     <div class="post_header">Posts</div>
     <Post
-        v-for="current_post in postStore.posts.slice(0, 9)"
+        v-for="current_post in postStore.posts.slice(0, 10)"
         :key="current_post.id"
         :username="current_post.username"
         :date="current_post.date"
