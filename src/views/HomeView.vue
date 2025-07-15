@@ -11,23 +11,21 @@ import UserInfo from '../components/UserInfo.vue';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore();
-const isLoggedIn = ref(userStore.isLoggedIn);
 
 </script>
 
 <template>
-  <div class="frontLoginBox">
-    <template v-if="!isLoggedIn">
-      <RouterLink to="/login">Log In</RouterLink>
-    </template>
-    <template v-else>
-      <div>
-        <UserInfo/>
+  <div>
+    <template v-if="!userStore.isLoggedIn">
+      <div class="frontLoginBox"> 
+        <RouterLink to="/login">Log In</RouterLink>  
       </div>
     </template>
+    <template v-else>
+        <UserInfo/>
+        <PostButton/>
+    </template>
   </div>
-
-  <PostButton/>
 
   <Feed/>
 
@@ -42,7 +40,7 @@ const isLoggedIn = ref(userStore.isLoggedIn);
 .frontLoginBox {
   position: fixed;
   top: 20%;
-  left: 20%;
+  left: 22.55%;
   transform: translate(-50%, -50%);
   width: 200px;
   padding: 20px;

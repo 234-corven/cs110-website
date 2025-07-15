@@ -25,7 +25,6 @@ import { computed } from 'vue'
 import { useUserStore } from '../stores/user'
 const userStore = useUserStore()
 
-// Show viewingUser if set, otherwise show logged-in user
 const userToShow = computed(() => userStore.viewingUser || userStore.user || {})
 </script>
 
@@ -50,8 +49,8 @@ const userToShow = computed(() => userStore.viewingUser || userStore.user || {})
 
 .userInfo {
     position: fixed;
-    top: 45%;
-    left: 30%;
+    top: 23.5%;
+    left: 20%;
     transform: translate(-50%, -50%);
     width: 300px;
     padding: 20px;

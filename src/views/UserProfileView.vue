@@ -5,20 +5,15 @@
           <Navigation/>
         </nav>
       </div> 
-  </header>
+</header>
 
-  <UserInfo/>
+  <UserInfo :user="userPage"/>
   <Feed/>
 
   <whoToFollow/>
-
-
-  
-
+  <PostButton/>
 
   <RouterView/>
-
-  
 
 </template>
 
@@ -31,10 +26,18 @@ import Feed from '../components/Feed.vue';
 import { ref, computed } from 'vue';
 import userList from '../stores/userList.js';
 import UserInfo from '../components/UserInfo.vue';
+import PostButton from '../components/PostButton.vue';
+import { useUserStore } from '../stores/user';
+const userStore = useUserStore();
 
 const route = useRoute();
-const userID = route.params.id;
-const user = computed(() => userList.find(u => u.email === userEmail));
+
+const user = user.find(u => u.email === route.params.email)
+const userPosts = user ? posts.filter(post => post.author === user.id) : []
+
+const userID = user.find(u => u.id === route.params.id)
+const userPage = computed(() => userList.find(u => u.id == userID));
+
 </script>
 
 <style>
