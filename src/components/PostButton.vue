@@ -38,6 +38,7 @@ export default {
       }
 
       this.postsStore.posts.push(newPost)
+      this.userStore.incrementPostCount()
       this.content = ''
 
       alert('Post created successfully!')
