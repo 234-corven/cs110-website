@@ -22,15 +22,10 @@ const userStore = useUserStore();
       </div>
     </template>
     <template v-else>
-      
-      <UserInfo/>
+        <UserInfo/>
+        <PostButton/>
     </template>
   </div>
-
-    
-  <template v-if="userStore.isLoggedIn">
-    <PostButton/>
-  </template>
 
   <Feed/>
 
