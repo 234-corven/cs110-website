@@ -25,7 +25,6 @@ import { computed } from 'vue'
 import { useUserStore } from '../stores/user'
 const userStore = useUserStore()
 
-// Show viewingUser if set, otherwise show logged-in user
 const userToShow = computed(() => userStore.viewingUser || userStore.user || {})
 </script>
 

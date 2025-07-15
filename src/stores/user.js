@@ -8,6 +8,7 @@ export const useUserStore = defineStore('user', () => {
   function login(email, password) {
     if (email === 'cneal005@ucr.edu' && password === '234') {
       user.value = {
+        id: 1,
         email,
         posts: 5,
         following: 5,

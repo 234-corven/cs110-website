@@ -95,7 +95,5 @@ const logout = () => {
   border-radius: 4px;
   cursor: pointer;
   font-size: 1.5rem;
-  
-  
 }
 </style>
