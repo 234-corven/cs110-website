@@ -1,7 +1,17 @@
-<script setup>
+<script>
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-const userStore = useUserStore()
+
+export default {
+  components: {
+    RouterLink
+  },
+  computed: {
+    userStore() {
+      return useUserStore()
+    }
+  }
+}
 </script>
 
 <template>

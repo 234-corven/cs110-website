@@ -11,13 +11,23 @@
 
 </template>
 
-<script setup>
+<script>
 import LoginView from './views/LoginView.vue';
 import Navigation from './components/Navigation.vue';
 import { RouterLink, RouterView } from 'vue-router';
 import Login from './components/Login.vue';
 import WhoToFollow from './components/whoToFollow.vue';
 
+export default {
+  components: {
+    Navigation,
+    RouterView,
+    RouterLink,
+    LoginView,
+    Login,
+    WhoToFollow
+  }
+}
 </script>
 
 
