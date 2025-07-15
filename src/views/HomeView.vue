@@ -17,26 +17,25 @@ const userStore = useUserStore();
 <template>
   <div>
     <template v-if="!userStore.isLoggedIn">
-      <div class="frontLoginBox"> 
-        <RouterLink to="/login">Log In</RouterLink>  
+      <div class="frontLoginBox">
+        <RouterLink to="/login">Log In</RouterLink>
       </div>
     </template>
     <template v-else>
-        <UserInfo/>
-        <PostButton/>
+      <UserInfo />
+      <PostButton />
     </template>
   </div>
 
-  <Feed/>
+  <Feed />
 
-  <whoToFollow/>
-  
-  <RouterView/>
+  <whoToFollow />
+
+  <RouterView />
 
 </template>
 
 <style>
-
 .frontLoginBox {
   position: fixed;
   top: 20%;
@@ -46,8 +45,6 @@ const userStore = useUserStore();
   padding: 20px;
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
-
 </style>

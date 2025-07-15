@@ -1,14 +1,14 @@
 <template>
   <header>
-      <div class ="navBar">
-        <nav>
-          <Navigation/>
-        </nav>
-      </div> 
+    <div class="navBar">
+      <nav>
+        <Navigation />
+      </nav>
+    </div>
   </header>
 
-  <RouterView/>
-  
+  <RouterView />
+
 </template>
 
 <script setup>
@@ -24,11 +24,10 @@ import WhoToFollow from './components/whoToFollow.vue';
 
 <style>
 div.navBar {
-position: fixed;
-top: 2%;
-left: 2%; 
+  position: fixed;
+  top: 2%;
+  left: 2%;
 
-color:blueviolet;
+  color: blueviolet;
 }
-
 </style>

@@ -1,45 +1,64 @@
 <template>
-<header>
-      <div class ="navBar">
-        <nav>
-          <Navigation/>
-        </nav>
-      </div> 
-</header>
+  <header>
+    <div class="navBar">
+      <nav>
+        <Navigation />
+      </nav>
+    </div>
+  </header>
 
-  <UserInfo :user="userPage"/>
-  <Feed/>
+  <template v-if="!userStore.isLoggedIn">
+    <div class="frontLoginBox">
+      <RouterLink to="/login">Log In</RouterLink>
+    </div>
+  </template>
+  <template v-else>
+    <UserInfo :user="userPage" />
+    <PostButton />
+  </template>
 
-  <whoToFollow/>
-  <PostButton/>
+  <Feed />
+  
+  <whoToFollow />
 
-  <RouterView/>
+  <RouterView />
 
 </template>
 
-<script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router';
+<script>
+import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
-import Login from '../components/Login.vue';
 import WhoToFollow from '../components/whoToFollow.vue';
 import Feed from '../components/Feed.vue';
-import { ref, computed } from 'vue';
-import userList from '../stores/userList.js';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
 import { useUserStore } from '../stores/user';
-const userStore = useUserStore();
 
-const route = useRoute();
-
-const user = user.find(u => u.email === route.params.email)
-const userPosts = user ? posts.filter(post => post.author === user.id) : []
-
-const userID = user.find(u => u.id === route.params.id)
-const userPage = computed(() => userList.find(u => u.id == userID));
-
+export default {
+  components: {
+    RouterLink,
+    RouterView,
+    Navigation,
+    WhoToFollow,
+    Feed,
+    UserInfo,
+    PostButton
+  },
+  computed: {
+    userStore() {
+      return useUserStore();
+    },
+    userID() {
+      return this.$route.params.id;
+    },
+    userPage() {
+      if (this.userID) {
+        return this.userStore.userList.find(u => u.id == this.userID);
+      }
+      return null;
+    }
+  }
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

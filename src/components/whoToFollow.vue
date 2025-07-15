@@ -1,19 +1,25 @@
 <script setup> 
 import { RouterLink } from 'vue-router';
-import userList from '../stores/userList.js';
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '../stores/user';
 const userStore = useUserStore();
+const followUser = (userId) => {
+  if (userStore.isLoggedIn) {
+    userStore.follow(userId);
+  } else {
+    alert('Please log in to follow users.');
+  }
+};
 </script>
 
 <template>
     <div class="whoToFollow">
       <h2>Who to Follow</h2>
         <ul class="to_follow_list">
-          <li v-for="user in userList" :key="user.id">
-            <RouterLink :to="`/profile/${user.id}`">{{ user.email }}</RouterLink>
+          <li v-for="current_user in userStore.userList" :key="current_user.id">
+            <RouterLink :to="`/profile/${current_user.id}`">{{ current_user.email }}</RouterLink>
           
             <template v-if="userStore.isLoggedIn" >
-              <button class="follow_button" @click="followUser(user.id)">Follow</button>
+              <button class="follow_button" @click="followUser(current_user.id)">Follow</button>
             </template>
           </li>
         </ul>  
