@@ -18,6 +18,13 @@ export default {
       } else {
         alert('Please log in to follow users.');
       }
+    },
+    isFollowing(userId) {
+      if (!this.userStore.user) return false;
+      return this.userStore.user.following.includes(userId);
+    },
+    getButtonText(userId) {
+      return this.isFollowing(userId) ? 'Following' : 'Follow';
     }
   }
 }
@@ -27,11 +34,16 @@ export default {
     <div class="whoToFollow">
       <h2>Who to Follow</h2>
         <ul class="to_follow_list">
-          <li v-for="current_user in userStore.userList" :key="current_user.id">
+          <li v-for="current_user in userStore.userList.filter(user => !userStore.user || user.id !== userStore.user.id)" :key="current_user.id">
             <RouterLink :to="`/profile/${current_user.id}`">{{ current_user.email }}</RouterLink>
           
             <template v-if="userStore.isLoggedIn" >
-              <button class="follow_button" @click="followUser(current_user.id)">Follow</button>
+              <button 
+                class="follow_button" 
+                :class="{ 'following': isFollowing(current_user.id) }"
+                @click="followUser(current_user.id)">
+                {{ getButtonText(current_user.id) }}
+              </button>
             </template>
           </li>
         </ul>  
@@ -64,5 +76,14 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   float: right;
+}
+
+.follow_button.following {
+  background-color: #808080; /* Gray */
+  cursor: default;
+}
+
+.follow_button.following:hover {
+  background-color: #808080; /* Keep gray on hover */
 }
 </style>
