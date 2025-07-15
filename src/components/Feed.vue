@@ -22,7 +22,7 @@ const postStore = usePostStore();
 
 .postBox {
   position: fixed;
-  top: 45%;
+  top: 45.5%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 750px;

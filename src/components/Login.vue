@@ -86,7 +86,7 @@ const logout = () => {
 }
 
 .logout_button{
-   display: block;
+  display: block;
   margin: 20px auto;
   padding: 15px 40px;
   background-color: #4CAF50; /* Green */
