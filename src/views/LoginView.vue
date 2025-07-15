@@ -1,21 +1,18 @@
 <script setup>
+import Navigation from '../components/Navigation.vue';      
+import Login from '../components/Login.vue';
 
 </script>
 
-
-
 <template>
+  <header>
 
-<div class="item">
-    <i>
-      <slot name="icon"></slot>
-    </i>
-    <div class="details">
-      <h3>
-        <slot name="heading"></slot>
-      </h3>
-      <slot></slot>
+  </header>
+
+    <div class = "loginBox">
+        <Login/>
+        
     </div>
-  </div>
+
 
 </template>
