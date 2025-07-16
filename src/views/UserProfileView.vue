@@ -20,7 +20,7 @@
     <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
   </template>
 
-  <Feed />
+  <Feed :userId="userPage?.id" />
 
   <whoToFollow />
 

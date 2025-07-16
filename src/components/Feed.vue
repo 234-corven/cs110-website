@@ -7,7 +7,7 @@
       :time="formatTime(current_post.timestamp)"
       :content="current_post.content" />
     <div v-if="displayPosts.length === 0" >
-      {{ isLoggedIn ? 'No posts in your feed. Follow some users to see their posts, or check out recent posts below!' : 'No posts available.' }}
+      {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
     </div>
   </div>
 </template>
@@ -22,6 +22,12 @@ export default {
   components: {
     Post
   },
+  props: {
+    userId: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
       displayPosts: []
@@ -35,6 +41,9 @@ export default {
       return this.userStore.isLoggedIn
     },
     headerText() {
+      if (this.userId) {
+        return 'User Posts';
+      }
       return 'Recent Posts';
     }
   },
@@ -48,6 +57,9 @@ export default {
   },
   watch: {
     isLoggedIn() {
+      this.loadPosts();
+    },
+    userId() {
       this.loadPosts();
     }
   },
@@ -72,8 +84,10 @@ export default {
     },
 
     getDisplayPosts() {
-      // Show recent posts for both logged-in and logged-out users
-      // This eliminates flashing and ensures everyone sees all posts
+      if (this.userId) {
+        return this.getUserPosts();
+      }
+      
       return this.getRecentPosts();
     },
 
@@ -82,9 +96,7 @@ export default {
         return this.getEmptyArray();
       }
       
-      // Take all posts from feed and reverse to show newest first
       const feedPostIds = this.userStore.user.feed.slice().reverse();
-      console.log('Feed post IDs:', feedPostIds); // Debug log
       
       if (feedPostIds.length === 0) {
         return this.getEmptyArray();
@@ -158,6 +170,51 @@ export default {
           return [];
         });
     },
+
+    getUserPosts() {
+      if (!this.userId) {
+        return Promise.resolve([]);
+      }
+
+      const userRef = doc(firestore, "users", this.userId);
+      
+      return getDoc(userRef)
+        .then((userDoc) => {
+          if (!userDoc.exists()) {
+            return [];
+          }
+
+          const userData = userDoc.data();
+          const userPostIds = userData.posts || [];
+
+          if (userPostIds.length === 0) {
+            return [];
+          }
+
+          const userPosts = userPostIds.map(postId => {
+            const postRef = doc(firestore, "posts", postId);
+            return getDoc(postRef)
+              .then((postDoc) => {
+                if (postDoc.exists()) {
+                  return {
+                    id: postDoc.id,
+                    ...postDoc.data(),
+                  };
+                }
+                return null;
+              })
+              .catch(() => null);
+          });
+
+          return Promise.all(userPosts)
+            .then((posts) => {
+              return posts.filter(post => post !== null);
+            });
+        })
+        .catch(() => {
+          return [];
+        });
+    },
     
     addAuthor(posts) {
       if (posts.length === 0) {
@@ -165,7 +222,6 @@ export default {
         return;
       }
 
-      // Use sequential .then() chaining instead of Promise.all
       const authoredPosts = [];
       let completedCount = 0;
 
