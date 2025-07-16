@@ -76,15 +76,7 @@ export default {
   },
   methods: {
     getEmptyArray() {
-      const postsCollection = collection(firestore, "posts");
-      const emptyQuery = query(postsCollection, limit(0));
-      return getDocs(emptyQuery)
-        .then(() => {
-          return [];
-        })
-        .catch(() => {
-          return [];
-        });
+      return Promise.resolve([]);
     },
 
     loadPosts() {

@@ -37,7 +37,8 @@ export default {
     return {
       email: '',
       password: '',
-      isLoading: false
+      isLoading: false,
+      newUser: null
     }
   },
   computed: {
@@ -76,9 +77,18 @@ export default {
             posts: [],
           };
 
+          this.newUser = user;
           return setDoc(doc(firestore, "users", user.uid), userDoc);
         })
         .then(() => {
+          return this.userStore.getUserById(this.newUser.uid);
+        })
+        .then((userData) => {
+          this.userStore.user = {
+            id: this.newUser.uid,
+            ...userData
+          };
+          
           alert(`Account created for ${email}`);
           this.isLoading = false;
           this.$router.push('/');
