@@ -74,8 +74,6 @@ export default {
           return setDoc(doc(firestore, 'users', user.uid), userDoc);
         })
         .then(() => {
-          this.userStore.signup(this.email, this.password);
-
           alert(`Account created for ${this.email}`);
           this.$router.push('/');
         })
