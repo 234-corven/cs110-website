@@ -36,6 +36,8 @@
 
 <script>
 import { useUserStore } from "../stores/user";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 export default {
   data() {
