@@ -65,6 +65,13 @@ export default {
     },
     userId() {
       this.loadPosts();
+    },
+    'userStore.user.following': {
+      handler() {
+        // Refresh feed when following list changes
+        this.loadPosts();
+      },
+      deep: true
     }
   },
   methods: {
@@ -92,6 +99,12 @@ export default {
         return this.getUserPosts();
       }
       
+      if (this.isLoggedIn) {
+        // If logged in and on home feed, show posts from followed users only
+        return this.getFeedPosts();
+      }
+      
+      // If not logged in, show recent posts from everyone
       return this.getRecentPosts();
     },
 
@@ -100,55 +113,43 @@ export default {
         return this.getEmptyArray();
       }
       
-      const feedPostIds = this.userStore.user.feed.slice().reverse();
+      const feedPostIds = this.userStore.user.feed || [];
       
       if (feedPostIds.length === 0) {
         return this.getEmptyArray();
       }
 
-      const firstPostId = feedPostIds[0];
-      const firstPostRef = doc(firestore, "posts", firstPostId);
-      const allPosts = [];
-
-      let grabPost = getDoc(firstPostRef)
-        .then((postDoc) => {
-          if (postDoc.exists()) {
-            allPosts.push({
-              id: postDoc.id,
-              ...postDoc.data(),
-            });
-          }
-          return allPosts;
-        })
-        .catch((error) => {
-          return [];
-        });
-
-      for (let i = 1; i < feedPostIds.length; i++) {
-        const postId = feedPostIds[i];
+      // Get all posts in parallel
+      const postToShow = feedPostIds.map(postId => {
         const postRef = doc(firestore, "posts", postId);
-
-        grabPost = grabPost
-          .then(() => {
-            return getDoc(postRef);
-          })
+        return getDoc(postRef)
           .then((postDoc) => {
             if (postDoc.exists()) {
-              allPosts.push({
+              return {
                 id: postDoc.id,
                 ...postDoc.data(),
-              });
+              };
             }
-            return allPosts;
+            return null;
           })
-          .catch((error) => {
-            return [];
-          });
-      }
-
-      return grabPost.then(() => {
-        return allPosts.filter((post) => post !== null);
+          .catch(() => null);
       });
+
+      return Promise.all(postToShow)
+        .then((posts) => {
+          const validPosts = posts
+            .filter(post => post !== null && post.timestamp)
+            .sort((a, b) => {
+              const aTime = a.timestamp.seconds || a.timestamp;
+              const bTime = b.timestamp.seconds || b.timestamp;
+              return bTime - aTime;
+            });
+          
+          return validPosts.slice(0, 10);
+        })
+        .catch(() => {
+          return [];
+        });
     },
 
     getRecentPosts() {

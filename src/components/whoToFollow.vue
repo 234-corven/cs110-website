@@ -24,7 +24,7 @@ export default {
   watch: {
     'userStore.user.following': {
       handler() {
-        // Refresh suggestions when following list changes
+        // Refreshes the suggestions when following list changes
         this.loadSuggestedUsers();
       },
       deep: true
@@ -67,11 +67,11 @@ export default {
         filteredUsers = users.filter(user => {
           if (user.id === this.userStore.user.id) {
             return false;
-          } 
+          }
 
           if (this.userStore.user.following && this.userStore.user.following.includes(user.id)) {
             return false;
-          } 
+          }
 
           return true;
         });
@@ -92,14 +92,14 @@ export default {
     followUser(userId) {
       if (this.userStore.isLoggedIn) {
         this.follow(userId);
-          // Refresh suggestions after follow
+        // Refresh suggestions after follow
         this.loadSuggestedUsers();
       } else {
         alert('Please log in to follow users.');
       }
     },
 
-    
+
     follow(userId) {
       if (!this.userStore.user) {
         return;
@@ -145,7 +145,7 @@ export default {
               if (!this.userStore.user.following.includes(userId)) {
                 this.userStore.user.following.push(userId);
               }
-              
+
               if (!this.userStore.user.feed) {
                 this.userStore.user.feed = [];
               }
@@ -155,7 +155,7 @@ export default {
                   this.userStore.user.feed.push(postId);
                 }
               });
-              
+
             })
             .catch((error) => {
             });
