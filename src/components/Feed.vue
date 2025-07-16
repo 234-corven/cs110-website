@@ -26,6 +26,10 @@ export default {
     userId: {
       type: String,
       default: null
+    },
+    userEmail: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -41,8 +45,8 @@ export default {
       return this.userStore.isLoggedIn
     },
     headerText() {
-      if (this.userId) {
-        return 'User Posts';
+      if (this.userId && this.userEmail) {
+        return this.userEmail;
       }
       return 'Recent Posts';
     }
