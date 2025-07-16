@@ -24,6 +24,8 @@
 
   <whoToFollow />
 
+  <Following />
+
   <RouterView />
 
 </template>
@@ -32,6 +34,7 @@
 import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
 import WhoToFollow from '../components/whoToFollow.vue';
+import Following from '../components/Following.vue';
 import Feed from '../components/Feed.vue';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
@@ -43,6 +46,7 @@ export default {
     RouterView,
     Navigation,
     WhoToFollow,
+    Following,
     Feed,
     UserInfo,
     PostButton

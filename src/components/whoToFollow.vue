@@ -82,25 +82,12 @@ export default {
 
     followUser(userId) {
       if (this.userStore.isLoggedIn) {
-        if (this.isFollowing(userId)) {
-          this.unfollow(userId);
-        } else {
-          this.follow(userId);
-        }
-        // Refresh suggestions after follow/unfollow
+        this.follow(userId);
+          // Refresh suggestions after follow
         this.loadSuggestedUsers();
       } else {
         alert('Please log in to follow users.');
       }
-    },
-    isFollowing(userId) {
-      if (!this.userStore.user) {
-        return false;
-      } 
-      return this.userStore.user.following && this.userStore.user.following.includes(userId);
-    },
-    getButtonText(userId) {
-      return this.isFollowing(userId) ? 'Unfollow' : 'Follow';
     },
 
     
@@ -166,64 +153,7 @@ export default {
         })
         .catch((error) => {
         });
-    },
-
-    unfollow(targetUserId) {
-      if (!this.userStore.user) {
-        return;
-      }
-
-      const currentUserId = this.userStore.user.id;
-      const currentUserRef = doc(firestore, "users", currentUserId);
-      const targetUserRef = doc(firestore, "users", targetUserId);
-
-      // Get target user's posts to remove from feed
-      getDoc(targetUserRef)
-        .then((targetUserDoc) => {
-          if (!targetUserDoc.exists()) {
-            return;
-          }
-
-          const targetUserData = targetUserDoc.data();
-          const targetUserPosts = targetUserData.posts || [];
-
-          // Update current user: remove from following array and remove target's posts from feed
-          const currentUserUpdates = {
-            following: arrayRemove(targetUserId),
-            feed: arrayRemove(...targetUserPosts),
-          };
-
-          // Update target user: remove current user from followers array
-          const targetUserUpdates = {
-            followers: arrayRemove(currentUserId),
-          };
-
-          // Update current user first, then target user
-          updateDoc(currentUserRef, currentUserUpdates)
-            .then(() => {
-              return updateDoc(targetUserRef, targetUserUpdates);
-            })
-            .then(() => {
-              // Update the store state - ensure we have arrays before filtering
-              if (this.userStore.user.following) {
-                this.userStore.user.following = this.userStore.user.following.filter(
-                  (id) => id !== targetUserId
-                );
-              }
-              
-              if (this.userStore.user.feed) {
-                this.userStore.user.feed = this.userStore.user.feed.filter(
-                  (post) => !targetUserPosts.includes(post)
-                );
-              }
-              
-            })
-            .catch((error) => {;
-            });
-        })
-        .catch((error) => {
-        });
-    },
+    }
   }
 }
 
@@ -237,9 +167,8 @@ export default {
         <RouterLink :to="`/profile/${current_user.id}`">{{ current_user.email }}</RouterLink>
 
         <template v-if="userStore.isLoggedIn">
-          <button class="follow_button" :class="{ 'following': isFollowing(current_user.id) }"
-            @click="followUser(current_user.id)">
-            {{ getButtonText(current_user.id) }}
+          <button class="follow_button" @click="followUser(current_user.id)">
+            Follow
           </button>
         </template>
       </li>
@@ -268,22 +197,10 @@ export default {
   margin-left: 10px;
   padding: 5px 10px;
   background-color: #4CAF50;
-  /* Green */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   float: right;
-}
-
-.follow_button.following {
-  background-color: #808080;
-  /* Gray */
-  cursor: default;
-}
-
-.follow_button.following:hover {
-  background-color: #808080;
-  /* Keep gray on hover */
 }
 </style>
