@@ -142,18 +142,30 @@ export default {
               return updateDoc(targetUserRef, targetUserUpdates);
             })
             .then(() => {
-              // Update the store state
+              // Update the store state - ensure arrays exist and avoid duplicates
+              if (!this.userStore.user.following) {
+                this.userStore.user.following = [];
+              }
               if (!this.userStore.user.following.includes(userId)) {
                 this.userStore.user.following.push(userId);
-                this.userStore.user.feed = [
-                  ...(this.userStore.user.feed || []),
-                  ...targetUserPosts,
-                ];
               }
+              
+              if (!this.userStore.user.feed) {
+                this.userStore.user.feed = [];
+              }
+              // Add new posts to feed, avoiding duplicates
+              targetUserPosts.forEach(postId => {
+                if (!this.userStore.user.feed.includes(postId)) {
+                  this.userStore.user.feed.push(postId);
+                }
+              });
+              
             })
-            .catch((error) => {});
+            .catch((error) => {
+            });
         })
-        .catch((error) => {});
+        .catch((error) => {
+        });
     },
 
     unfollow(targetUserId) {
@@ -192,17 +204,25 @@ export default {
               return updateDoc(targetUserRef, targetUserUpdates);
             })
             .then(() => {
-              // Update the store state
-              this.userStore.user.following = this.userStore.user.following.filter(
-                (id) => id !== targetUserId
-              );
-              this.userStore.user.feed = (this.userStore.user.feed || []).filter(
-                (post) => !targetUserPosts.includes(post)
-              );
+              // Update the store state - ensure we have arrays before filtering
+              if (this.userStore.user.following) {
+                this.userStore.user.following = this.userStore.user.following.filter(
+                  (id) => id !== targetUserId
+                );
+              }
+              
+              if (this.userStore.user.feed) {
+                this.userStore.user.feed = this.userStore.user.feed.filter(
+                  (post) => !targetUserPosts.includes(post)
+                );
+              }
+              
             })
-            .catch((error) => {});
+            .catch((error) => {;
+            });
         })
-        .catch((error) => {});
+        .catch((error) => {
+        });
     },
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="postBox">
-    <div class="post_header">{{ isLoggedIn ? 'Your Feed' : 'Recent Posts' }}</div>
+    <div class="post_header">{{ headerText }}</div>
     <Post v-for="current_post in displayPosts" :key="current_post.id"
       :username="current_post.authorEmail" 
       :date="formatDate(current_post.timestamp)" 
       :time="formatTime(current_post.timestamp)"
       :content="current_post.content" />
     <div v-if="displayPosts.length === 0" >
-      {{ isLoggedIn ? 'No posts in your feed. Follow some users to see their posts!' : 'No posts available.' }}
+      {{ isLoggedIn ? 'No posts in your feed. Follow some users to see their posts, or check out recent posts below!' : 'No posts available.' }}
     </div>
   </div>
 </template>
@@ -33,10 +33,18 @@ export default {
     },
     isLoggedIn() {
       return this.userStore.isLoggedIn
+    },
+    headerText() {
+      return 'Recent Posts';
     }
   },
   mounted() {
     this.loadPosts();
+    // looks for new posts created by the user
+    window.addEventListener('postCreated', this.loadPosts);
+  },
+  beforeUnmount() {
+    window.removeEventListener('postCreated', this.loadPosts);
   },
   watch: {
     isLoggedIn() {
@@ -44,6 +52,18 @@ export default {
     }
   },
   methods: {
+    getEmptyArray() {
+      const postsCollection = collection(firestore, "posts");
+      const emptyQuery = query(postsCollection, limit(0));
+      return getDocs(emptyQuery)
+        .then(() => {
+          return [];
+        })
+        .catch(() => {
+          return [];
+        });
+    },
+
     loadPosts() {
       this.getDisplayPosts()
         .then((posts) => {
@@ -52,25 +72,22 @@ export default {
     },
 
     getDisplayPosts() {
-      if (this.isLoggedIn) {
-        return this.getFeedPosts();
-      } else {
-        return this.getRecentPosts();
-      }
+      // Show recent posts for both logged-in and logged-out users
+      // This eliminates flashing and ensures everyone sees all posts
+      return this.getRecentPosts();
     },
 
     getFeedPosts() {
-      const feedPostIds = this.userStore.user.feed.slice(-10).reverse();
+      if (!this.userStore.user || !this.userStore.user.feed) {
+        return this.getEmptyArray();
+      }
+      
+      // Take all posts from feed and reverse to show newest first
+      const feedPostIds = this.userStore.user.feed.slice().reverse();
+      console.log('Feed post IDs:', feedPostIds); // Debug log
+      
       if (feedPostIds.length === 0) {
-        const postsCollection = collection(firestore, "posts");
-        const emptyFeed = query(postsCollection, limit(0));
-        return getDocs(emptyFeed)
-          .then(() => {
-            return [];
-          })
-          .catch(() => {
-            return [];
-          });
+        return this.getEmptyArray();
       }
 
       const firstPostId = feedPostIds[0];
@@ -143,31 +160,54 @@ export default {
     },
     
     addAuthor(posts) {
+      if (posts.length === 0) {
+        this.displayPosts = [];
+        return;
+      }
+
+      // Use sequential .then() chaining instead of Promise.all
       const authoredPosts = [];
-      
-      posts.forEach((post) => {
+      let completedCount = 0;
+
+      posts.forEach((post, index) => {
         this.userStore.getUserById(post.author)
           .then((author) => {
-            const fullPost = {
+            authoredPosts[index] = {
               ...post,
-              authorEmail: author.email
+              authorEmail: author ? author.email : 'Unknown User'
             };
-            authoredPosts.push(fullPost);
+            completedCount++;
             
-            if (authoredPosts.length === posts.length) {
-              this.displayPosts = authoredPosts.sort((a, b) => {
-                if (a.timestamp && b.timestamp) {
-                  return b.timestamp.seconds - a.timestamp.seconds;
-                }
-                return 0;
-              });
+            if (completedCount === posts.length) {
+              this.displayPosts = authoredPosts
+                .filter(post => post !== undefined)
+                .sort((a, b) => {
+                  if (a.timestamp && b.timestamp) {
+                    return b.timestamp.seconds - a.timestamp.seconds;
+                  }
+                  return 0;
+                });
+            }
+          })
+          .catch(() => {
+            authoredPosts[index] = {
+              ...post,
+              authorEmail: 'Unknown User'
+            };
+            completedCount++;
+            
+            if (completedCount === posts.length) {
+              this.displayPosts = authoredPosts
+                .filter(post => post !== undefined)
+                .sort((a, b) => {
+                  if (a.timestamp && b.timestamp) {
+                    return b.timestamp.seconds - a.timestamp.seconds;
+                  }
+                  return 0;
+                });
             }
           });
       });
-      
-      if (posts.length === 0) {
-        this.displayPosts = [];
-      }
     },
 
     formatDate(timestamp) {

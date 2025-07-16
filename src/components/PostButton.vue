@@ -45,11 +45,16 @@ export default {
           const currentUserRef = doc(firestore, "users", this.userStore.user.id);
           updateDoc(currentUserRef, {
             posts: arrayUnion(postId),
+            feed: arrayUnion(postId)  
           })
             .then(() => {
               this.userStore.user.posts = [...(this.userStore.user.posts || []), postId];
+              this.userStore.user.feed = [...(this.userStore.user.feed || []), postId];  // Update local feed too
 
               this.addPostToFollowersFeeds(postId);
+
+              // Emit event to refresh the feed
+              window.dispatchEvent(new CustomEvent('postCreated'));
 
               alert("Post created successfully!");
             })

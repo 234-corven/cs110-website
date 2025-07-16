@@ -39,8 +39,6 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { firestore } from "../firebaseResources.js";
-import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default {
   data() {
@@ -68,7 +66,7 @@ export default {
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userLogin) => {
           const user = userLogin.user;
-          this.loginHelper(this.email, this.password);
+          this.loadUserData(user.uid);
 
           alert(`Welcome, ${this.email}!`);
           this.$router.push("/");
@@ -96,37 +94,15 @@ export default {
         });
     },
 
-    loginHelper(email, password) {
-      const usersCollection = collection(firestore, "users");
-      const emailSearch = query(usersCollection, where("email", "==", email));
-
-      getDocs(emailSearch)
-        .then((emailSelection) => {
-          if (emailSelection.empty) {
-            alert("Invalid email or password");
-            return;
-          }
-
-          let foundUser = null;
-          emailSelection.docs.forEach((document) => {
-            const userData = document.data();
-            if (userData.password === password) {
-              foundUser = {
-                id: document.id,
-                ...userData,
-              };
-            }
-          });
-
-          if (foundUser) {
-            this.userStore.user = foundUser;
-            alert("Login successful!");
-          } else {
-            alert("Invalid email or password");
+    loadUserData(userId) {
+      this.userStore.getUserById(userId)
+        .then((userData) => {
+          if (userData) {
+            this.userStore.user = userData;
           }
         })
         .catch((error) => {
-          alert("Login failed");
+          console.error("Error loading user data:", error);
         });
     },
 
@@ -162,7 +138,7 @@ export default {
 }
 
 .signup {
-  text-align: right;
+  text-align: left;
 }
 
 .logout_button {
