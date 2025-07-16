@@ -28,8 +28,7 @@
 
 <script>
 import { useUserStore } from '../stores/user'
-import { auth } from '../firebaseResources'
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default {
   data() {
@@ -45,7 +44,7 @@ export default {
     }
   },
   methods: {
-    async handleSignup() {
+    handleSignup() {
       if (!this.email || !this.password) {
         alert('Please fill in all fields')
         return
@@ -58,31 +57,36 @@ export default {
 
       this.isLoading = true
 
-      try {
-        const userLogin = await createUserWithEmailAndPassword(auth, this.email, this.password)
-        const user = userLogin.user
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userLogin) => {
+          const user = userLogin.user;
+          this.userStore.signup(this.email, this.password)
 
-        this.userStore.signup(this.email, this.password)
-
-        alert(`Account created successfully for ${this.email}`)
-        this.$router.push('/')
-      } catch (error) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            alert('This email is already registered. Please use a different email or try logging in.')
-            break
-          case 'auth/invalid-email':
-            alert('Please enter a valid email address.')
-            break
-          case 'auth/weak-password':
-            alert('Password is too weak. Please choose a stronger password.')
-            break
-          default:
-            alert('Signup failed: ' + error.message)
-        }
-      } finally {
-        this.isLoading = false
-      }
+          alert(`Account created for ${this.email}`)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          
+          switch (errorCode) {
+            case 'auth/email-already-in-use':
+              alert('This email is already registered. Please use a different email.')
+              break
+            case 'auth/invalid-email':
+              alert('Enter a valid email address.')
+              break
+            case 'auth/weak-password':
+              alert('Choose a stronger password.')
+              break
+            default:
+              alert('Signup failed: ' + errorMessage)
+          }
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
     }
   }
 }

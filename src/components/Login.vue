@@ -38,8 +38,7 @@
 
 <script>
 import { useUserStore } from "../stores/user";
-import { auth } from "../firebaseResources";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default {
   data() {
@@ -55,7 +54,7 @@ export default {
     },
   },
   methods: {
-    async login() {
+    login() {
       if (!this.email || !this.password) {
         alert('Please fill in all fields');
         return;
@@ -63,37 +62,36 @@ export default {
 
       this.isLoading = true;
 
-      try {
-        const userLogin = await signInWithEmailAndPassword(auth, this.email, this.password);
-        const user = userLogin.user;
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userLogin) => {
+          const user = userLogin.user; 
+          this.userStore.login(this.email, this.password);
 
-        this.userStore.login(this.email, this.password);
-
-        alert(`Welcome, ${this.email}!`);
-        this.$router.push("/");
-      } catch (error) {
-        switch (error.code) {
-          case 'auth/user-not-found':
-            alert('No account found with this email address.');
-            break;
-          case 'auth/wrong-password':
-            alert('Incorrect password. Please try again.');
-            break;
-          case 'auth/invalid-email':
-            alert('Please enter a valid email address.');
-            break;
-          case 'auth/user-disabled':
-            alert('This account has been disabled.');
-            break;
-          case 'auth/too-many-requests':
-            alert('Too many failed login attempts. Please try again later.');
-            break;
-          default:
-            alert('Login failed: ' + error.message);
-        }
-      } finally {
-        this.isLoading = false;
-      }
+          alert(`Welcome, ${this.email}!`);
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          
+          switch (errorCode) {
+            case 'auth/user-not-found':
+              alert('No account found with this email address.');
+              break;
+            case 'auth/wrong-password':
+              alert('Incorrect password. Try again.');
+              break;
+            case 'auth/invalid-email':
+              alert('Enter a valid email address.');
+              break;
+            default:
+              alert('Login failed: ' + errorMessage);
+          }
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
     logout() {
       this.userStore.user = null;
