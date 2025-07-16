@@ -29,6 +29,8 @@
 <script>
 import { useUserStore } from '../stores/user'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { firestore } from '../firebaseResources';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -61,10 +63,21 @@ export default {
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then((userLogin) => {
           const user = userLogin.user;
-          this.userStore.signup(this.email, this.password)
+          const userDoc = {
+            email: user.email,
+            feed: [],
+            followers: [],
+            following: [],
+            posts: []
+          };
 
-          alert(`Account created for ${this.email}`)
-          this.$router.push('/')
+          return setDoc(doc(firestore, 'users', user.uid), userDoc);
+        })
+        .then(() => {
+          this.userStore.signup(this.email, this.password);
+
+          alert(`Account created for ${this.email}`);
+          this.$router.push('/');
         })
         .catch((error) => {
           const errorCode = error.code;
