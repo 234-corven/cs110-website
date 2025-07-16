@@ -21,6 +21,15 @@ export default {
   mounted() {
     this.loadSuggestedUsers();
   },
+  watch: {
+    'userStore.user.following': {
+      handler() {
+        // Refresh suggestions when following list changes
+        this.loadSuggestedUsers();
+      },
+      deep: true
+    }
+  },
   methods: {
     loadSuggestedUsers() {
       this.getSuggestedUsers()
