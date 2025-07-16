@@ -23,9 +23,16 @@ export default {
   },
   watch: {
     'userStore.user.following': {
-      handler() {
-        // Refreshes the suggestions when following list changes
-        this.loadSuggestedUsers();
+      handler(newFollowing, oldFollowing) {
+        if (this.suggestedUsers.length === 0) {
+          this.loadSuggestedUsers();
+          return;
+        }
+        
+        // If someone was unfollowed, reload suggestions
+        if (oldFollowing && newFollowing && newFollowing.length < oldFollowing.length) {
+          this.loadSuggestedUsers();
+        }
       },
       deep: true
     }
@@ -92,8 +99,9 @@ export default {
     followUser(userId) {
       if (this.userStore.isLoggedIn) {
         this.follow(userId);
-        // Refresh suggestions after follow
-        this.loadSuggestedUsers();
+        // Remove the followed user from suggestions instead of reloading
+        this.suggestedUsers = this.suggestedUsers.filter(user => user.id !== userId);
+        
       } else {
         alert('Please log in to follow users.');
       }
