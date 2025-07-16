@@ -28,9 +28,9 @@
 
 <script>
 import { useUserStore } from '../stores/user'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { firestore } from '../firebaseResources';
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { firestore } from '../firebaseResources.js'
+import { doc, setDoc } from 'firebase/firestore'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 export default {
   data() {
@@ -47,57 +47,63 @@ export default {
   },
   methods: {
     handleSignup() {
-      if (!this.email || !this.password) {
-        alert('Please fill in all fields')
-        return
+      this.isLoading = true;
+      this.signup(this.email, this.password);
+    },
+
+    signup(email, password) {
+      if (!email || !password) {
+        alert("Please fill in all fields");
+        this.isLoading = false;
+        return;
       }
 
-      if (this.password.length < 6) {
-        alert('Password must be at least 6 characters long')
-        return
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters long");
+        this.isLoading = false;
+        return;
       }
-
-      this.isLoading = true
 
       const auth = getAuth();
-      createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userLogin) => {
-          const user = userLogin.user;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
           const userDoc = {
             email: user.email,
             feed: [],
             followers: [],
             following: [],
-            posts: []
+            posts: [],
           };
 
-          return setDoc(doc(firestore, 'users', user.uid), userDoc);
+          return setDoc(doc(firestore, "users", user.uid), userDoc);
         })
         .then(() => {
-          alert(`Account created for ${this.email}`);
+          alert(`Account created for ${email}`);
+          this.isLoading = false;
           this.$router.push('/');
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
+          let errorMessage;
 
           switch (errorCode) {
-            case 'auth/email-already-in-use':
-              alert('This email is already registered. Please use a different email.')
-              break
-            case 'auth/invalid-email':
-              alert('Enter a valid email address.')
-              break
-            case 'auth/weak-password':
-              alert('Choose a stronger password.')
-              break
+            case "auth/email-already-in-use":
+              errorMessage =
+                "This email is already registered. Use a different email.";
+              break;
+            case "auth/invalid-email":
+              errorMessage = "Enter a valid email address.";
+              break;
+            case "auth/weak-password":
+              errorMessage = "Choose a stronger password.";
+              break;
             default:
-              alert('Signup failed: ' + errorMessage)
+              errorMessage = "Signup failed: " + error.message;
           }
-        })
-        .finally(() => {
-          this.isLoading = false
-        })
+          alert(errorMessage);
+          this.isLoading = false;
+        });
     }
   }
 }

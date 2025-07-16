@@ -1,6 +1,6 @@
 <script>
 import { RouterLink } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '../stores/user'
 
 export default {
   components: {

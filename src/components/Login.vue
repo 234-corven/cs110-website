@@ -39,6 +39,8 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { firestore } from "../firebaseResources.js";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default {
   data() {
@@ -66,7 +68,7 @@ export default {
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userLogin) => {
           const user = userLogin.user;
-          this.userStore.login(this.email, this.password);
+          this.loginHelper(this.email, this.password);
 
           alert(`Welcome, ${this.email}!`);
           this.$router.push("/");
@@ -93,10 +95,45 @@ export default {
           this.isLoading = false;
         });
     },
+
+    loginHelper(email, password) {
+      const usersCollection = collection(firestore, "users");
+      const emailSearch = query(usersCollection, where("email", "==", email));
+
+      getDocs(emailSearch)
+        .then((emailSelection) => {
+          if (emailSelection.empty) {
+            alert("Invalid email or password");
+            return;
+          }
+
+          let foundUser = null;
+          emailSelection.docs.forEach((document) => {
+            const userData = document.data();
+            if (userData.password === password) {
+              foundUser = {
+                id: document.id,
+                ...userData,
+              };
+            }
+          });
+
+          if (foundUser) {
+            this.userStore.user = foundUser;
+            alert("Login successful!");
+          } else {
+            alert("Invalid email or password");
+          }
+        })
+        .catch((error) => {
+          alert("Login failed");
+        });
+    },
+
     logout() {
       const auth = getAuth();
       signOut(auth).then(() => {
-        this.userStore.logout();
+        this.userStore.user = null;
         alert('You have been logged out successfully.');
         this.$router.push("/");
       }).catch((error) => {
