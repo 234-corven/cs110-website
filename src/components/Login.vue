@@ -21,7 +21,9 @@
           <label>Password:</label>
           <input type="password" class="form-control" v-model="password" required />
         </div>
-        <button type="submit">Log In</button>
+        <button type="submit" :disabled="isLoading">
+          {{ isLoading ? 'Logging in...' : 'Log In' }}
+        </button>
       </form>
     </div>
 
@@ -36,14 +38,15 @@
 
 <script>
 import { useUserStore } from "../stores/user";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import { auth } from "../firebaseResources";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default {
   data() {
     return {
       email: "",
       password: "",
+      isLoading: false
     };
   },
   computed: {
@@ -53,21 +56,49 @@ export default {
   },
   methods: {
     async login() {
-      const current_user = this.userStore.userList.find(
-        (u) => u.email === this.email && u.password === this.password
-      );
-      if (current_user) {
-        this.userStore.user = current_user;
+      if (!this.email || !this.password) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      this.isLoading = true;
+
+      try {
+        const userLogin = await signInWithEmailAndPassword(auth, this.email, this.password);
+        const user = userLogin.user;
+
+        this.userStore.login(this.email, this.password);
+
+        alert(`Welcome, ${this.email}!`);
         this.$router.push("/");
-      } else {
-        alert("Invalid email or password");
+      } catch (error) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            alert('No account found with this email address.');
+            break;
+          case 'auth/wrong-password':
+            alert('Incorrect password. Please try again.');
+            break;
+          case 'auth/invalid-email':
+            alert('Please enter a valid email address.');
+            break;
+          case 'auth/user-disabled':
+            alert('This account has been disabled.');
+            break;
+          case 'auth/too-many-requests':
+            alert('Too many failed login attempts. Please try again later.');
+            break;
+          default:
+            alert('Login failed: ' + error.message);
+        }
+      } finally {
+        this.isLoading = false;
       }
     },
     logout() {
       this.userStore.user = null;
       this.$router.push("/");
     },
-
   },
 };
 </script>
@@ -86,11 +117,11 @@ export default {
 }
 
 .login {
-  align: left;
+  text-align: left;
 }
 
 .signup {
-  align: right;
+  text-align: right;
 }
 
 .logout_button {
