@@ -69,7 +69,7 @@ export default {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          
+
           switch (errorCode) {
             case 'auth/email-already-in-use':
               alert('This email is already registered. Please use a different email.')

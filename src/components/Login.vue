@@ -38,7 +38,7 @@
 
 <script>
 import { useUserStore } from "../stores/user";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default {
   data() {
@@ -65,7 +65,7 @@ export default {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userLogin) => {
-          const user = userLogin.user; 
+          const user = userLogin.user;
           this.userStore.login(this.email, this.password);
 
           alert(`Welcome, ${this.email}!`);
@@ -74,7 +74,7 @@ export default {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          
+
           switch (errorCode) {
             case 'auth/user-not-found':
               alert('No account found with this email address.');
@@ -94,8 +94,14 @@ export default {
         });
     },
     logout() {
-      this.userStore.user = null;
-      this.$router.push("/");
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.userStore.logout();
+        alert('You have been logged out successfully.');
+        this.$router.push("/");
+      }).catch((error) => {
+        alert('Error logging out: ' + error.message);
+      });
     },
   },
 };
