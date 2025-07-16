@@ -18,7 +18,7 @@
   </template>
 
   <Feed />
-  
+
   <whoToFollow />
 
   <RouterView />

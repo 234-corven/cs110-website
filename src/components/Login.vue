@@ -65,7 +65,7 @@ export default {
       this.userStore.user = null;
       this.$router.push("/");
     },
-  
+
   },
 };
 </script>

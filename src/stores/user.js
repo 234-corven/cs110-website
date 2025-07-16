@@ -54,16 +54,16 @@ export const useUserStore = defineStore("user", {
   getters: {
     isLoggedIn: (state) => state.user !== null,
     getUserById: (state) => (id) => {
-      return state.userList.find(user => user.id === id);
+      return state.userList.find((user) => user.id === id);
     },
     getFollowingCount: (state) => (userId) => {
-      const user = state.userList.find(u => u.id === userId);
+      const user = state.userList.find((u) => u.id === userId);
       return user ? user.following.length : 0;
     },
     getFollowersCount: (state) => (userId) => {
-      const user = state.userList.find(u => u.id === userId);
+      const user = state.userList.find((u) => u.id === userId);
       return user ? user.followers.length : 0;
-    }
+    },
   },
   actions: {
     login(email, password) {
@@ -81,20 +81,16 @@ export const useUserStore = defineStore("user", {
     },
     follow(userId) {
       if (!this.user) {
-        console.log('No user logged in');
         return;
       }
-      
+
       const currentUser = this.userList.find((u) => u.id === this.user.id);
       const followedUser = this.userList.find((u) => u.id === userId);
-      
+
       if (currentUser && followedUser && currentUser.id !== followedUser.id) {
         if (!currentUser.following.includes(followedUser.id)) {
           currentUser.following.push(followedUser.id);
           followedUser.followers.push(currentUser.id);
-          console.log(`${currentUser.email} is now following ${followedUser.email}`);
-        } else {
-          console.log('Already following this user');
         }
       }
     },
@@ -102,7 +98,7 @@ export const useUserStore = defineStore("user", {
       if (!userId && this.user) {
         userId = this.user.id;
       }
-      
+
       const user = this.userList.find((u) => u.id === userId);
       if (user) {
         user.posts++;
