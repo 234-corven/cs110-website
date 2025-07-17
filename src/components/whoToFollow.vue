@@ -195,15 +195,14 @@ export default {
 
 <style>
 .whoToFollow {
-  position: fixed;
-  top: 30.90%;
-  left: 79.25%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
   width: 275px;
   padding: 20px;
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
 }
 
 .to_follow_list {

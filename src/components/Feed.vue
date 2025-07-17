@@ -282,15 +282,15 @@ export default {
 
 <style>
 .postBox {
-  position: fixed;
-  top: 47.75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
   width: 750px;
+  max-width: 100%;
   padding: 20px;
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
 }
 
 .post_header {
