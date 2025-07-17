@@ -87,7 +87,6 @@ export default {
   display: flex;
   justify-content: center;
   max-width: 800px;
-  margin-top: 50px;
 }
 
 .right_section {
