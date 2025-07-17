@@ -62,7 +62,7 @@ export default {
 <style>
 .page_flex_box {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
   position: fixed;
@@ -79,6 +79,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-top: 50px;
 }
 
 .center_section {
@@ -86,14 +87,16 @@ export default {
   display: flex;
   justify-content: center;
   max-width: 800px;
-  margin-left: 50px;
-  margin-right: 50px;
+  margin-top: 50px;
 }
 
 .right_section {
   flex: 0 0 300px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  margin-top: 50px;
+
 }
 
 .frontLoginBox {

@@ -202,7 +202,6 @@ export default {
   background-color: rgb(236, 233, 28);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 50px;
 }
 
 .to_follow_list {

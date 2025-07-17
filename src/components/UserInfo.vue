@@ -63,7 +63,7 @@ export default {
 .userInfo {
     display: flex;
     flex-direction: column;
-        width: 300px;
+    width: 300px;
     padding: 20px;
     background-color: rgb(236, 233, 28);
     border-radius: 8px;
