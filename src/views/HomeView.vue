@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
 import Login from '../components/Login.vue';
 import WhoToFollow from '../components/whoToFollow.vue';
+import Following from '../components/Following.vue';
 import Feed from '../components/Feed.vue';
 import PostButton from '../components/PostButton.vue';
 import UserInfo from '../components/UserInfo.vue';
@@ -15,6 +16,7 @@ export default {
     Navigation,
     Login,
     WhoToFollow,
+    Following,
     Feed,
     PostButton,
     UserInfo
@@ -37,6 +39,7 @@ export default {
     <template v-else>
       <UserInfo />
       <PostButton />
+      <Following />
     </template>
   </div>
 

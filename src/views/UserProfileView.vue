@@ -12,14 +12,19 @@
       <RouterLink to="/login">Log In</RouterLink>
     </div>
   </template>
+  <template v-else-if="loading">
+    <div class="loading">Loading user profile...</div>
+  </template>
   <template v-else>
     <UserInfo :user="userPage" />
-    <PostButton />
+    <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
   </template>
 
-  <Feed />
+  <Feed :userId="userPage?.id" :userEmail="userPage?.email" />
 
   <whoToFollow />
+
+  <Following />
 
   <RouterView />
 
@@ -29,6 +34,7 @@
 import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
 import WhoToFollow from '../components/whoToFollow.vue';
+import Following from '../components/Following.vue';
 import Feed from '../components/Feed.vue';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
@@ -40,9 +46,16 @@ export default {
     RouterView,
     Navigation,
     WhoToFollow,
+    Following,
     Feed,
     UserInfo,
     PostButton
+  },
+  data() {
+    return {
+      profileUser: null,
+      loading: true
+    }
   },
   computed: {
     userStore() {
@@ -52,13 +65,50 @@ export default {
       return this.$route.params.id;
     },
     userPage() {
+      return this.profileUser;
+    }
+  },
+  mounted() {
+    this.loadUserProfile();
+  },
+  watch: {
+    '$route.params.id'() {
+      this.loadUserProfile();
+    }
+  },
+  methods: {
+    loadUserProfile() {
       if (this.userID) {
-        return this.userStore.userList.find(u => u.id == this.userID);
+        this.loading = true;
+        this.userStore.getUserById(this.userID)
+          .then((user) => {
+            this.profileUser = user;
+            this.loading = false;
+          })
+          .catch((error) => {
+            this.profileUser = null;
+            this.loading = false;
+          });
+      } else {
+        this.profileUser = this.userStore.user;
+        this.loading = false;
       }
-      return null;
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: rgb(236, 233, 28);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  font-weight: bold;
+}
+</style>

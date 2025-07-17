@@ -21,7 +21,9 @@
           <label>Password:</label>
           <input type="password" class="form-control" v-model="password" required />
         </div>
-        <button type="submit">Log In</button>
+        <button type="submit" :disabled="isLoading">
+          {{ isLoading ? 'Logging in...' : 'Log In' }}
+        </button>
       </form>
     </div>
 
@@ -36,12 +38,14 @@
 
 <script>
 import { useUserStore } from "../stores/user";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default {
   data() {
     return {
       email: "",
       password: "",
+      isLoading: false
     };
   },
   computed: {
@@ -50,22 +54,68 @@ export default {
     },
   },
   methods: {
-    async login() {
-      const current_user = this.userStore.userList.find(
-        (u) => u.email === this.email && u.password === this.password
-      );
-      if (current_user) {
-        this.userStore.user = current_user;
-        this.$router.push("/");
-      } else {
-        alert("Invalid email or password");
+    login() {
+      if (!this.email || !this.password) {
+        alert('Please fill in all fields');
+        return;
       }
-    },
-    logout() {
-      this.userStore.user = null;
-      this.$router.push("/");
+
+      this.isLoading = true;
+
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userLogin) => {
+          const user = userLogin.user;
+          this.loadUserData(user.uid);
+
+          alert(`Welcome, ${this.email}!`);
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          switch (errorCode) {
+            case 'auth/user-not-found':
+              alert('No account found with this email address.');
+              break;
+            case 'auth/wrong-password':
+              alert('Incorrect password. Try again.');
+              break;
+            case 'auth/invalid-email':
+              alert('Enter a valid email address.');
+              break;
+            default:
+              alert('Login failed: ' + errorMessage);
+          }
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
 
+    loadUserData(userId) {
+      this.userStore.getUserById(userId)
+        .then((userData) => {
+          if (userData) {
+            this.userStore.user = userData;
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading user data:", error);
+        });
+    },
+
+    logout() {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.userStore.user = null;
+        alert('You have been logged out successfully.');
+        this.$router.push("/");
+      }).catch((error) => {
+        alert('Error logging out: ' + error.message);
+      });
+    },
   },
 };
 </script>
@@ -84,11 +134,11 @@ export default {
 }
 
 .login {
-  align: left;
+  text-align: left;
 }
 
 .signup {
-  align: right;
+  text-align: left;
 }
 
 .logout_button {

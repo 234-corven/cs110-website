@@ -6,7 +6,7 @@
         <div class="profileValues">
             <div class="userValue">
                 <div>Posts</div>
-                <div class="userValueDisplay">{{ userToShow.posts }}</div>
+                <div class="userValueDisplay">{{ userToShow.posts ? userToShow.posts.length : 0 }}</div>
             </div>
             <div class="userValue">
                 <div>Following</div>

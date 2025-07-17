@@ -1,6 +1,7 @@
 <script>
 import { useUserStore } from '../stores/user'
-import { usePostStore } from '../stores/posts'
+import { firestore } from '../firebaseResources.js'
+import { collection, doc, updateDoc, arrayUnion, addDoc, serverTimestamp } from 'firebase/firestore'
 
 export default {
   data() {
@@ -11,37 +12,72 @@ export default {
   computed: {
     userStore() {
       return useUserStore()
-    },
-    postsStore() {
-      return usePostStore()
     }
   },
   methods: {
     handlePost() {
-      if (this.content.trim() === '') {
-        alert('Post cannot be empty.')
-        return
-      }
+      this.createPost(this.content);
+      this.content = '';
+    },
 
+    createPost(content) {
       if (!this.userStore.user) {
-        alert('You must be logged in to post.')
-        return
+        alert("You must be logged in to post.");
+        return;
       }
 
+      if (!content || content.trim() === "") {
+        alert("Post cannot be empty.");
+        return;
+      }
+
+      const postsCollection = collection(firestore, "posts");
       const newPost = {
-        postID: this.postsStore.posts.length + 1,
-        username: this.userStore.user.email,
-        id: this.userStore.user.id,
-        date: new Date().toISOString().slice(0, 10),
-        time: new Date().toLocaleTimeString('en-US', { hour12: false }),
-        content: this.content
+        timestamp: serverTimestamp(),
+        author: this.userStore.user.id,
+        content: content.trim(),
+      };
+
+      addDoc(postsCollection, newPost)
+        .then((postDocRef) => {
+          const postId = postDocRef.id;
+
+          const currentUserRef = doc(firestore, "users", this.userStore.user.id);
+          updateDoc(currentUserRef, {
+            posts: arrayUnion(postId),
+            feed: arrayUnion(postId)  
+          })
+            .then(() => {
+              this.userStore.user.posts = [...(this.userStore.user.posts || []), postId];
+              this.userStore.user.feed = [...(this.userStore.user.feed || []), postId];  // Update local feed too
+
+              this.addPostToFollowersFeeds(postId);
+
+              // Emit event to refresh the feed
+              window.dispatchEvent(new CustomEvent('postCreated'));
+
+              alert("Post created successfully!");
+            })
+            .catch((error) => {
+              alert("Failed to update user posts. Please try again.");
+            });
+        })
+        .catch((error) => {
+          alert("Failed to create post. Please try again.");
+        });
+    },
+
+    addPostToFollowersFeeds(postId) {
+      if (!this.userStore.user.followers || this.userStore.user.followers.length === 0) {
+        return;
       }
 
-      this.postsStore.posts.push(newPost)
-      this.userStore.incrementPostCount()
-      this.content = ''
-
-      alert('Post created successfully!')
+      this.userStore.user.followers.forEach((followerId) => {
+        const followerRef = doc(firestore, "users", followerId);
+        updateDoc(followerRef, {
+          feed: arrayUnion(postId),
+        }).catch((error) => {});
+      });
     }
   }
 }
