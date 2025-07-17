@@ -18,12 +18,9 @@
         <div class="loading">Loading user profile...</div>
       </template>
       <template v-else>
-
         <UserInfo :user="userPage" />
         <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
       </template>
-
-
     </div>
 
     <div class="center_section">
@@ -33,7 +30,9 @@
 
     <div class="right_section">
       <whoToFollow />
-      <Following />
+      <template v-if="userStore.isLoggedIn">
+        <Following />
+      </template>
     </div>
 
     <RouterView />
