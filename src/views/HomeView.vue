@@ -66,7 +66,7 @@ export default {
   align-items: flex-start;
   min-height: 100vh;
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   width: 100%;
   z-index: 1;
