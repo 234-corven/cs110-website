@@ -61,11 +61,9 @@ export default {
 }
 
 .userInfo {
-    position: fixed;
-    top: 23.5%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+        width: 300px;
     padding: 20px;
     background-color: rgb(236, 233, 28);
     border-radius: 8px;

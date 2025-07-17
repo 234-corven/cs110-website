@@ -99,10 +99,8 @@ export default {
 
 <style>
 .createPostBox {
-  position: fixed;
-  top: 39%;
-  left: 18%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
   width: 225px;
   padding: 20px;
   background-color: rgb(236, 233, 28);
