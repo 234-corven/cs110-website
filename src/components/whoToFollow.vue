@@ -195,10 +195,8 @@ export default {
 
 <style>
 .whoToFollow {
-  position: fixed;
-  top: 30.90%;
-  left: 79.25%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
   width: 275px;
   padding: 20px;
   background-color: rgb(236, 233, 28);

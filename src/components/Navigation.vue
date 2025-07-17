@@ -14,7 +14,7 @@ export default {
 }
 </script>
 
-<template>
+<template class = "navigation">
   <img class="logo" src="../components/icons/50x50.jpg">
   <RouterLink to="/">Home</RouterLink>
 
@@ -28,6 +28,9 @@ export default {
 </template>
 
 <style>
+.navigation {
+  z-index: 10;
+}
 RouterLink {
   text-align: top;
 }

@@ -30,33 +30,74 @@ export default {
 </script>
 
 <template>
-  <div>
-    <template v-if="!userStore.isLoggedIn">
-      <div class="frontLoginBox">
-        <RouterLink to="/login">Log In</RouterLink>
-      </div>
-    </template>
-    <template v-else>
-      <UserInfo />
-      <PostButton />
-      <Following />
-    </template>
+  <div class="page_flex_box">
+      <div class="left_section">
+      <template v-if="!userStore.isLoggedIn">
+        <div class="frontLoginBox">
+          <RouterLink to="/login">Log In</RouterLink>
+        </div>
+      </template>
+      <template v-else>
+        <UserInfo />
+        <PostButton />
+      </template>
+    </div>
+
+    <div class="center_section">
+      <Feed />
+    </div>
+
+    <div class="right_section">
+      <whoToFollow />
+      <template v-if="userStore.isLoggedIn">
+        <Following />
+      </template>
+    </div>
   </div>
-
-  <Feed />
-
-  <whoToFollow />
 
   <RouterView />
 
 </template>
 
 <style>
-.frontLoginBox {
+.page_flex_box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
   position: fixed;
-  top: 20%;
-  left: 22.55%;
-  transform: translate(-50%, -50%);
+  top: 50px;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.left_section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.center_section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 800px;
+}
+
+.right_section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.frontLoginBox {
   width: 200px;
   padding: 20px;
   background-color: rgb(236, 233, 28);

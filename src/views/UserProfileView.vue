@@ -7,26 +7,36 @@
     </div>
   </header>
 
-  <template v-if="!userStore.isLoggedIn">
-    <div class="frontLoginBox">
-      <RouterLink to="/login">Log In</RouterLink>
+  <div class="page_flex_box">
+    <div class="left_section">
+      <template v-if="!userStore.isLoggedIn">
+        <div class="frontLoginBox">
+          <RouterLink to="/login">Log In</RouterLink>
+        </div>
+      </template>
+      <template v-else-if="loading">
+        <div class="loading">Loading user profile...</div>
+      </template>
+      <template v-else>
+        <UserInfo :user="userPage" />
+        <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
+      </template>
     </div>
-  </template>
-  <template v-else-if="loading">
-    <div class="loading">Loading user profile...</div>
-  </template>
-  <template v-else>
-    <UserInfo :user="userPage" />
-    <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
-  </template>
 
-  <Feed :userId="userPage?.id" :userEmail="userPage?.email" />
+    <div class="center_section">
+      <Feed :userId="userPage?.id" :userEmail="userPage?.email" />
 
-  <whoToFollow />
+    </div>
 
-  <Following />
+    <div class="right_section">
+      <whoToFollow />
+      <template v-if="userStore.isLoggedIn">
+        <Following />
+      </template>
+    </div>
 
-  <RouterView />
+    <RouterView />
+  </div>
 
 </template>
 
