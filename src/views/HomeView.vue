@@ -95,7 +95,6 @@ export default {
   flex-direction: column;
   gap: 20px;
   margin-top: 50px;
-
 }
 
 .frontLoginBox {
