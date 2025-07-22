@@ -162,6 +162,16 @@ export default {
   margin-bottom: 8px;
 }
 
+.following_list a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.following_list a:hover {
+  color: var(--link-hover); 
+  text-decoration: none;
+}
+
 .unfollow_button {
   padding: 3px 8px;
   background-color: var(--btn-unfollow);

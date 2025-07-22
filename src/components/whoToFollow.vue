@@ -206,6 +206,16 @@ export default {
 
 .to_follow_list {
   line-height: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.to_follow_list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .to_follow_list a {
