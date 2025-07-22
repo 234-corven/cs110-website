@@ -14,6 +14,7 @@
     <Post v-for="current_post in displayPosts" :key="current_post.id" 
       :username="current_post.authorEmail"
       :userId="current_post.authorId" 
+      :title="current_post.title"
       :date="formatDate(current_post.timestamp)" 
       :time="formatTime(current_post.timestamp)"
       :content="current_post.content" />

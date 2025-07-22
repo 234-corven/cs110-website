@@ -7,6 +7,7 @@ export default {
   data() {
     return {
       content: '',
+      title: '',
     }
   },
   computed: {
@@ -48,16 +49,19 @@ export default {
 
     handlePost() {
       const plainText = this.$refs.editor.innerText.trim();
-      if (plainText) {
-        this.createPost(this.content);
+      const titleText = this.title.trim();
+      
+      if (plainText && titleText) {
+        this.createPost(this.content, this.title);
         this.$refs.editor.innerHTML = '';
         this.content = '';
+        this.title = '';
       } else {
-        alert("Post cannot be empty.");
+        alert("Both title and content are required.");
       }
     },
 
-    createPost(content) {
+    createPost(content, title) {
       if (!this.userStore.user) {
         alert("You must be logged in to post.");
         return;
@@ -67,6 +71,7 @@ export default {
       const newPost = {
         timestamp: serverTimestamp(),
         author: this.userStore.user.id,
+        title: title.trim(),
         content: content.trim(),
       };
 
@@ -119,6 +124,13 @@ export default {
   <div class="createPostBox">
     <h1>Create a Post</h1>
     <form class="PostInput">
+      <input 
+        v-model="title" 
+        type="text" 
+        placeholder="Post title..." 
+        class="title-input"
+        required
+      />
       <div class="editor-toolbar">
         <button type="button" @click="formatText('bold')" title="Bold">B</button>
         <button type="button" @click="formatText('italic')" title="Italic">I</button>
@@ -281,5 +293,21 @@ export default {
 
 .post_button:hover {
   background-color: var(--btn-post-hover);
+}
+
+.title-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 </style>

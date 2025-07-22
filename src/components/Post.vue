@@ -1,5 +1,6 @@
 <template>
   <div class="post">
+    <h3 class="post_title" v-if="title">{{ title }}</h3>
     <div class="post_info">
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink> on {{ date }} at {{ time }}
     </div>
@@ -35,6 +36,10 @@ export default {
     content: {
       type: String,
       required: true
+    },
+    title: {
+      type: String,
+      default: ''
     }
   }
 }
@@ -69,6 +74,14 @@ export default {
 
 .username-link:hover {
   text-decoration: none;
+}
+
+.post_title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-header);
+  margin: 8px 0 12px 0;
+  line-height: 1.3;
 }
 
 .post_content {
