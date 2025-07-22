@@ -104,4 +104,17 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--shadow-light);
 }
+
+.frontLoginBox a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.frontLoginBox a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
 </style>

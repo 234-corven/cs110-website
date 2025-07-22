@@ -1,44 +1,57 @@
+
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
 :root {
+  --font-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-secondary: "Georgia", serif;
+  --font-mono: "Fira Code", "Consolas", monospace;
+
   /* Primary Colors */
-  --primary-color: #E1D05C;
+  --primary-color: #e1d05c;
   --primary-hover: #d4c249;
   --primary-light: #f0e380;
-  
+
   /* Secondary Colors */
-  --secondary-color: #4CAF50;
+  --secondary-color: #4caf50;
   --secondary-hover: #45a049;
-  
+
   /* Text Colors */
   --text-header: #000;
   --text-primary: #333;
   --text-secondary: #666;
   --text-light: #999;
   --text-white: white;
-  
+
   /* Background Colors */
-  --bg-primary: #E1D05C;
+  --bg-primary: #e1d05c;
   --bg-secondary: #f8f9fa;
   --bg-white: white;
-  
+
   /* Border Colors */
   --border-primary: #ddd;
   --border-dark: #000;
-  
+
   /* Link Colors */
   --link-color: #007bff;
   --link-hover: #0056b3;
-  
+
   /* Button Colors */
-  --btn-follow: #4CAF50;
-  --btn-follow-hover: #45a049;
+  --btn-follow: #5C6DE1;
+  --btn-follow-hover: #5C6DE1;
   --btn-unfollow: #f44336;
   --btn-unfollow-hover: #e53935;
-  --btn-logout: #dc3545;    
+  --btn-logout: #dc3545;
   --btn-logout-hover: #c82333;
   --btn-post: #007bff;
   --btn-post-hover: #0056b3;
-  
+
   /* Shadow Colors */
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.2);
+}
+
+body, * {
+  font-family: var(--font-primary);
 }
