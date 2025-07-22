@@ -372,6 +372,7 @@ export default {
   background-color: var(--btn-follow-hover);
 }
 
+/*Unfollow button*/
 .follow-button.following {
   padding: 6x 12px;
   background-color: var(--btn-unfollow);

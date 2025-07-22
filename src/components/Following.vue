@@ -76,61 +76,12 @@ export default {
                 });
         },
 
-        unfollowUser(targetUserId) {
-            if (!this.userStore.user) {
-                return;
+        async unfollowUser(targetUserId) {
+            try {
+                await this.userStore.unfollowUser(targetUserId);
+            } catch (error) {
+                console.error('Error unfollowing user:', error);
             }
-
-            const currentUserId = this.userStore.user.id;
-            const currentUserRef = doc(firestore, "users", currentUserId);
-            const targetUserRef = doc(firestore, "users", targetUserId);
-
-            // Get target user's posts to remove from feed
-            getDoc(targetUserRef)
-                .then((targetUserDoc) => {
-                    if (!targetUserDoc.exists()) {
-                        return;
-                    }
-
-                    const targetUserData = targetUserDoc.data();
-                    const targetUserPosts = targetUserData.posts || [];
-
-                    // Update current user: remove from following array and remove target's posts from feed
-                    const currentUserUpdates = {
-                        following: arrayRemove(targetUserId),
-                        feed: arrayRemove(...targetUserPosts),
-                    };
-
-                    // Update target user: remove current user from followers array
-                    const targetUserUpdates = {
-                        followers: arrayRemove(currentUserId),
-                    };
-
-                    // Update current user first, then target user
-                    updateDoc(currentUserRef, currentUserUpdates)
-                        .then(() => {
-                            return updateDoc(targetUserRef, targetUserUpdates);
-                        })
-                        .then(() => {
-                            // Update the store state
-                            if (this.userStore.user.following) {
-                                this.userStore.user.following = this.userStore.user.following.filter(
-                                    (id) => id !== targetUserId
-                                );
-                            }
-
-                            if (this.userStore.user.feed) {
-                                this.userStore.user.feed = this.userStore.user.feed.filter(
-                                    (post) => !targetUserPosts.includes(post)
-                                );
-                            }
-
-                        })
-                        .catch((error) => {
-                        });
-                })
-                .catch((error) => {
-                });
         }
     }
 }
