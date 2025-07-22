@@ -39,7 +39,6 @@
         ref="editor"
         class="rich-editor"
         contenteditable="true"
-        v-html="editContent"
         @input="updateEditContent"
         @focus="$event.target.style.outline = 'none'"
         data-placeholder="Edit your post..."
