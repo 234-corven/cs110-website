@@ -114,5 +114,6 @@ export default {
     background-color: var(--bg-primary);
     border-radius: 8px;
     box-shadow: 0 2px 10px var(--shadow-light);
+    margin-left: auto;
 }
 </style>
