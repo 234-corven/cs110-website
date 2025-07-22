@@ -364,9 +364,6 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease;
 }
 
 .follow-button:hover {
@@ -374,10 +371,13 @@ export default {
 }
 
 .follow-button.following {
-  background-color: var(--danger);
+  padding: 5px 10px;
+  background-color: var(--btn-unfollow);
+  color: var(--bg-white);
+  font-size: 16px;
 }
 
 .follow-button.following:hover {
-  background-color: var(--btn-follow-hover);
+  background-color: var(--btn-unfollow-hover);
 }
 </style>
