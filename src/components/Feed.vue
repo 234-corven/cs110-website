@@ -1,6 +1,16 @@
 <template>
   <div class="postBox">
-    <div class="feed_header">{{ headerText }}</div>
+    <div class="feed_header">
+      <span>{{ headerText }}</span>
+      <button 
+        v-if="isViewingOtherUser" 
+        @click="toggleFollow"
+        class="follow-button"
+        :class="{ 'following': isFollowing }"
+      >
+        {{ isFollowing ? 'Unfollow' : 'Follow' }}
+      </button>
+    </div>
     <Post v-for="current_post in displayPosts" :key="current_post.id" 
       :username="current_post.authorEmail"
       :userId="current_post.authorId" 
@@ -50,6 +60,13 @@ export default {
         return this.userEmail;
       }
       return 'Recent Posts';
+    },
+    isViewingOtherUser() {
+      return this.userId && this.userStore.user && this.userId !== this.userStore.user.id;
+    },
+    isFollowing() {
+      if (!this.userStore.user || !this.userId) return false;
+      return this.userStore.user.following && this.userStore.user.following.includes(this.userId);
     }
   },
   mounted() {
@@ -278,6 +295,20 @@ export default {
         return new Date(timestamp.seconds * 1000).toLocaleTimeString('en-US');
       }
       return new Date(timestamp).toLocaleTimeString('en-US');
+    },
+
+    async toggleFollow() {
+      if (!this.userStore.user || !this.userId) return;
+      
+      try {
+        if (this.isFollowing) {
+          await this.userStore.unfollowUser(this.userId);
+        } else {
+          await this.userStore.followUser(this.userId);
+        }
+      } catch (error) {
+        console.error('Error toggling follow status:', error);
+      }
     }
   }
 }
@@ -302,6 +333,9 @@ export default {
   margin-top: 0;
   margin-bottom: 10px;
   color: var(--text-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .postBox .post {
@@ -320,5 +354,30 @@ export default {
 
 .postBox .post:last-child {
   margin-bottom: 0; 
+}
+
+.follow-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: var(--btn-follow);
+  color: var(--text-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.follow-button:hover {
+  background-color: var(--btn-follow-hover);
+}
+
+.follow-button.following {
+  background-color: var(--danger);
+}
+
+.follow-button.following:hover {
+  background-color: var(--btn-follow-hover);
 }
 </style>
