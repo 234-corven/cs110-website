@@ -6,9 +6,6 @@
         {{ title }}
       </h3>
       <div v-if="isImportant" class="important-badge">Important Event</div>
-      <button v-if="canEdit && !isEditing" class="edit-button" @click="startEdit">Edit</button>
-      <button v-if="isEditing" class="edit-button" @click="saveEdit">Save</button>
-      <button v-if="isEditing" class="edit-button" @click="cancelEdit">Cancel</button>
     </div>
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
@@ -18,8 +15,15 @@
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
       <textarea v-model="editContent" class="edit-text"></textarea>
+      <div class="edit-button-group">
+        <button v-if="isEditing" class="edit-button" @click="saveEdit">Save</button>
+        <button v-if="isEditing" class="edit-button" @click="cancelEdit">Cancel</button>
+      </div>
     </div>
     <div v-else class="post_content" v-html="content"></div>
+    <div v-if="canEdit && !isEditing" class="edit-button-group">
+      <button class="edit-button" @click="startEdit">Edit</button>
+    </div>
   </div>
 </template>
 
@@ -252,11 +256,19 @@ export default {
   background: var(--btn-post-hover);
 }
 
+.edit-button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 .edit-content {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 8px;
+  position: relative;
 }
 
 .edit-title {
