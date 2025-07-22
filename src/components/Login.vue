@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <div class="logoutButton" v-else>
+  <div class="logout_box" v-else>
     <div class="logout_user">
       <h2>{{ userStore.user.email }}</h2>
     </div>
@@ -239,9 +239,22 @@ form button:disabled {
   cursor: not-allowed;
 }
 
+.logout_box {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  padding: 20px;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px var(--shadow-light);
+  text-align: center;
+}
+
 .logout_button {
   display: block;
-  margin: 20px auto;
+  margin: 0px auto;
   padding: 15px 40px;
   background-color: var(--btn-logout);
   color: var(--text-white);
@@ -252,7 +265,7 @@ form button:disabled {
 }
 
 .logout_user {
-  margin: 0;
+  margin: -20px 0px -10px 0;
   font-size: 1.5rem;
   text-align: center;
 }
