@@ -6,7 +6,7 @@ import { collection, doc, updateDoc, arrayUnion, addDoc, serverTimestamp } from 
 export default {
   data() {
     return {
-      content: ''
+      content: '',
     }
   },
   computed: {
@@ -15,19 +15,30 @@ export default {
     }
   },
   methods: {
+    updateContent() {
+      this.content = this.$refs.editor.innerHTML;
+    },
+
+    formatText(command) {
+      document.execCommand(command, false, null);
+      this.$refs.editor.focus();
+      this.updateContent();
+    },
+
     handlePost() {
-      this.createPost(this.content);
-      this.content = '';
+      const plainText = this.$refs.editor.innerText.trim();
+      if (plainText) {
+        this.createPost(this.content);
+        this.$refs.editor.innerHTML = '';
+        this.content = '';
+      } else {
+        alert("Post cannot be empty.");
+      }
     },
 
     createPost(content) {
       if (!this.userStore.user) {
         alert("You must be logged in to post.");
-        return;
-      }
-
-      if (!content || content.trim() === "") {
-        alert("Post cannot be empty.");
         return;
       }
 
@@ -85,23 +96,31 @@ export default {
 
 <template>
   <div class="createPostBox">
-    <h1>
-      Create a Post
-    </h1>
+    <h1>Create a Post</h1>
     <form class="PostInput">
-      <input type="text" v-model="content" placeholder="What are you pondering?" />
+      <div 
+        ref="editor"
+        class="rich-editor"
+        contenteditable="true"
+        @input="updateContent"
+        @focus="$event.target.style.outline = 'none'"
+        data-placeholder="What are you pondering?"
+      ></div>
+      <div class="editor-toolbar">
+        <button type="button" @click="formatText('bold')" title="Bold"><b>B</b></button>
+        <button type="button" @click="formatText('italic')" title="Italic"><i>I</i></button>
+        <button type="button" @click="formatText('underline')" title="Underline"><u>U</u></button>
+      </div>
       <button class="post_button" type="button" @click="handlePost">Post</button>
     </form>
-
   </div>
-
 </template>
 
 <style>
 .createPostBox {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 300px;
   padding: 20px;
   background-color: var(--bg-primary);
   border-radius: 8px;
@@ -113,13 +132,75 @@ export default {
   margin-bottom: 8px;
 }
 
+.rich-editor {
+  min-height: 80px;
+  max-height: 200px;
+  padding: 10px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  background-color: white;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.rich-editor:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.rich-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-style: italic;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.editor-toolbar button {
+  padding: 8px 12px;
+  border: 2px solid var(--border-primary);
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--text-primary);
+  min-width: 35px;
+  transition: all 0.2s ease;
+}
+
+.editor-toolbar button:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--text-header);
+}
+
+.editor-toolbar button:active {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(1px);
+}
+
 .post_button {
-  margin-left: 10px;
-  padding: 5px 10px;
+  align-self: flex-end;
+  padding: 8px 16px;
   background-color: var(--btn-post);
   color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
+}
+
+.post_button:hover {
+  background-color: var(--btn-post-hover);
 }
 </style>
