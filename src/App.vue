@@ -1,10 +1,6 @@
 <template>
   <header>
-    <div class="navBar">
-      <nav>
-        <Navigation />
-      </nav>
-    </div>
+    <Navigation />
   </header>
 
   <RouterView />
@@ -35,11 +31,5 @@ export default {
 
 
 <style>
-div.navBar {
-  position: fixed;
-  top: 2%;
-  left: 2%;
 
-  color: blueviolet;
-}
 </style>
