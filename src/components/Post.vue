@@ -41,10 +41,24 @@ export default {
 </script>
 
 <style>
+.post {
+ background-color: var(--post-bg);
+  border: 1px solid var(--post-border);
+  border-radius: var(--post-radius);
+  padding: var(--post-padding);
+  margin-bottom: var(--post-margin);
+  box-shadow: var(--post-shadow);
+  transition: box-shadow 0.3s ease
+}
+
+.post:hover {
+  box-shadow: var(--post-shadow-hover);
+}
+
 .post_info {
   font-size: 14px;
   color: var(--text-header);
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -58,7 +72,9 @@ export default {
 }
 
 .post_content {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
 }
 </style>

@@ -50,6 +50,15 @@
   /* Shadow Colors */
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.2);
+
+  /* Post Styles */
+  --post-bg: white;
+  --post-border: #e1e5e9;
+  --post-radius: 8px;
+  --post-padding: 15px;
+  --post-margin: 15px;
+  --post-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --post-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 body, * {

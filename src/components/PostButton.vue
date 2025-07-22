@@ -101,7 +101,7 @@ export default {
 .createPostBox {
   display: flex;
   flex-direction: column;
-  width: 225px;
+  width: 250px;
   padding: 20px;
   background-color: var(--bg-primary);
   border-radius: 8px;

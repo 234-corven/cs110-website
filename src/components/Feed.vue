@@ -299,7 +299,25 @@ export default {
 .post_header {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: var(--text-header);
+}
+
+.postBox .post {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px var(--shadow-light);
+  transition: box-shadow 0.3s ease;
+}
+
+.postBox .post:hover {
+  box-shadow: 0 4px 10px var(--shadow-medium);
+}
+
+.postBox .post:last-child {
+  margin-bottom: 0; 
 }
 </style>
