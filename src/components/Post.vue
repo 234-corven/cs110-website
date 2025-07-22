@@ -178,8 +178,8 @@ export default {
 }
 
 .important-post {
-  border-left: 4px solid #ffd700;
-  background: linear-gradient(135deg, var(--post-bg) 0%, rgba(255, 215, 0, 0.05) 100%);
+  border-left: 4px solid #d13838;
+  background-color: rgba(209, 56, 56, 0.08);
 }
 
 .post-header {
@@ -194,14 +194,14 @@ export default {
 }
 
 .important-badge {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #333;
+  background: linear-gradient(135deg, #d13838, #d13838);
+  color: white;
   padding: 3px 8px;
   border-radius: 12px;
   font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
 }
 </style>
