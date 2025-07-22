@@ -16,12 +16,18 @@ export default {
 
 <template>
 <div class="navigation">
-  <div class="logo-section">
-    <img class="logo" src="../components/icons/250x250.jpg">
-  </div>
+  
   
   <div class="nav-links">
     <RouterLink to="/">Home</RouterLink>
+
+    <div class="logo-section">
+    <RouterLink v-if="userStore.isLoggedIn" to="/profile/self">
+      <img class="logo" src="../components/icons/250x250.jpg">
+    </RouterLink>
+    <img v-else class="logo" src="../components/icons/250x250.jpg">
+  </div>
+
     <div v-if="!userStore.isLoggedIn">
       <RouterLink to="/login">Log In</RouterLink>
     </div>
@@ -53,6 +59,14 @@ export default {
 .logo-section {
   display: flex;
   align-items: center;
+}
+
+.logo-section a {
+  padding: 0;
+}
+
+.logo-section a:hover {
+  background-color: transparent !important;
 }
 
 .logo {
