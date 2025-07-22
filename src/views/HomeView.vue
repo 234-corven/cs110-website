@@ -65,8 +65,8 @@ export default {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  position: fixed;
-  top: 50px;
+  position: absolute;
+  top: 80px;
   left: 0;
   width: 100%;
   z-index: 1;
