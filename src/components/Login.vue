@@ -1,17 +1,18 @@
 <template>
-  <div class="backLoginBox">
-    <div v-if="!userStore.isLoggedIn">
-      <div class="login">
-        <h2>
-          <RouterLink to="/login">Login</RouterLink>
-        </h2>
+  <div v-if="!userStore.isLoggedIn">
+    <div class="backLoginBox">
+      <div class="login-buttons">
+        <div class="login">
+          <h2>
+            <RouterLink to="/login">Login</RouterLink>
+          </h2>
+        </div>
+        <div class="signup">
+          <h2>
+            <RouterLink to="/signup">Sign Up</RouterLink>
+          </h2>
+        </div>
       </div>
-      <div class="signup">
-        <h2>
-          <RouterLink to="/signup">Sign Up</RouterLink>
-        </h2>
-      </div>
-
       <form @submit.prevent="login">
         <div class="form-group">
           <label>Email:</label>
@@ -26,13 +27,12 @@
         </button>
       </form>
     </div>
-
-    <div class="logoutButton" v-else>
-      <div class="logout_user">
-        <h2>{{ userStore.user.email }}</h2>
-      </div>
-      <button class="logout_button" @click="logout">Logout</button>
+  </div>
+  <div class="logoutButton" v-else>
+    <div class="logout_user">
+      <h2>{{ userStore.user.email }}</h2>
     </div>
+    <button class="logout_button" @click="logout">Logout</button>
   </div>
 </template>
 
@@ -133,12 +133,35 @@ export default {
   box-shadow: 0 2px 10px var(--shadow-light);
 }
 
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
 .login {
   text-align: left;
+  flex: 1;
 }
 
 .signup {
   text-align: left;
+  flex: 1;
+}
+
+
+.login h2,
+.signup h2 {
+  margin: 0;
+  padding: 10px;
+}
+
+.login a,
+.signup a {
+  color: var(--text-header);
+  text-decoration: none;
+  font-size: 1.2rem;
 }
 
 .logout_button {
@@ -156,11 +179,10 @@ export default {
 .logout_user {
   margin: 0;
   font-size: 1.5rem;
-  text-align:center;
+  text-align: center;
 }
 
 .logout_button:hover {
   background-color: var(--btn-logout-hover);
 }
-
 </style>
