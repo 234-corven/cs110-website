@@ -15,15 +15,19 @@ export default {
 </script>
 
 <template>
-<div class = "navigation">
-  <img class="logo" src="../components/icons/250x250.jpg">
-  <RouterLink to="/">Home</RouterLink>
-
-  <div v-if="!userStore.isLoggedIn">
-    <RouterLink to="/login">Log In</RouterLink>
+<div class="navigation">
+  <div class="logo-section">
+    <img class="logo" src="../components/icons/250x250.jpg">
   </div>
-  <div v-else>
-    <RouterLink to="/login">Log Out</RouterLink>
+  
+  <div class="nav-links">
+    <RouterLink to="/">Home</RouterLink>
+    <div v-if="!userStore.isLoggedIn">
+      <RouterLink to="/login">Log In</RouterLink>
+    </div>
+    <div v-else>
+      <RouterLink to="/login">Log Out</RouterLink>
+    </div>
   </div>
 </div>
 </template>
@@ -32,7 +36,7 @@ export default {
 .navigation {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   height: 80px; 
   background-color: #E1D05C;
@@ -46,13 +50,26 @@ export default {
   gap: 30px; 
 }
 
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
 .logo {
-  height: 50px; 
+  height: 60px; 
   width: auto; 
   border: #000 solid 1px;  
   border-radius: 50%; 
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex: 1; 
+  justify-content: center; 
+}
+ 
 .navigation a {
   text-decoration: none;
   color: #333;
