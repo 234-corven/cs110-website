@@ -306,6 +306,12 @@ export default {
         } else {
           await this.userStore.followUser(this.userId);
         }
+        
+        // notifies UserProfileView to update the follow status
+        this.$emit('user-follow-changed', this.userId);
+        window.dispatchEvent(new CustomEvent('userFollowChanged', { 
+          detail: { userId: this.userId } 
+        }));
       } catch (error) {
         console.error('Error toggling follow status:', error);
       }

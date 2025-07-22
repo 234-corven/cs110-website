@@ -24,7 +24,7 @@
     </div>
 
     <div class="center_section">
-      <Feed :userId="userPage?.id" :userEmail="userPage?.email" />
+      <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
 
     </div>
 
@@ -103,6 +103,11 @@ export default {
         this.profileUser = this.userStore.user;
         this.loading = false;
       }
+    },
+
+    handleFollowChange(userId) {
+      // Reload the user profile to get updated follower count
+      this.loadUserProfile();
     }
   }
 };

@@ -30,13 +30,50 @@ export default {
             default: null
         }
     },
+    data() {
+        return {
+            localUser: null
+        }
+    },
     computed: {
         userStore() {
             return useUserStore()
         },
         userToShow() {
-            return this.user || this.userStore.user || {}
+            return this.localUser || this.user || this.userStore.user || {}
         }
+    },
+    watch: {
+        user: {
+            handler(newUser) {
+                if (newUser) {
+                    this.localUser = { ...newUser };
+                }
+            },
+            immediate: true,
+            deep: true
+        }
+    },
+    methods: {
+        async refreshUserData() {
+            if (this.user && this.user.id) {
+                try {
+                    const updatedUser = await this.userStore.getUserById(this.user.id);
+                    if (updatedUser) {
+                        this.localUser = updatedUser;
+                    }
+                } catch (error) {
+                    console.error('Error refreshing user data:', error);
+                }
+            }
+        }
+    },
+    mounted() {
+        // Listen for follow changes
+        window.addEventListener('userFollowChanged', this.refreshUserData);
+    },
+    beforeUnmount() {
+        window.removeEventListener('userFollowChanged', this.refreshUserData);
     }
 }
 </script>
