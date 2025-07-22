@@ -119,6 +119,35 @@ export default {
   <div class="createPostBox">
     <h1>Create a Post</h1>
     <form class="PostInput">
+      <div class="editor-toolbar">
+        <button type="button" @click="formatText('bold')" title="Bold">B</button>
+        <button type="button" @click="formatText('italic')" title="Italic">I</button>
+        <button type="button" @click="formatText('underline')" title="Underline">U</button>
+        <button type="button" @click="formatText('strikeThrough')" title="Strikethrough">S</button>
+        
+        <span class="separator">|</span>
+        
+        <button type="button" @click="formatText('justifyLeft')" title="Align Left">⬅</button>
+        <button type="button" @click="formatText('justifyCenter')" title="Center">↔</button>
+        <button type="button" @click="formatText('justifyRight')" title="Align Right">➡</button>
+        
+        <span class="separator">|</span>
+        
+        <button type="button" @click="formatText('insertOrderedList')" title="Numbered List">#</button>
+        <button type="button" @click="formatText('insertUnorderedList')" title="Bullet List">•</button>
+        
+        <span class="separator">|</span>
+        
+        <button type="button" @click="insertLink" title="Insert Link">🔗</button>
+        <button type="button" @click="changeFontSize" title="Font Size">A</button>
+        <button type="button" @click="changeTextColor" title="Text Color">C</button>
+        
+        <span class="separator">|</span>
+        
+        <button type="button" @click="formatText('removeFormat')" title="Clear Formatting">⌫</button>
+        <button type="button" @click="formatText('undo')" title="Undo">↶</button>
+        <button type="button" @click="formatText('redo')" title="Redo">↷</button>
+      </div>
       <div 
         ref="editor"
         class="rich-editor"
@@ -127,40 +156,6 @@ export default {
         @focus="$event.target.style.outline = 'none'"
         data-placeholder="What are you pondering?"
       ></div>
-      <div class="editor-toolbar">
-        <!-- Text Formatting -->
-        <button type="button" @click="formatText('bold')" title="Bold"><b>B</b></button>
-        <button type="button" @click="formatText('italic')" title="Italic"><i>I</i></button>
-        <button type="button" @click="formatText('underline')" title="Underline"><u>U</u></button>
-        <button type="button" @click="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
-        
-        <div class="toolbar-separator"></div>
-        
-        <!-- Text Alignment -->
-        <button type="button" @click="formatText('justifyLeft')" title="Align Left">⬅</button>
-        <button type="button" @click="formatText('justifyCenter')" title="Center">↔</button>
-        <button type="button" @click="formatText('justifyRight')" title="Align Right">➡</button>
-        
-        <div class="toolbar-separator"></div>
-        
-        <!-- Lists -->
-        <button type="button" @click="formatText('insertOrderedList')" title="Numbered List">1.</button>
-        <button type="button" @click="formatText('insertUnorderedList')" title="Bullet List">•</button>
-        
-        <div class="toolbar-separator"></div>
-        
-        <!-- Advanced -->
-        <button type="button" @click="insertLink" title="Insert Link">🔗</button>
-        <button type="button" @click="changeFontSize" title="Font Size">A</button>
-        <button type="button" @click="changeTextColor" title="Text Color">🎨</button>
-        
-        <div class="toolbar-separator"></div>
-        
-        <!-- Utility -->
-        <button type="button" @click="formatText('removeFormat')" title="Clear Formatting">⌫</button>
-        <button type="button" @click="formatText('undo')" title="Undo">↶</button>
-        <button type="button" @click="formatText('redo')" title="Redo">↷</button>
-      </div>
       <button class="post_button" type="button" @click="handlePost">Post</button>
     </form>
   </div>
@@ -210,23 +205,27 @@ export default {
 
 .editor-toolbar {
   display: flex;
-  gap: 3px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 5px;
   align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
 }
 
 .editor-toolbar button {
-  padding: 6px 8px;
+  padding: 3px 5px;
   border: 1px solid var(--border-primary);
   background: white;
-  border-radius: 3px;
+  border-radius: 2px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-primary);
-  min-width: 28px;
-  height: 28px;
+  min-width: 20px;
+  height: 20px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -242,14 +241,12 @@ export default {
 .editor-toolbar button:active {
   background-color: var(--primary);
   color: white;
-  transform: translateY(1px);
 }
 
-.toolbar-separator {
-  width: 1px;
-  height: 24px;
-  background-color: var(--border-primary);
-  margin: 0 4px;
+.separator {
+  color: var(--border-primary);
+  margin: 0 3px;
+  font-size: 12px;
 }
 
 .rich-editor img {
