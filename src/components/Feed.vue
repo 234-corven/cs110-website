@@ -290,9 +290,9 @@ export default {
   width: 750px;
   max-width: 100%;
   padding: 20px;
-  background-color: #E1D05C;
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px var(--shadow-light);
   margin-top: 50px;
 }
 
@@ -300,5 +300,6 @@ export default {
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: var(--text-primary);
 }
 </style>

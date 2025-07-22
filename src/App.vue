@@ -15,6 +15,7 @@ import Login from './components/Login.vue';
 import WhoToFollow from './components/whoToFollow.vue';
 import Following from './components/Following.vue';
 
+
 export default {
   components: {
     Navigation,

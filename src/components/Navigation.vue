@@ -39,8 +39,8 @@ export default {
   justify-content: space-between;
   width: 100%;
   height: 80px; 
-  background-color: #E1D05C;
-  border-bottom: 1px solid #ddd;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
   padding: 0 20px;
   box-sizing: border-box;
   position: fixed; 
@@ -58,7 +58,7 @@ export default {
 .logo {
   height: 60px; 
   width: auto; 
-  border: #000 solid 1px;  
+  border:  var(--border-dark) solid 1px;  
   border-radius: 50%; 
 }
 
@@ -72,7 +72,7 @@ export default {
  
 .navigation a {
   text-decoration: none;
-  color: #333;
+  color: var(--text-primary);
   font-weight: bold;
   font-size: 24px; 
   padding: 10px 20px;
@@ -81,6 +81,6 @@ export default {
 }
 
 .navigation a:hover {
-  background-color: #e9ecef;
+  background-color: var(--primary-hover);
 }
 </style>
