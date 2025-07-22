@@ -3,7 +3,7 @@
     <div class="post_info">
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink> on {{ date }} at {{ time }}
     </div>
-    <p class="post_content">{{ content }}</p>
+    <div class="post_content" v-html="content"></div>
   </div>
 </template>
 
@@ -76,5 +76,53 @@ export default {
   color: var(--text-primary);
   line-height: 1.5;
   margin: 0;
+}
+
+/* Style rich text content */
+.post_content b, .post_content strong {
+  font-weight: bold;
+}
+
+.post_content i, .post_content em {
+  font-style: italic;
+}
+
+.post_content u {
+  text-decoration: underline;
+}
+
+.post_content s {
+  text-decoration: line-through;
+}
+
+.post_content ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.post_content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.post_content a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.post_content a:hover {
+  color: var(--link-hover);
+}
+
+.post_content [style*="text-align: center"] {
+  text-align: center;
+}
+
+.post_content [style*="text-align: right"] {
+  text-align: right;
+}
+
+.post_content [style*="text-align: left"] {
+  text-align: left;
 }
 </style>
