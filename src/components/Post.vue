@@ -14,10 +14,39 @@
     </div>
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
-      <textarea v-model="editContent" class="edit-text"></textarea>
+      <div class="editor-toolbar">
+        <button type="button" @click="formatText('bold')">B</button>
+        <button type="button" @click="formatText('italic')">I</button>
+        <button type="button" @click="formatText('underline')">U</button>
+        <button type="button" @click="formatText('strikeThrough')">S</button>
+        <span class="separator">|</span>
+        <button type="button" @click="formatText('justifyLeft')">⬅</button>
+        <button type="button" @click="formatText('justifyCenter')">↔</button>
+        <button type="button" @click="formatText('justifyRight')">➡</button>
+        <span class="separator">|</span>
+        <button type="button" @click="formatText('insertOrderedList')">#</button>
+        <button type="button" @click="formatText('insertUnorderedList')">•</button>
+        <span class="separator">|</span>
+        <button type="button" @click="insertLink">🔗</button>
+        <button type="button" @click="changeFontSize">A</button>
+        <button type="button" @click="changeTextColor">C</button>
+        <span class="separator">|</span>
+        <button type="button" @click="formatText('removeFormat')">⌫</button>
+        <button type="button" @click="formatText('undo')">↶</button>
+        <button type="button" @click="formatText('redo')">↷</button>
+      </div>
+      <div
+        ref="editor"
+        class="rich-editor"
+        contenteditable="true"
+        v-html="editContent"
+        @input="updateEditContent"
+        @focus="$event.target.style.outline = 'none'"
+        data-placeholder="Edit your post..."
+      ></div>
       <div class="edit-button-group">
-        <button v-if="isEditing" class="edit-button" @click="saveEdit">Save</button>
-        <button v-if="isEditing" class="edit-button" @click="cancelEdit">Cancel</button>
+        <button class="edit-button" @click="saveEdit">Save</button>
+        <button class="edit-button" @click="cancelEdit">Cancel</button>
       </div>
     </div>
     <div v-else class="post_content" v-html="content"></div>
@@ -76,23 +105,54 @@ export default {
         day: 'numeric'
       })
     },
+    formatText(command, value = null) {
+      document.execCommand(command, false, value);
+      this.$refs.editor.focus();
+      this.updateEditContent();
+    },
+    insertLink() {
+      const url = prompt('Enter URL:');
+      if (url) {
+        this.formatText('createLink', url);
+      }
+    },
+    changeFontSize() {
+      const size = prompt('Enter font size (1-7):');
+      if (size && size >= 1 && size <= 7) {
+        this.formatText('fontSize', size);
+      }
+    },
+    changeTextColor() {
+      const color = prompt('Enter color (e.g., red, #ff0000):');
+      if (color) {
+        this.formatText('foreColor', color);
+      }
+    },
+    updateEditContent() {
+      this.editContent = this.$refs.editor.innerHTML;
+    },
     startEdit() {
-      this.isEditing = true
-      this.editTitle = this.title
-      this.editContent = this.content
+      this.isEditing = true;
+      this.editTitle = this.title;
+      this.editContent = this.content;
+      this.$nextTick(() => {
+        if (this.$refs.editor) {
+          this.$refs.editor.innerHTML = this.editContent;
+        }
+      });
     },
     async saveEdit() {
-      if (!this.id) return
+      if (!this.id) return;
       try {
-        const postRef = doc(firestore, "posts", this.id)
+        const postRef = doc(firestore, "posts", this.id);
         await updateDoc(postRef, {
           title: this.editTitle,
           content: this.editContent
-        })
-        this.$emit('post-edited', { id: this.id, title: this.editTitle, content: this.editContent })
-        this.isEditing = false
+        });
+        this.$emit('post-edited', { id: this.id, title: this.editTitle, content: this.editContent });
+        this.isEditing = false;
       } catch (error) {
-        alert("Failed to save changes.")
+        alert("Failed to save changes.");
       }
     },
     cancelEdit() {
@@ -286,5 +346,51 @@ export default {
   border: 1px solid var(--border-primary);
   min-height: 60px;
   resize: vertical;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 5px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.separator {
+  color: var(--border-primary);
+  margin: 0 3px;
+  font-size: 12px;
+}
+
+.rich-editor {
+  min-height: 80px;
+  max-height: 200px;
+  padding: 10px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  background-color: white;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rich-editor:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.rich-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-style: italic;
 }
 </style>
