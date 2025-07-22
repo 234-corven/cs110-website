@@ -28,6 +28,7 @@
       </form>
     </div>
   </div>
+
   <div class="logoutButton" v-else>
     <div class="logout_user">
       <h2>{{ userStore.user.email }}</h2>
@@ -135,33 +136,46 @@ export default {
 
 .login-buttons {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 20px;
+  justify-content: space-evenly;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding: 10px 0;
 }
 
 .login {
-  text-align: left;
   flex: 1;
 }
 
 .signup {
-  text-align: left;
   flex: 1;
 }
 
-
 .login h2,
 .signup h2 {
+  font-size: 30px;
   margin: 0;
-  padding: 10px;
+  padding: 8px;
 }
 
 .login a,
 .signup a {
-  color: var(--text-header);
+  display: inline-block;
+  width: 80%;
+  background-color: var(--btn-back-login);
+  color: var(--text-white);
+  
   text-decoration: none;
-  font-size: 1.2rem;
+
+  padding: 15px 30px;
+  transition: all 0.3s ease;
+  
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--shadow-light);
+  text-align: center;
+}
+
+.login a:hover, .signup a:hover {
+  background-color: var(--btn-back-login-hover);
 }
 
 .logout_button {

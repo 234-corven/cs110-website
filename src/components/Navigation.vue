@@ -72,7 +72,7 @@ export default {
  
 .navigation a {
   text-decoration: none;
-  color: var(--text-primary);
+  color: var(--text-header);
   font-weight: bold;
   font-size: 24px; 
   padding: 10px 20px;

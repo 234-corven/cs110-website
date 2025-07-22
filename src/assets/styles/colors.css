@@ -1,5 +1,3 @@
-
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
@@ -38,12 +36,14 @@
   --link-hover: #0056b3;
 
   /* Button Colors */
-  --btn-follow: #5C6DE1;
-  --btn-follow-hover: #5C6DE1;
+  --btn-follow: #5c6de1;
+  --btn-follow-hover: #3d4ba8;
   --btn-unfollow: #f44336;
   --btn-unfollow-hover: #e53935;
   --btn-logout: #dc3545;
   --btn-logout-hover: #c82333;
+  --btn-back-login: #5c6de1;
+  --btn-back-login-hover: #3d4ba8;
   --btn-post: #007bff;
   --btn-post-hover: #0056b3;
 
@@ -61,6 +61,7 @@
   --post-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-body, * {
+body,
+* {
   font-family: var(--font-primary);
 }

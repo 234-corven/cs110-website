@@ -1,15 +1,17 @@
 <template>
   <div class="backLoginBox">
-    <div class="login">
-      <h2>
-        <RouterLink to="/login">Login</RouterLink>
-      </h2>
-    </div>
-    <div class="signup">
-      <h2>
-        <RouterLink to="/signup">Sign Up</RouterLink>
-      </h2>
-    </div>
+    <div class="login-buttons">
+        <div class="login">
+          <h2>
+            <RouterLink to="/login">Login</RouterLink>
+          </h2>
+        </div>
+        <div class="signup">
+          <h2>
+            <RouterLink to="/signup">Sign Up</RouterLink>
+          </h2>
+        </div>
+      </div>
 
     <form @submit.prevent="handleSignup">
       <div class="form-group">

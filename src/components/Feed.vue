@@ -294,7 +294,6 @@ export default {
   border-radius: 8px;
   box-shadow: 0 5px 15px var(--shadow-light);
   margin-top: 50px;
-  
 }
 
 .feed_header {
