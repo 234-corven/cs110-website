@@ -10,6 +10,7 @@ export default {
       title: '',
       userDate: '', // User-specified date
       isImportant: false, // New important flag
+      activeCommands: [],
     }
   },
   computed: {
@@ -17,15 +18,40 @@ export default {
       return useUserStore()
     }
   },
+  mounted() {
+    document.addEventListener('selectionchange', this.updateActiveCommands);
+  },
+  beforeUnmount() {
+    document.removeEventListener('selectionchange', this.updateActiveCommands);
+  },
   methods: {
     updateContent() {
       this.content = this.$refs.editor.innerHTML;
+    },
+
+    updateActiveCommands() {
+      if (!this.$refs.editor || document.activeElement !== this.$refs.editor) return;
+      const commands = [
+        'bold', 'italic', 'underline', 'strikeThrough',
+        'justifyLeft', 'justifyCenter', 'justifyRight',
+        'insertOrderedList', 'insertUnorderedList'
+      ];
+      this.activeCommands = commands.filter(cmd => document.queryCommandState(cmd));
+    },
+
+    isActive(command) {
+      return this.activeCommands.includes(command);
     },
 
     formatText(command, value = null) {
       document.execCommand(command, false, value);
       this.$refs.editor.focus();
       this.updateContent();
+      this.updateActiveCommands();
+    },
+
+    toggleFormat(command, value = null) {
+      this.formatText(command, value);
     },
 
     insertLink() {
@@ -121,7 +147,7 @@ export default {
           feed: arrayUnion(postId),
         }).catch((error) => {});
       });
-    }
+    },
   }
 }
 </script>
@@ -145,33 +171,33 @@ export default {
         placeholder="Post date (optional)"
       />
       <div class="editor-toolbar">
-        <button type="button" @click="formatText('bold')" title="Bold">B</button>
-        <button type="button" @click="formatText('italic')" title="Italic">I</button>
-        <button type="button" @click="formatText('underline')" title="Underline">U</button>
-        <button type="button" @click="formatText('strikeThrough')" title="Strikethrough">S</button>
+        <button type="button" :class="{ active: isActive('bold') }" @mousedown.prevent="toggleFormat('bold')" title="Bold">B</button>
+        <button type="button" :class="{ active: isActive('italic') }" @mousedown.prevent="toggleFormat('italic')" title="Italic">I</button>
+        <button type="button" :class="{ active: isActive('underline') }" @mousedown.prevent="toggleFormat('underline')" title="Underline">U</button>
+        <button type="button" :class="{ active: isActive('strikeThrough') }" @mousedown.prevent="toggleFormat('strikeThrough')" title="Strikethrough">S</button>
         
         <span class="separator">|</span>
         
-        <button type="button" @click="formatText('justifyLeft')" title="Align Left">⬅</button>
-        <button type="button" @click="formatText('justifyCenter')" title="Center">↔</button>
-        <button type="button" @click="formatText('justifyRight')" title="Align Right">➡</button>
+        <button type="button" :class="{ active: isActive('justifyLeft') }" @mousedown.prevent="toggleFormat('justifyLeft')" title="Align Left">⬅</button>
+        <button type="button" :class="{ active: isActive('justifyCenter') }" @mousedown.prevent="toggleFormat('justifyCenter')" title="Center">↔</button>
+        <button type="button" :class="{ active: isActive('justifyRight') }" @mousedown.prevent="toggleFormat('justifyRight')" title="Align Right">➡</button>
         
         <span class="separator">|</span>
         
-        <button type="button" @click="formatText('insertOrderedList')" title="Numbered List">#</button>
-        <button type="button" @click="formatText('insertUnorderedList')" title="Bullet List">•</button>
+        <button type="button" :class="{ active: isActive('insertOrderedList') }" @mousedown.prevent="toggleFormat('insertOrderedList')" title="Numbered List">#</button>
+        <button type="button" :class="{ active: isActive('insertUnorderedList') }" @mousedown.prevent="toggleFormat('insertUnorderedList')" title="Bullet List">•</button>
         
         <span class="separator">|</span>
         
-        <button type="button" @click="insertLink" title="Insert Link">🔗</button>
-        <button type="button" @click="changeFontSize" title="Font Size">A</button>
-        <button type="button" @click="changeTextColor" title="Text Color">C</button>
+        <button type="button" @mousedown.prevent="insertLink" title="Insert Link">🔗</button>
+        <button type="button" @mousedown.prevent="changeFontSize" title="Font Size">A</button>
+        <button type="button" @mousedown.prevent="changeTextColor" title="Text Color">C</button>
         
         <span class="separator">|</span>
         
-        <button type="button" @click="formatText('removeFormat')" title="Clear Formatting">⌫</button>
-        <button type="button" @click="formatText('undo')" title="Undo">↶</button>
-        <button type="button" @click="formatText('redo')" title="Redo">↷</button>
+        <button type="button" @mousedown.prevent="toggleFormat('removeFormat')" title="Clear Formatting">⌫</button>
+        <button type="button" @mousedown.prevent="toggleFormat('undo')" title="Undo">↶</button>
+        <button type="button" @mousedown.prevent="toggleFormat('redo')" title="Redo">↷</button>
       </div>
       <div 
         ref="editor"
@@ -279,6 +305,12 @@ export default {
 .editor-toolbar button:active {
   background-color: var(--primary);
   color: white;
+}
+
+.editor-toolbar button.active {
+  background-color: var(--primary-hover);
+  color: var(--primary-color);
+  border-color: var(--primary);
 }
 
 .separator {
