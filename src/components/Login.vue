@@ -178,6 +178,67 @@ export default {
   background-color: var(--btn-back-login-hover);
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.form-group {
+  width: 80%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/*Email and Password Entry boxes */
+.form-group input {
+  width: 80%;
+  max-width: 300px; 
+  padding: 5px;
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/*Entry Box Labels*/
+.form-group label {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: right;
+  margin: 0; 
+}
+
+/*Submission Button*/
+form button {
+  width: 80%;
+  max-width: 200px; 
+  padding: 12px;
+  background-color: var(--btn-post);
+  color: var(--text-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 3px;
+}
+
+form button:hover {
+  background-color: var(--btn-post-hover);
+}
+
+form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .logout_button {
   display: block;
   margin: 20px auto;
