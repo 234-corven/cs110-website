@@ -73,7 +73,7 @@ export default {
 
 <style>
 .post {
- background-color: var(--post-bg);
+  background-color: white !important;
   border: 1px solid var(--post-border);
   border-radius: var(--post-radius);
   padding: var(--post-padding);
@@ -178,8 +178,11 @@ export default {
 }
 
 .important-post {
-  border-left: 4px solid #d13838;
-  background-color: rgba(209, 56, 56, 0.08);
+  border-left: 4px solid #ff6b6b !important;
+  border-top: 1px solid #ff6b6b !important;
+  border-right: 1px solid #ff6b6b !important;
+  border-bottom: 1px solid #ff6b6b !important;
+  background-color: #f29797 !important;
 }
 
 .post-header {
@@ -194,7 +197,7 @@ export default {
 }
 
 .important-badge {
-  background: linear-gradient(135deg, #d13838, #d13838);
+  background: linear-gradient(135deg, #ff6b6b, #ff8a80) !important;
   color: white;
   padding: 3px 8px;
   border-radius: 12px;
