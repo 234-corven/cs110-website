@@ -1,12 +1,13 @@
 <template>
   <div class="postBox">
     <div class="post_header">{{ headerText }}</div>
-    <Post v-for="current_post in displayPosts" :key="current_post.id"
-      :username="current_post.authorEmail" 
+    <Post v-for="current_post in displayPosts" :key="current_post.id" 
+      :username="current_post.authorEmail"
+      :userId="current_post.authorId" 
       :date="formatDate(current_post.timestamp)" 
       :time="formatTime(current_post.timestamp)"
       :content="current_post.content" />
-    <div v-if="displayPosts.length === 0" >
+    <div v-if="displayPosts.length === 0">
       {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
     </div>
   </div>
@@ -90,12 +91,12 @@ export default {
       if (this.userId) {
         return this.getUserPosts();
       }
-      
+
       if (this.isLoggedIn) {
         // If logged in and on home feed, show posts from followed users only
         return this.getFeedPosts();
       }
-      
+
       // If not logged in, show recent posts from everyone
       return this.getRecentPosts();
     },
@@ -104,9 +105,9 @@ export default {
       if (!this.userStore.user || !this.userStore.user.feed) {
         return this.getEmptyArray();
       }
-      
+
       const feedPostIds = this.userStore.user.feed || [];
-      
+
       if (feedPostIds.length === 0) {
         return this.getEmptyArray();
       }
@@ -136,7 +137,7 @@ export default {
               const bTime = b.timestamp.seconds || b.timestamp;
               return bTime - aTime;
             });
-          
+
           return validPosts.slice(0, 10);
         })
         .catch(() => {
@@ -174,7 +175,7 @@ export default {
       }
 
       const userRef = doc(firestore, "users", this.userId);
-      
+
       return getDoc(userRef)
         .then((userDoc) => {
           if (!userDoc.exists()) {
@@ -212,7 +213,7 @@ export default {
           return [];
         });
     },
-    
+
     addAuthor(posts) {
       if (posts.length === 0) {
         this.displayPosts = [];
@@ -230,7 +231,7 @@ export default {
               authorEmail: author ? author.email : 'Unknown User'
             };
             completedCount++;
-            
+
             if (completedCount === posts.length) {
               this.displayPosts = authoredPosts
                 .filter(post => post !== undefined)
@@ -248,7 +249,7 @@ export default {
               authorEmail: 'Unknown User'
             };
             completedCount++;
-            
+
             if (completedCount === posts.length) {
               this.displayPosts = authoredPosts
                 .filter(post => post !== undefined)
