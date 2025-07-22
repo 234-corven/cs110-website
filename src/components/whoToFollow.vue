@@ -28,7 +28,7 @@ export default {
           this.loadSuggestedUsers();
           return;
         }
-        
+
         // If someone was unfollowed, reload suggestions
         if (oldFollowing && newFollowing && newFollowing.length < oldFollowing.length) {
           this.loadSuggestedUsers();
@@ -101,7 +101,7 @@ export default {
         this.follow(userId);
         // Remove the followed user from suggestions instead of reloading
         this.suggestedUsers = this.suggestedUsers.filter(user => user.id !== userId);
-        
+
       } else {
         alert('Please log in to follow users.');
       }
@@ -198,10 +198,19 @@ export default {
   display: flex;
   flex-direction: column;
   width: 275px;
-  padding: 20px;
-  background-color:  var(--bg-primary);
+  padding: 10px 20px;
+  background-color: var(--bg-primary);
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+.whoToFollow h2 {
+  margin-top: 0;
+  margin-bottom: 3px;
+  font-size: 25px;
+  padding-bottom: 4px;
+  color: var(--text-header);
+  border-bottom: 2px solid var(--text-header);
 }
 
 .to_follow_list {
@@ -215,7 +224,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 4px;
 }
 
 .to_follow_list a {
@@ -241,5 +251,4 @@ export default {
 .follow_button:hover {
   background-color: var(--btn-follow-hover);
 }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="postBox">
-    <div class="post_header">{{ headerText }}</div>
+    <div class="feed_header">{{ headerText }}</div>
     <Post v-for="current_post in displayPosts" :key="current_post.id" 
       :username="current_post.authorEmail"
       :userId="current_post.authorId" 
@@ -289,7 +289,7 @@ export default {
   flex-direction: column;
   width: 750px;
   max-width: 100%;
-  padding: 20px;
+  padding: 8px 20px;
   background-color: var(--bg-primary);
   border-radius: 8px;
   box-shadow: 0 5px 15px var(--shadow-light);
@@ -297,10 +297,11 @@ export default {
   
 }
 
-.post_header {
+.feed_header {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: 10px;
   color: var(--text-header);
 }
 

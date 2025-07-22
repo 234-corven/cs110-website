@@ -52,7 +52,11 @@ export default {
 .userEmail {
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    margin-top: 0;
+    padding-bottom: 8px;
+    color: var(--text-header); 
+    border-bottom: 2px solid var(--text-header);
 }
 
 .userValue {
@@ -60,11 +64,16 @@ export default {
     font-weight: bold;
 }
 
+.userValueDisplay {
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
 .userInfo {
     display: flex;
     flex-direction: column;
     width: 300px;
-    padding: 20px;
+    padding: 10px 20px;
     background-color: var(--bg-primary);
     border-radius: 8px;
     box-shadow: 0 2px 10px var(--shadow-light);

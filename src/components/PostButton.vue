@@ -108,6 +108,11 @@ export default {
   box-shadow: 0 2px 10px var(--shadow-light);
 }
 
+.createPostBox h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
 .post_button {
   margin-left: 10px;
   padding: 5px 10px;
