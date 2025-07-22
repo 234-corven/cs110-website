@@ -2,9 +2,9 @@
   <div class="post">
     <h3 class="post_title" v-if="title">{{ title }}</h3>
     <div class="post_info">
-      @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink> 
-      <span v-if="userDate" class="user-date">on {{ formatUserDate(userDate) }}</span>
-      <span class="submission-info">• Posted {{ date }} at {{ time }}</span>
+      <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
+      @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
+      <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
     </div>
     <div class="post_content" v-html="content"></div>
   </div>
@@ -77,21 +77,22 @@ export default {
 }
 
 .post_info {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-header);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   font-weight: bold;
 }
 
 .user-date {
   color: var(--text-primary);
+  font-size: 14px;
   font-weight: normal;
 }
 
 .submission-info {
   color: var(--text-secondary);
   font-weight: normal;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .username-link {
@@ -107,14 +108,14 @@ export default {
   font-size: 24px;
   font-weight: bold;
   color: var(--text-header);
-  margin: 8px 0 12px 0;
-  line-height: 1.3;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
 }
 
 .post_content {
   font-size: 16px;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 
@@ -136,12 +137,12 @@ export default {
 }
 
 .post_content ul {
-  margin: 8px 0;
+  margin: 4px 0;
   padding-left: 20px;
 }
 
 .post_content ol {
-  margin: 8px 0;
+  margin: 4px 0;
   padding-left: 20px;
 }
 
