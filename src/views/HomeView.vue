@@ -78,7 +78,7 @@ export default {
   flex: 0 0 300px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
   margin-top: 50px;
 }
 
@@ -93,7 +93,7 @@ export default {
   flex: 0 0 300px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
   margin-top: 50px;
 }
 
