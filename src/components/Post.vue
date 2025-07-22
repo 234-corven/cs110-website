@@ -14,35 +14,11 @@
     </div>
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
-      <div class="editor-toolbar">
-        <button type="button" :class="{ active: isActive('bold') }" @mousedown.prevent="formatText('bold')">B</button>
-        <button type="button" :class="{ active: isActive('italic') }" @mousedown.prevent="formatText('italic')">I</button>
-        <button type="button" :class="{ active: isActive('underline') }" @mousedown.prevent="formatText('underline')">U</button>
-        <button type="button" :class="{ active: isActive('strikeThrough') }" @mousedown.prevent="formatText('strikeThrough')">S</button>
-        <span class="separator">|</span>
-        <button type="button" :class="{ active: isActive('justifyLeft') }" @mousedown.prevent="formatText('justifyLeft')">⬅</button>
-        <button type="button" :class="{ active: isActive('justifyCenter') }" @mousedown.prevent="formatText('justifyCenter')">↔</button>
-        <button type="button" :class="{ active: isActive('justifyRight') }" @mousedown.prevent="formatText('justifyRight')">➡</button>
-        <span class="separator">|</span>
-        <button type="button" :class="{ active: isActive('insertOrderedList') }" @mousedown.prevent="formatText('insertOrderedList')">#</button>
-        <button type="button" :class="{ active: isActive('insertUnorderedList') }" @mousedown.prevent="formatText('insertUnorderedList')">•</button>
-        <span class="separator">|</span>
-        <button type="button" @mousedown.prevent="insertLink">🔗</button>
-        <button type="button" @mousedown.prevent="changeFontSize">A</button>
-        <button type="button" @mousedown.prevent="changeTextColor">C</button>
-        <span class="separator">|</span>
-        <button type="button" @mousedown.prevent="formatText('removeFormat')">⌫</button>
-        <button type="button" @mousedown.prevent="formatText('undo')">↶</button>
-        <button type="button" @mousedown.prevent="formatText('redo')">↷</button>
-      </div>
-      <div
-        ref="editor"
-        class="rich-editor"
-        contenteditable="true"
-        @input="updateEditContent"
-        @focus="$event.target.style.outline = 'none'"
-        data-placeholder="Edit your post..."
-      ></div>
+      <RichTextEditor
+        v-model="editContent"
+        :placeholder="'Edit your post...'"
+        :editorClass="'rich-editor'"
+      />
       <div class="edit-button-group">
         <button class="edit-button" @click="saveEdit">Save</button>
         <button class="edit-button" @click="cancelEdit">Cancel</button>
@@ -60,11 +36,13 @@ import { RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { firestore } from '../firebaseResources.js'
 import { doc, updateDoc } from 'firebase/firestore'
+import RichTextEditor from './RichTextEditor.vue'
 
 export default {
   name: 'Post',
   components: {
-    RouterLink
+    RouterLink,
+    RichTextEditor
   },
   props: {
     id: {

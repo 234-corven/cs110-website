@@ -2,6 +2,7 @@
 import { useUserStore } from '../stores/user'
 import { firestore } from '../firebaseResources.js'
 import { collection, doc, updateDoc, arrayUnion, addDoc, serverTimestamp } from 'firebase/firestore'
+import RichTextEditor from './RichTextEditor.vue'
 
 export default {
   data() {
@@ -148,6 +149,9 @@ export default {
         }).catch((error) => {});
       });
     },
+  },
+  components: {
+    RichTextEditor
   }
 }
 </script>
@@ -170,43 +174,12 @@ export default {
         title="Optional: Specify a date for this post"
         placeholder="Post date (optional)"
       />
-      <div class="editor-toolbar">
-        <button type="button" :class="{ active: isActive('bold') }" @mousedown.prevent="toggleFormat('bold')" title="Bold">B</button>
-        <button type="button" :class="{ active: isActive('italic') }" @mousedown.prevent="toggleFormat('italic')" title="Italic">I</button>
-        <button type="button" :class="{ active: isActive('underline') }" @mousedown.prevent="toggleFormat('underline')" title="Underline">U</button>
-        <button type="button" :class="{ active: isActive('strikeThrough') }" @mousedown.prevent="toggleFormat('strikeThrough')" title="Strikethrough">S</button>
-        
-        <span class="separator">|</span>
-        
-        <button type="button" :class="{ active: isActive('justifyLeft') }" @mousedown.prevent="toggleFormat('justifyLeft')" title="Align Left">⬅</button>
-        <button type="button" :class="{ active: isActive('justifyCenter') }" @mousedown.prevent="toggleFormat('justifyCenter')" title="Center">↔</button>
-        <button type="button" :class="{ active: isActive('justifyRight') }" @mousedown.prevent="toggleFormat('justifyRight')" title="Align Right">➡</button>
-        
-        <span class="separator">|</span>
-        
-        <button type="button" :class="{ active: isActive('insertOrderedList') }" @mousedown.prevent="toggleFormat('insertOrderedList')" title="Numbered List">#</button>
-        <button type="button" :class="{ active: isActive('insertUnorderedList') }" @mousedown.prevent="toggleFormat('insertUnorderedList')" title="Bullet List">•</button>
-        
-        <span class="separator">|</span>
-        
-        <button type="button" @mousedown.prevent="insertLink" title="Insert Link">🔗</button>
-        <button type="button" @mousedown.prevent="changeFontSize" title="Font Size">A</button>
-        <button type="button" @mousedown.prevent="changeTextColor" title="Text Color">C</button>
-        
-        <span class="separator">|</span>
-        
-        <button type="button" @mousedown.prevent="toggleFormat('removeFormat')" title="Clear Formatting">⌫</button>
-        <button type="button" @mousedown.prevent="toggleFormat('undo')" title="Undo">↶</button>
-        <button type="button" @mousedown.prevent="toggleFormat('redo')" title="Redo">↷</button>
-      </div>
-      <div 
-        ref="editor"
-        class="rich-editor"
-        contenteditable="true"
-        @input="updateContent"
-        @focus="$event.target.style.outline = 'none'"
-        data-placeholder="What are you pondering?"
-      ></div>
+     
+      <RichTextEditor
+        v-model="content"
+        :placeholder="'What are you pondering?'"
+        :editorClass="'rich-editor'"
+      />
       <div class="important-checkbox">
         <input 
           v-model="isImportant" 
