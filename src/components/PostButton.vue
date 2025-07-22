@@ -46,13 +46,6 @@ export default {
       }
     },
 
-    insertImage() {
-      const url = prompt('Enter image URL:');
-      if (url) {
-        this.formatText('insertImage', url);
-      }
-    },
-
     handlePost() {
       const plainText = this.$refs.editor.innerText.trim();
       if (plainText) {
@@ -160,7 +153,6 @@ export default {
         <button type="button" @click="insertLink" title="Insert Link">🔗</button>
         <button type="button" @click="changeFontSize" title="Font Size">A</button>
         <button type="button" @click="changeTextColor" title="Text Color">🎨</button>
-        <button type="button" @click="insertImage" title="Insert Image">🖼</button>
         
         <div class="toolbar-separator"></div>
         
