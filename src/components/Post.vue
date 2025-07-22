@@ -1,6 +1,12 @@
 <template>
-  <div class="post">
-    <h3 class="post_title" v-if="title">{{ title }}</h3>
+  <div class="post" :class="{ 'important-post': isImportant }">
+    <div class="post-header">
+      <h3 class="post_title" v-if="title">
+        <span v-if="isImportant" class="important-star">⭐</span>
+        {{ title }}
+      </h3>
+      <div v-if="isImportant" class="important-badge">Important Event</div>
+    </div>
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
@@ -46,6 +52,10 @@ export default {
     userDate: {
       type: String,
       default: null
+    },
+    isImportant: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -165,5 +175,33 @@ export default {
 
 .post_content [style*="text-align: left"] {
   text-align: left;
+}
+
+.important-post {
+  border-left: 4px solid #ffd700;
+  background: linear-gradient(135deg, var(--post-bg) 0%, rgba(255, 215, 0, 0.05) 100%);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.important-star {
+  color: #ffd700;
+  margin-right: 6px;
+}
+
+.important-badge {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #333;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
 }
 </style>

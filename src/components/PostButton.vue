@@ -9,6 +9,7 @@ export default {
       content: '',
       title: '',
       userDate: '', // User-specified date
+      isImportant: false, // New important flag
     }
   },
   computed: {
@@ -53,17 +54,18 @@ export default {
       const titleText = this.title.trim();
       
       if (plainText && titleText) {
-        this.createPost(this.content, this.title, this.userDate);
+        this.createPost(this.content, this.title, this.userDate, this.isImportant);
         this.$refs.editor.innerHTML = '';
         this.content = '';
         this.title = '';
         this.userDate = '';
+        this.isImportant = false;
       } else {
         alert("Both title and content are required.");
       }
     },
 
-    createPost(content, title, userDate) {
+    createPost(content, title, userDate, isImportant) {
       if (!this.userStore.user) {
         alert("You must be logged in to post.");
         return;
@@ -76,6 +78,7 @@ export default {
         title: title.trim(),
         content: content.trim(),
         userDate: userDate || null, // User-specified date (optional)
+        isImportant: isImportant || false, // Add important flag
       };
 
       addDoc(postsCollection, newPost)
@@ -178,6 +181,17 @@ export default {
         @focus="$event.target.style.outline = 'none'"
         data-placeholder="What are you pondering?"
       ></div>
+      <div class="important-checkbox">
+        <input 
+          v-model="isImportant" 
+          type="checkbox" 
+          id="important-check"
+          class="checkbox-input"
+        />
+        <label for="important-check" class="checkbox-label">
+          ⭐ Mark as Important Event
+        </label>
+      </div>
       <button class="post_button" type="button" @click="handlePost">Post</button>
     </form>
   </div>
@@ -330,5 +344,27 @@ export default {
   margin-bottom: 10px;
   font-size: 14px;
   box-sizing: border-box;
+}
+
+.important-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.checkbox-input {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
+
+.checkbox-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-primary);
+  cursor: pointer;
 }
 </style>
