@@ -30,7 +30,7 @@
 
     <div class="right_section">
       <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
-      <template v-if="userStore.isLoggedIn">
+      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
         <Following />
       </template>
     </div>
