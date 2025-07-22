@@ -228,7 +228,8 @@ export default {
           .then((author) => {
             authoredPosts[index] = {
               ...post,
-              authorEmail: author ? author.email : 'Unknown User'
+              authorEmail: author ? author.email : 'Unknown User',
+              authorId: post.author
             };
             completedCount++;
 
@@ -246,7 +247,8 @@ export default {
           .catch(() => {
             authoredPosts[index] = {
               ...post,
-              authorEmail: 'Unknown User'
+              authorEmail: 'Unknown User',
+              authorId: post.author
             };
             completedCount++;
 
