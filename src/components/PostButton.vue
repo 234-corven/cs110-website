@@ -8,6 +8,7 @@ export default {
     return {
       content: '',
       title: '',
+      userDate: '', // User-specified date
     }
   },
   computed: {
@@ -52,16 +53,17 @@ export default {
       const titleText = this.title.trim();
       
       if (plainText && titleText) {
-        this.createPost(this.content, this.title);
+        this.createPost(this.content, this.title, this.userDate);
         this.$refs.editor.innerHTML = '';
         this.content = '';
         this.title = '';
+        this.userDate = '';
       } else {
         alert("Both title and content are required.");
       }
     },
 
-    createPost(content, title) {
+    createPost(content, title, userDate) {
       if (!this.userStore.user) {
         alert("You must be logged in to post.");
         return;
@@ -69,10 +71,11 @@ export default {
 
       const postsCollection = collection(firestore, "posts");
       const newPost = {
-        timestamp: serverTimestamp(),
+        timestamp: serverTimestamp(), // Actual submission time
         author: this.userStore.user.id,
         title: title.trim(),
         content: content.trim(),
+        userDate: userDate || null, // User-specified date (optional)
       };
 
       addDoc(postsCollection, newPost)
@@ -130,6 +133,13 @@ export default {
         placeholder="Post title..." 
         class="title-input"
         required
+      />
+      <input 
+        v-model="userDate" 
+        type="date" 
+        class="date-input"
+        title="Optional: Specify a date for this post"
+        placeholder="Post date (optional)"
       />
       <div class="editor-toolbar">
         <button type="button" @click="formatText('bold')" title="Bold">B</button>
@@ -306,8 +316,19 @@ export default {
   box-sizing: border-box;
 }
 
-.title-input:focus {
+.title-input:focus,
+.date-input:focus {
   outline: none;
   border-color: var(--primary);
+}
+
+.date-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 </style>

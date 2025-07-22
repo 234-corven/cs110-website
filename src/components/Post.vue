@@ -2,7 +2,9 @@
   <div class="post">
     <h3 class="post_title" v-if="title">{{ title }}</h3>
     <div class="post_info">
-      @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink> on {{ date }} at {{ time }}
+      @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink> 
+      <span v-if="userDate" class="user-date">on {{ formatUserDate(userDate) }}</span>
+      <span class="submission-info">• Posted {{ date }} at {{ time }}</span>
     </div>
     <div class="post_content" v-html="content"></div>
   </div>
@@ -40,6 +42,20 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    userDate: {
+      type: String,
+      default: null
+    }
+  },
+  methods: {
+    formatUserDate(dateString) {
+      if (!dateString) return '';
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
     }
   }
 }
@@ -65,6 +81,17 @@ export default {
   color: var(--text-header);
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+.user-date {
+  color: var(--text-primary);
+  font-weight: normal;
+}
+
+.submission-info {
+  color: var(--text-secondary);
+  font-weight: normal;
+  font-size: 12px;
 }
 
 .username-link {
