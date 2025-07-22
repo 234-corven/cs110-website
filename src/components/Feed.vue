@@ -358,12 +358,14 @@ export default {
 
 .follow-button {
   margin-left: 10px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   background-color: var(--btn-follow);
   color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+
+  font-size: 16px;
 }
 
 .follow-button:hover {
@@ -371,9 +373,12 @@ export default {
 }
 
 .follow-button.following {
-  padding: 5px 10px;
+  padding: 6x 12px;
   background-color: var(--btn-unfollow);
   color: var(--bg-white);
+  min-width: auto;
+  width: auto;
+
   font-size: 16px;
 }
 
