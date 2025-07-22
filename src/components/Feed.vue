@@ -290,7 +290,7 @@ export default {
   width: 750px;
   max-width: 100%;
   padding: 20px;
-  background-color: rgb(236, 233, 28);
+  background-color: #E1D05C;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   margin-top: 50px;
