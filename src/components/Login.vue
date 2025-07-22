@@ -28,8 +28,8 @@
     </div>
 
     <div class="logoutButton" v-else>
-      <div>
-        <h2>User: {{ userStore.user.email }}</h2>
+      <div class="logout_user">
+        <h2>{{ userStore.user.email }}</h2>
       </div>
       <button class="logout_button" @click="logout">Logout</button>
     </div>
@@ -151,6 +151,12 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-size: 1.5rem;
+}
+
+.logout_user {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align:center;
 }
 
 .logout_button:hover {

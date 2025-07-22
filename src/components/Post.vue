@@ -68,7 +68,7 @@ export default {
 }
 
 .username-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .post_content {

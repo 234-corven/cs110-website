@@ -66,7 +66,7 @@ export default {
   align-items: flex-start;
   min-height: 100vh;
   position: absolute;
-  top: 80px;
+  top: 18px;
   left: 0;
   width: 100%;
   z-index: 1;
@@ -98,11 +98,15 @@ export default {
 }
 
 .frontLoginBox {
-  width: 200px;
-  padding: 20px;
+  display:flex;
+  flex-direction: column;
+  align-self: center;
+  width: 150px;
+  padding: 15px;
   background-color:var(--bg-primary);
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--shadow-light);
+  text-align: center;
 }
 
 .frontLoginBox a {
@@ -114,7 +118,7 @@ export default {
 
 .frontLoginBox a:hover {
   color: var(--link-hover);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 </style>
