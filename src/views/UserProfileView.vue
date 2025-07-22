@@ -29,7 +29,7 @@
     </div>
 
     <div class="right_section">
-      <whoToFollow />
+      <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
       <template v-if="userStore.isLoggedIn">
         <Following />
       </template>
