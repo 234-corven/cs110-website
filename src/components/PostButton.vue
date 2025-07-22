@@ -19,10 +19,38 @@ export default {
       this.content = this.$refs.editor.innerHTML;
     },
 
-    formatText(command) {
-      document.execCommand(command, false, null);
+    formatText(command, value = null) {
+      document.execCommand(command, false, value);
       this.$refs.editor.focus();
       this.updateContent();
+    },
+
+    insertLink() {
+      const url = prompt('Enter URL:');
+      if (url) {
+        this.formatText('createLink', url);
+      }
+    },
+
+    changeFontSize() {
+      const size = prompt('Enter font size (1-7):');
+      if (size && size >= 1 && size <= 7) {
+        this.formatText('fontSize', size);
+      }
+    },
+
+    changeTextColor() {
+      const color = prompt('Enter color (e.g., red, #ff0000):');
+      if (color) {
+        this.formatText('foreColor', color);
+      }
+    },
+
+    insertImage() {
+      const url = prompt('Enter image URL:');
+      if (url) {
+        this.formatText('insertImage', url);
+      }
     },
 
     handlePost() {
@@ -107,9 +135,39 @@ export default {
         data-placeholder="What are you pondering?"
       ></div>
       <div class="editor-toolbar">
+        <!-- Text Formatting -->
         <button type="button" @click="formatText('bold')" title="Bold"><b>B</b></button>
         <button type="button" @click="formatText('italic')" title="Italic"><i>I</i></button>
         <button type="button" @click="formatText('underline')" title="Underline"><u>U</u></button>
+        <button type="button" @click="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
+        
+        <div class="toolbar-separator"></div>
+        
+        <!-- Text Alignment -->
+        <button type="button" @click="formatText('justifyLeft')" title="Align Left">⬅</button>
+        <button type="button" @click="formatText('justifyCenter')" title="Center">↔</button>
+        <button type="button" @click="formatText('justifyRight')" title="Align Right">➡</button>
+        
+        <div class="toolbar-separator"></div>
+        
+        <!-- Lists -->
+        <button type="button" @click="formatText('insertOrderedList')" title="Numbered List">1.</button>
+        <button type="button" @click="formatText('insertUnorderedList')" title="Bullet List">•</button>
+        
+        <div class="toolbar-separator"></div>
+        
+        <!-- Advanced -->
+        <button type="button" @click="insertLink" title="Insert Link">🔗</button>
+        <button type="button" @click="changeFontSize" title="Font Size">A</button>
+        <button type="button" @click="changeTextColor" title="Text Color">🎨</button>
+        <button type="button" @click="insertImage" title="Insert Image">🖼</button>
+        
+        <div class="toolbar-separator"></div>
+        
+        <!-- Utility -->
+        <button type="button" @click="formatText('removeFormat')" title="Clear Formatting">⌫</button>
+        <button type="button" @click="formatText('undo')" title="Undo">↶</button>
+        <button type="button" @click="formatText('redo')" title="Redo">↷</button>
       </div>
       <button class="post_button" type="button" @click="handlePost">Post</button>
     </form>
@@ -160,21 +218,27 @@ export default {
 
 .editor-toolbar {
   display: flex;
-  gap: 5px;
+  gap: 3px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .editor-toolbar button {
-  padding: 8px 12px;
-  border: 2px solid var(--border-primary);
+  padding: 6px 8px;
+  border: 1px solid var(--border-primary);
   background: white;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-primary);
-  min-width: 35px;
+  min-width: 28px;
+  height: 28px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .editor-toolbar button:hover {
@@ -187,6 +251,30 @@ export default {
   background-color: var(--primary);
   color: white;
   transform: translateY(1px);
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border-primary);
+  margin: 0 4px;
+}
+
+.rich-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+.rich-editor a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.rich-editor ul, .rich-editor ol {
+  margin: 8px 0;
+  padding-left: 20px;
 }
 
 .post_button {
