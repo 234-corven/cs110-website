@@ -103,17 +103,16 @@ export default {
   flex-direction: column;
   width: 225px;
   padding: 20px;
-  background-color: #E1D05C;
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
 }
 
 .post_button {
   margin-left: 10px;
   padding: 5px 10px;
-  background-color: #4CAF50;
-  /* Green */
-  color: white;
+  background-color: var(--btn-post);
+  color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;

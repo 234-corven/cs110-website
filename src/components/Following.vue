@@ -142,9 +142,9 @@ export default {
   flex-direction: column;
   width: 275px;
   padding: 20px;
-  background-color: #E1D05C;
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
   margin-top: 20px;
 }
 
@@ -164,8 +164,8 @@ export default {
 
 .unfollow_button {
   padding: 3px 8px;
-  background-color: #f44336;
-  color: white;
+  background-color: var(--btn-unfollow);
+  color: var(--bg-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -173,11 +173,11 @@ export default {
 }
 
 .unfollow_button:hover {
-  background-color: #d32f2f;
+  background-color: var(--btn-unfollow-hover);
 }
 
 .no-following {
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
   text-align: center;
   padding: 10px 0;

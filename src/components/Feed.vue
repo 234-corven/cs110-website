@@ -300,6 +300,6 @@ export default {
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: var(--text-primary);
+  color: var(--text-header);
 }
 </style>

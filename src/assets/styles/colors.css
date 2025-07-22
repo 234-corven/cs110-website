@@ -9,6 +9,7 @@
   --secondary-hover: #45a049;
   
   /* Text Colors */
+  --text-header: #000;
   --text-primary: #333;
   --text-secondary: #666;
   --text-light: #999;
@@ -30,6 +31,12 @@
   /* Button Colors */
   --btn-follow: #4CAF50;
   --btn-follow-hover: #45a049;
+  --btn-unfollow: #f44336;
+  --btn-unfollow-hover: #e53935;
+  --btn-logout: #dc3545;    
+  --btn-logout-hover: #c82333;
+  --btn-post: #007bff;
+  --btn-post-hover: #0056b3;
   
   /* Shadow Colors */
   --shadow-light: rgba(0, 0, 0, 0.1);

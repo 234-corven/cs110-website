@@ -115,9 +115,9 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: #E1D05C;
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
   font-size: 18px;
   font-weight: bold;
 }

@@ -43,13 +43,13 @@ export default {
 <style>
 .post_info {
   font-size: 14px;
-  color: #000000;
+  color: var(--text-header);
   margin-bottom: 5px;
   font-weight: bold;
 }
 
 .username-link {
-  color: #007bff;
+  color: var(--link-color);
   text-decoration: none;
 }
 
@@ -59,6 +59,6 @@ export default {
 
 .post_content {
   font-size: 12px;
-  color: #333333;
+  color: var(--text-primary);
 }
 </style>
