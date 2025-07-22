@@ -165,7 +165,7 @@ export default {
 .createPostBox {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 400px;
   padding: 20px;
   background-color: var(--bg-primary);
   border-radius: 8px;
@@ -190,6 +190,8 @@ export default {
   font-size: 14px;
   line-height: 1.4;
   word-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rich-editor:focus {
