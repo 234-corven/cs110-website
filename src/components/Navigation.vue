@@ -16,8 +16,6 @@ export default {
 
 <template>
 <div class="navigation">
-  
-  
   <div class="nav-links">
     <RouterLink to="/">Home</RouterLink>
 
@@ -83,6 +81,11 @@ export default {
   flex: 1; 
   justify-content: center; 
 }
+
+.nav-links a{
+  user-select: none;
+  outline: none;
+}
  
 .navigation a {
   text-decoration: none;
@@ -96,5 +99,25 @@ export default {
 
 .navigation a:hover {
   background-color: var(--primary-hover);
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:focus {
+  outline: none;
+  background-color: transparent;
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:active {
+  outline: none;
+  background-color: transparent;
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:visited {
+  color: var(--text-header);
 }
 </style>

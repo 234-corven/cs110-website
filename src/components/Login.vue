@@ -270,6 +270,13 @@ form button:disabled {
   text-align: center;
 }
 
+.logout_button:hover, .logout_button:focus, .logout_button:active,
+.login a:hover, .login a:focus, .login a:active, 
+.signup a:hover, .signup a:focus, .signup a:active {
+  user-select: none;
+  outline: none;
+}
+
 .logout_button:hover {
   background-color: var(--btn-logout-hover);
 }
