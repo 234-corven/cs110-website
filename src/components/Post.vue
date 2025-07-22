@@ -6,18 +6,28 @@
         {{ title }}
       </h3>
       <div v-if="isImportant" class="important-badge">Important Event</div>
+      <button v-if="canEdit && !isEditing" class="edit-button" @click="startEdit">Edit</button>
+      <button v-if="isEditing" class="edit-button" @click="saveEdit">Save</button>
+      <button v-if="isEditing" class="edit-button" @click="cancelEdit">Cancel</button>
     </div>
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
       <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
     </div>
-    <div class="post_content" v-html="content"></div>
+    <div v-if="isEditing" class="edit-content">
+      <input v-model="editTitle" class="edit-title" />
+      <textarea v-model="editContent" class="edit-text"></textarea>
+    </div>
+    <div v-else class="post_content" v-html="content"></div>
   </div>
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
+import { useUserStore } from '../stores/user'
+import { firestore } from '../firebaseResources.js'
+import { doc, updateDoc } from 'firebase/firestore'
 
 export default {
   name: 'Post',
@@ -25,47 +35,64 @@ export default {
     RouterLink
   },
   props: {
-    username: {
+    id: {
       type: String,
-      required: true
+      required: false
     },
-    userId: {
-      type: String,
-      required: true
+    username: { type: String, required: true },
+    userId: { type: String, required: true },
+    date: { type: String, required: true },
+    time: { type: String, required: true },
+    content: { type: String, required: true },
+    title: { type: String, default: '' },
+    userDate: { type: String, default: null },
+    isImportant: { type: Boolean, default: false }
+  },
+  data() {
+    return {
+      isEditing: false,
+      editTitle: this.title,
+      editContent: this.content
+    }
+  },
+  computed: {
+    userStore() {
+      return useUserStore()
     },
-    date: {
-      type: String,
-      required: true
-    },
-    time: {
-      type: String,
-      required: true
-    },
-    content: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    userDate: {
-      type: String,
-      default: null
-    },
-    isImportant: {
-      type: Boolean,
-      default: false
+    canEdit() {
+      return this.userStore.user && this.userStore.user.id === this.userId
     }
   },
   methods: {
     formatUserDate(dateString) {
-      if (!dateString) return '';
+      if (!dateString) return ''
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
-      });
+      })
+    },
+    startEdit() {
+      this.isEditing = true
+      this.editTitle = this.title
+      this.editContent = this.content
+    },
+    async saveEdit() {
+      if (!this.id) return
+      try {
+        const postRef = doc(firestore, "posts", this.id)
+        await updateDoc(postRef, {
+          title: this.editTitle,
+          content: this.editContent
+        })
+        this.$emit('post-edited', { id: this.id, title: this.editTitle, content: this.editContent })
+        this.isEditing = false
+      } catch (error) {
+        alert("Failed to save changes.")
+      }
+    },
+    cancelEdit() {
+      this.isEditing = false
     }
   }
 }
@@ -130,11 +157,13 @@ export default {
 }
 
 /* Style rich text content */
-.post_content b, .post_content strong {
+.post_content b,
+.post_content strong {
   font-weight: bold;
 }
 
-.post_content i, .post_content em {
+.post_content i,
+.post_content em {
   font-style: italic;
 }
 
@@ -206,5 +235,44 @@ export default {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+}
+
+.edit-button {
+  margin-left: 10px;
+  padding: 3px 10px;
+  font-size: 12px;
+  background: var(--btn-post);
+  color: var(--text-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  background: var(--btn-post-hover);
+}
+
+.edit-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.edit-title {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.edit-text {
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+  min-height: 60px;
+  resize: vertical;
 }
 </style>

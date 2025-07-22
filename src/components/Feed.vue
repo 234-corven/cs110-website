@@ -12,6 +12,7 @@
       </button>
     </div>
     <Post v-for="current_post in displayPosts" :key="current_post.id" 
+      :id="current_post.id"
       :username="current_post.authorEmail"
       :userId="current_post.authorId" 
       :title="current_post.title"
@@ -19,7 +20,9 @@
       :time="formatTime(current_post.timestamp)"
       :userDate="current_post.userDate"
       :isImportant="current_post.isImportant"
-      :content="current_post.content" />
+      :content="current_post.content"
+      @post-edited="loadPosts"
+    />
     <div v-if="displayPosts.length === 0">
       {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
     </div>
