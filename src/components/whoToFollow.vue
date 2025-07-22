@@ -199,23 +199,47 @@ export default {
   flex-direction: column;
   width: 275px;
   padding: 20px;
-  background-color: rgb(236, 233, 28);
+  background-color:  var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
 }
 
 .to_follow_list {
   line-height: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.to_follow_list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.to_follow_list a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.to_follow_list a:hover {
+  color: var(--link-hover);
 }
 
 .follow_button {
   margin-left: 10px;
   padding: 5px 10px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--btn-follow);
+  color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   float: right;
 }
+
+.follow_button:hover {
+  background-color: var(--btn-follow-hover);
+}
+
 </style>

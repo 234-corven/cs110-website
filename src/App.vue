@@ -1,10 +1,6 @@
 <template>
   <header>
-    <div class="navBar">
-      <nav>
-        <Navigation />
-      </nav>
-    </div>
+    <Navigation />
   </header>
 
   <RouterView />
@@ -18,6 +14,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import Login from './components/Login.vue';
 import WhoToFollow from './components/whoToFollow.vue';
 import Following from './components/Following.vue';
+
 
 export default {
   components: {
@@ -35,11 +32,5 @@ export default {
 
 
 <style>
-div.navBar {
-  position: fixed;
-  top: 2%;
-  left: 2%;
 
-  color: blueviolet;
-}
 </style>

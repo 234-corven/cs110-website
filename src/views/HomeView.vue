@@ -100,8 +100,8 @@ export default {
 .frontLoginBox {
   width: 200px;
   padding: 20px;
-  background-color: rgb(236, 233, 28);
+  background-color:var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
 }
 </style>

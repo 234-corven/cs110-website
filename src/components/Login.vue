@@ -128,9 +128,9 @@ export default {
   transform: translate(-50%, -50%);
   width: 500px;
   padding: 20px;
-  background-color: rgb(236, 233, 28);
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-light);
 }
 
 .login {
@@ -145,11 +145,16 @@ export default {
   display: block;
   margin: 20px auto;
   padding: 15px 40px;
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--btn-logout);
+  color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1.5rem;
 }
+
+.logout_button:hover {
+  background-color: var(--btn-logout-hover);
+}
+
 </style>
