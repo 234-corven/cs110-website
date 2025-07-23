@@ -33,7 +33,7 @@
 
 <script>
 import { firestore } from '../firebaseResources.js'
-import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore'
+import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc, getDoc, addDoc } from 'firebase/firestore'
 import { RouterLink } from 'vue-router'
 
 export default {
@@ -59,9 +59,9 @@ export default {
   },
   watch: {
     userId: {
-      handler(newId) {
-        this.setupListener(newId);
-        this.checkAnniversaries(newId); 
+      async handler(newId) {
+        await this.setupListener(newId);
+        await this.checkAnniversaries(newId);
       },
       immediate: true
     }
@@ -98,18 +98,19 @@ export default {
         where("userId", "==", userId),
         orderBy("timestamp", "desc")
       );
-      this.unsubscribe = onSnapshot(q, async (snapshot) => {
-        const notes = [];
-        for (const docSnap of snapshot.docs) {
-          const note = { id: docSnap.id, ...docSnap.data() };
-          if (note.followerId && !note.followerEmail) {
-            const userDoc = await getDoc(doc(firestore, "users", note.followerId));
-            note.followerEmail = userDoc.exists() ? userDoc.data().email : "Unknown";
-          }
-          notes.push(note);
-        }
-        this.notifications = notes;
+      const notes = [];
+      const snapshot = await new Promise(resolve => {
+        this.unsubscribe = onSnapshot(q, resolve);
       });
+      for (const docSnap of snapshot.docs) {
+        const note = { id: docSnap.id, ...docSnap.data() };
+        if (note.followerId && !note.followerEmail) {
+          const userDoc = await getDoc(doc(firestore, "users", note.followerId));
+          note.followerEmail = userDoc.exists() ? userDoc.data().email : "Unknown";
+        }
+        notes.push(note);
+      }
+      this.notifications = notes;
     },
     async checkAnniversaries(userId) {
       if (!userId) {
@@ -124,6 +125,7 @@ export default {
       const posts = userDoc.data().posts || [];
       const today = new Date();
       const anniversaryNotes = [];
+      const notificationsRef = collection(firestore, "notifications");
       for (const postId of posts) {
         const postDoc = await getDoc(doc(firestore, "posts", postId));
         if (postDoc.exists()) {
@@ -143,8 +145,21 @@ export default {
             anniversaryDate.getMonth() === today.getMonth() &&
             anniversaryDate.getFullYear() !== today.getFullYear()
           ) {
+            const message = `🎉 It's the anniversary of your post "${post.title || 'Untitled'}"!`;
+            const alreadyExists = this.notifications.some(n =>
+              n.message === message &&
+              new Date(n.timestamp).toDateString() === today.toDateString()
+            );
+            if (!alreadyExists) {
+              await addDoc(notificationsRef, {
+                userId,
+                postId,
+                message,
+                timestamp: today.getTime()
+              });
+            }
             anniversaryNotes.push({
-              message: `🎉 It's the anniversary of your post "${post.title || 'Untitled'}"!`,
+              message,
               timestamp: today.getTime()
             });
           }
