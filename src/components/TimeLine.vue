@@ -36,6 +36,7 @@
             :isImportant="post.isImportant"
             :content="post.content"
             :editedAt="post.editedAt"
+            :timestamp="post.timestamp"
             class="timeline-post"
           />
         </div>
