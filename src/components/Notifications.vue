@@ -3,29 +3,27 @@
     <h2>Notifications</h2>
     <ul v-if="notifications.length > 0" class="notifications-list">
       <li v-for="(note, idx) in notifications" :key="idx">
-        <div class="notif-content">
-          <template v-if="note.followerId && note.followerEmail">
-            <RouterLink :to="`/profile/${note.followerId}`" class="notif-link">
-              {{ note.followerEmail }}
-            </RouterLink>
-            <span> followed you.</span>
-          </template>
-          <template v-else-if="note.authorId && note.authorEmail && note.postId">
-            <RouterLink :to="`/profile/${note.authorId}`" class="notif-link">
-              {{ note.authorEmail }}
-            </RouterLink>
-            <span> made a new </span>
-            <RouterLink :to="`/post/${note.postId}`" class="notif-link">
-              post
-            </RouterLink>
-            <span>.</span>
-          </template>
-          <template v-else>
-            {{ note.message }}
-          </template>
-          <span class="notification-time">{{ formatTime(note.timestamp) }}</span>
+        <div class="notif-row">
+          <div class="notif-content notif-inline">
+            <template v-if="note.followerId && note.followerEmail">
+              <RouterLink :to="`/profile/${note.followerId}`" class="notif-link">
+                {{ note.followerEmail }}
+              </RouterLink>
+              <span> followed you.</span>
+            </template>
+            <template v-else-if="note.authorId && note.authorEmail">
+              <RouterLink :to="`/profile/${note.authorId}`" class="notif-link">
+                {{ note.authorEmail }}
+              </RouterLink>
+              <span>made a new post.</span>
+            </template>
+            <template v-else>
+              {{ note.message }}
+            </template>
+          </div>
+          <button class="close-btn" @click="removeNotification(note, idx)">✖</button>
         </div>
-        <button class="close-btn" @click="removeNotification(note, idx)">✖</button>
+        <div class="notification-time">{{ formatTime(note.timestamp) }}</div>
       </li>
     </ul>
     <div v-else class="no-notifications">
@@ -133,13 +131,13 @@ export default {
 }
 
 .notifications-list li {
-  padding: 6px 0;
+  padding: 3px 0;
   border-bottom: 1px solid var(--border-primary);
   font-size: 15px;
   color: var(--text-primary);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   position: relative;
 }
 
@@ -147,17 +145,31 @@ export default {
   border-bottom: none;
 }
 
+.notif-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .notif-content {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
+  flex-wrap: wrap;
+}
+
+.notif-inline {
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .notification-time {
+  margin-left: 0;
+  margin-top: 0px;
   font-size: 12px;
   color: var(--text-secondary);
-  margin-left: 12px;
+  display: block;
 }
 
 .close-btn {
@@ -167,8 +179,10 @@ export default {
   font-size: 16px;
   cursor: pointer;
   margin-left: 8px;
+  margin-top: 0px;
   transition: color 0.2s;
   padding: 0 4px;
+  align-self: center;
 }
 
 .close-btn:hover {
