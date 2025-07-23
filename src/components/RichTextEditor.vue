@@ -114,14 +114,103 @@ export default {
 </script>
 
 <style scoped>
+.editor-toolbar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.editor-toolbar button {
+  padding: 3px 5px;
+  border: 1px solid var(--border-primary);
+  background: white;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 11px;
+  color: var(--text-primary);
+  min-width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-toolbar button:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--text-header);
+}
+
+.editor-toolbar button:active {
+  background-color: var(--primary);
+  color: white;
+}
+
 .editor-toolbar button.active {
   background-color: var(--rte-bg-active-color);
   color: var(--rte-active-color);
   border-color: var(--primary);
 }
+
 .separator {
   color: var(--border-primary);
   margin: 0 3px;
   font-size: 12px;
+}
+
+.rich-editor {
+  min-height: 80px;
+  max-height: 200px;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  background-color: white;
+  overflow-y: auto;
+  margin-bottom: 0px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.rich-editor:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.rich-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-style: italic;
+}
+
+.rich-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+.rich-editor a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.rich-editor ul, .rich-editor ol {
+  margin: 8px 0;
+  padding-left: 20px;
 }
 </style>

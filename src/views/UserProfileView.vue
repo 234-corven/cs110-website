@@ -19,11 +19,15 @@
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
-        <PostButton v-if="!userID || (userStore.user && userID === userStore.user.id)" />
       </template>
     </div>
 
     <div class="center_section">
+      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
+        <div class="profile-post-button">
+          <PostButton />
+        </div>
+      </template>
       <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
 
     </div>
@@ -113,7 +117,64 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.center_section {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.profile-post-button {
+  margin-bottom: 0;
+}
+
+.profile-post-button .createPostBox {
+  width: 765px !important;
+}
+
+.profile-post-button .rich-editor {
+  width: 650px !important;
+}
+
+.profile-post-button .post_button {
+  width: 80px !important;
+}
+
+.center_section .postBox{
+  margin-top: 5px !important;
+}
+
+.page_flex_box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  position: absolute;
+  top: 18px;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.left_section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 50px;
+}
+
+.right_section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 50px;
+}
+
 .loading {
   position: fixed;
   top: 50%;

@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     updateContent() {
-      this.content = this.$refs.editor.innerHTML;
+   
     },
 
     updateActiveCommands() {
@@ -77,12 +77,11 @@ export default {
     },
 
     handlePost() {
-      const plainText = this.$refs.editor.innerText.trim();
+      const plainText = this.content.replace(/<[^>]+>/g, '').trim();
       const titleText = this.title.trim();
       
       if (plainText && titleText) {
         this.createPost(this.content, this.title, this.userDate, this.isImportant);
-        this.$refs.editor.innerHTML = '';
         this.content = '';
         this.title = '';
         this.userDate = '';
@@ -196,7 +195,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped>
 .createPostBox {
   display: flex;
   flex-direction: column;
@@ -256,77 +255,10 @@ export default {
 
 /** Post Input */
 .rich-editor {
-  min-height: 80px;
-  max-height: 200px;
-  padding: 10px;
-  border: 2px solid var(--border-primary);
-  border-radius: 4px;
-  background-color: white;
-  overflow-y: auto;
-  margin-bottom: 0px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.4;
-  word-wrap: break-word;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.rich-editor:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-.rich-editor:empty:before {
-  content: attr(data-placeholder);
-  color: #999;
-  font-style: italic;
-}
-
-.editor-toolbar {
-  display: flex;
-  gap: 1px;
-  margin-bottom: 0px;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-secondary);
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid var(--border-primary);
-}
-
-.editor-toolbar button {
-  padding: 3px 5px;
-  border: 1px solid var(--border-primary);
-  background: white;
-  border-radius: 2px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 11px;
-  color: var(--text-primary);
-  min-width: 20px;
-  height: 20px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.editor-toolbar button:hover {
-  background-color: var(--primary-light);
-  border-color: var(--primary);
-  color: var(--text-header);
-}
-
-.editor-toolbar button:active {
-  background-color: var(--primary);
-  color: white;
-}
-
-.editor-toolbar button.active {
-  background-color: var(--primary-hover);
-  color: var(--primary-color);
-  border-color: var(--primary);
+  width: 90% !important;
+  max-width: 600px !important;
+  min-height: 80px !important;
+  background-color: #fffbe6 !important;
 }
 
 .separator {

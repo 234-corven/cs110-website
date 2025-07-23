@@ -188,7 +188,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .post {
   background-color: white !important;
   border: 1px solid var(--post-border);
@@ -395,6 +395,7 @@ export default {
   font-weight: bold;
   color: var(--text-primary);
   cursor: pointer;
+  user-select: none;
 }
 
 .edit-text {
@@ -406,18 +407,6 @@ export default {
   resize: vertical;
 }
 
-.editor-toolbar {
-  display: flex;
-  gap: 2px;
-  margin-bottom: 5px;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-secondary);
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid var(--border-primary);
-}
-
 .separator {
   color: var(--border-primary);
   margin: 0 3px;
@@ -425,36 +414,6 @@ export default {
 }
 
 .rich-editor {
-  min-height: 80px;
-  max-height: 200px;
-  padding: 10px;
-  border: 2px solid var(--border-primary);
-  border-radius: 4px;
-  background-color: white;
-  overflow-y: auto;
-  margin-bottom: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.4;
-  word-wrap: break-word;
-  width: 100%;
-  box-sizing: border-box;
-}
 
-.rich-editor:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-.rich-editor:empty:before {
-  content: attr(data-placeholder);
-  color: #999;
-  font-style: italic;
-}
-
-.editor-toolbar button.active {
-  background-color: var(--primary-hover);
-  color: var(--primary-color);
-  border-color: var(--primary);
 }
 </style>
