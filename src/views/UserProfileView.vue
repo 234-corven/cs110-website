@@ -97,10 +97,7 @@ export default {
       <template v-else>
         <UserInfo :user="userPage" />
         <TimelineButton :userId="userPage?.id" />
-        <Notifications
-          v-if="userStore.user && userPage && userStore.user.id === userPage.id"
-          :userId="userPage.id"
-        />
+        <Notifications v-if="userStore.user && userPage && userStore.user.id === userPage.id" :userId="userPage.id" />
       </template>
     </div>
     <div class="center_section">
@@ -140,7 +137,7 @@ export default {
   z-index: 1;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .left_section {
@@ -162,7 +159,7 @@ export default {
 .center_section {
   flex-direction: column;
   display: flex;
-  align-items: flex-start; 
+  align-items: flex-start;
   margin-top: 50px;
 }
 
@@ -185,10 +182,9 @@ export default {
   width: 97% !important;
 }
 
-.center_section .postBox{
+.center_section .postBox {
   margin-top: 0px !important;
 }
-
 
 .loading {
   position: fixed;
