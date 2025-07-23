@@ -23,6 +23,9 @@
         :isImportant="current_post.isImportant"
         :content="current_post.content"
         :editedAt="current_post.editedAt"
+        :timestamp="current_post.timestamp"
+        :yearsSinceTimestamp="getYearsSince(current_post.timestamp)"
+        :yearsSinceEdited="getYearsSince(current_post.editedAt)"
         @post-edited="loadPosts"
       />
       <div v-if="displayPosts.length === 0">

@@ -13,8 +13,10 @@
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
-      <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
-      <span v-if="editedAt" class="edit-info">• Edited at {{ formatEditTimestamp(editedAt) }}</span>
+      <div class="post_dates">
+        <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
+        <span v-if="editedAt" class="edit-info">• Edited at {{ formatEditTimestamp(editedAt) }}</span>
+      </div>
     </div>
     <div v-if="timestamp || userDate" class="tracker-info-row">
       <span v-if="timestamp && yearsSinceTimestamp !== ''" class="tracker-info">
@@ -271,7 +273,7 @@ export default {
 .post_info {
   font-size: 12px;
   color: var(--text-header);
-  margin-bottom: 6px;
+  margin-bottom: 0px; 
   font-weight: bold;
 }
 
@@ -293,6 +295,11 @@ export default {
   font-style: italic;
   font-weight: normal;
   margin-left: 4px;
+  margin-bottom: 0;
+}
+
+.post_dates {
+  margin-bottom: 0px;
 }
 
 .username-link {
@@ -499,10 +506,11 @@ export default {
 
 .tracker-info-row {
   display: flex;
-  gap: 16px;
-  margin-top: 2px;
+  gap: 4px;
+  margin-top: 0px;
   margin-bottom: 6px;
   font-style: italic;
+  font-weight: normal;
 }
 
 .tracker-info {

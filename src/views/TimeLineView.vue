@@ -6,10 +6,7 @@
     <div class="timeline-center">
       <template v-if="timelineUser">
         <TimeLine :user="timelineUser">
-          <Feed
-            :userId="timelineUser.id"
-            :userEmail="timelineUser.email"
-          />
+          <Feed :userId="timelineUser.id" :userEmail="timelineUser.email" />
         </TimeLine>
       </template>
     </div>
@@ -81,18 +78,14 @@ export default {
   padding: 30px 0;
   background: var(--bg-white);
 }
-.timeline-left {
-  flex: 0 0 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 50px;
-}
+
 .timeline-center {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-start;
   margin-top: 50px;
+  width: 100%;
 }
 </style>
