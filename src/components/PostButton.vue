@@ -201,7 +201,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 400px;
-  padding: 20px;
+  padding: 12px; 
   background-color: var(--bg-primary);
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--shadow-light);
@@ -209,9 +209,52 @@ export default {
 
 .createPostBox h1 {
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 4px; 
 }
 
+.PostInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.title-input,
+.date-input,
+.rich-editor,
+.important-checkbox,
+.post_button {
+  margin-bottom: 0px;
+  margin-top: 0px; 
+}
+
+.title-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  margin-bottom: 0px;
+  font-size: 16px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.title-input:focus,
+.date-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.date-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/** Post Input */
 .rich-editor {
   min-height: 80px;
   max-height: 200px;
@@ -220,7 +263,7 @@ export default {
   border-radius: 4px;
   background-color: white;
   overflow-y: auto;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   font-family: inherit;
   font-size: 14px;
   line-height: 1.4;
@@ -242,8 +285,8 @@ export default {
 
 .editor-toolbar {
   display: flex;
-  gap: 2px;
-  margin-bottom: 5px;
+  gap: 1px;
+  margin-bottom: 0px;
   align-items: center;
   justify-content: center;
   background-color: var(--bg-secondary);
@@ -311,6 +354,7 @@ export default {
 
 .post_button {
   align-self: flex-end;
+  width: 20%;
   padding: 8px 16px;
   background-color: var(--btn-post);
   color: var(--text-white);
@@ -318,47 +362,22 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 .post_button:hover {
   background-color: var(--btn-post-hover);
 }
 
-.title-input {
-  width: 100%;
-  padding: 10px;
-  border: 2px solid var(--border-primary);
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  box-sizing: border-box;
-}
-
-.title-input:focus,
-.date-input:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-.date-input {
-  width: 100%;
-  padding: 8px;
-  border: 2px solid var(--border-primary);
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
 .important-checkbox {
   display: flex;
+  width: 94.5%;
   align-items: center;
-  margin-bottom: 10px;
-  padding: 8px;
+  margin-bottom: 4px;
+  padding: 10px;
   background-color: var(--bg-secondary);
   border-radius: 4px;
-  border: 1px solid var(--border-primary);
+  border: 2px solid var(--border-primary);
 }
 
 .checkbox-input {
