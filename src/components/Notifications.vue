@@ -34,7 +34,7 @@
 
 <script>
 import { firestore } from '../firebaseResources.js'
-import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc, getDoc, addDoc } from 'firebase/firestore'
+import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc, getDoc, addDoc, getDocs } from 'firebase/firestore'
 import { RouterLink } from 'vue-router'
 
 export default {
@@ -129,8 +129,10 @@ export default {
       }
       const posts = userDoc.data().posts || [];
       const today = new Date();
+      const todayDateString = today.toISOString().slice(0, 10);
       const anniversaryNotes = [];
       const notificationsRef = collection(firestore, "notifications");
+
       for (const postId of posts) {
         const postDoc = await getDoc(doc(firestore, "posts", postId));
         if (postDoc.exists()) {
@@ -151,11 +153,28 @@ export default {
             anniversaryDate.getFullYear() !== today.getFullYear()
           ) {
             const message = `🎉 It's the anniversary of your post "${post.title || 'Untitled'}"!`;
-            const alreadyExists = this.notifications.some(n =>
+
+            // Check local notifications for duplicates
+            const localDuplicate = this.notifications.some(n =>
+              n.postId === postId &&
               n.message === message &&
-              new Date(n.timestamp).toDateString() === today.toDateString()
+              new Date(n.timestamp).toISOString().slice(0, 10) === todayDateString
             );
-            if (!alreadyExists) {
+
+            // Query Firestore for existing notification for this post and today
+            const q = query(
+              notificationsRef,
+              where("userId", "==", userId),
+              where("postId", "==", postId),
+              where("message", "==", message)
+            );
+            const existingSnap = await getDocs(q);
+            const remoteDuplicate = existingSnap.docs.some(docSnap => {
+              const n = docSnap.data();
+              return new Date(n.timestamp).toISOString().slice(0, 10) === todayDateString;
+            });
+
+            if (!localDuplicate && !remoteDuplicate) {
               await addDoc(notificationsRef, {
                 userId,
                 postId,
@@ -163,10 +182,13 @@ export default {
                 timestamp: today.getTime()
               });
             }
-            anniversaryNotes.push({
-              message,
-              timestamp: today.getTime()
-            });
+            // Only add to anniversaryNotes if not already present in localNotifications
+            if (!localDuplicate) {
+              anniversaryNotes.push({
+                message,
+                timestamp: today.getTime()
+              });
+            }
           }
         }
       }
