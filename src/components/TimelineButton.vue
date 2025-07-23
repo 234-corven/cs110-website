@@ -1,5 +1,5 @@
 <template>
-  <RouterLink to="/timeline" class="timeline-btn">
+  <RouterLink :to="timelineLink" class="timeline-button">
     Go to Timeline
   </RouterLink>
 </template>
@@ -8,12 +8,23 @@
 import { RouterLink } from 'vue-router'
 export default {
   name: 'TimelineButton',
-  components: { RouterLink }
+  components: { RouterLink },
+  props: {
+    userId: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    timelineLink() {
+      return `/profile/${this.userId}/timeline`;
+    }
+  }
 }
 </script>
 
 <style scoped>
-.timeline-btn {
+.timeline-button {
   margin-top: 14px;
   display: inline-block;
   padding: 10px 22px;
@@ -26,7 +37,7 @@ export default {
   text-decoration: none;
   transition: background 0.2s;
 }
-.timeline-btn:hover {
+.timeline-button:hover {
   background-color: var(--btn-post-hover);
   color: var(--text-white);
 }

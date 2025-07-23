@@ -96,7 +96,7 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
-        <TimelineButton />
+        <TimelineButton :userId="userPage?.id" />
         <Notifications
           v-if="userStore.user && userPage && userStore.user.id === userPage.id"
           :userId="userPage.id"
@@ -114,6 +114,7 @@ export default {
     <div class="right_section">
       <template v-if="!userStore.isLoggedIn && userID">
         <UserInfo :user="userPage" />
+        <TimelineButton :userId="userPage?.id" />
       </template>
       <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
       <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
