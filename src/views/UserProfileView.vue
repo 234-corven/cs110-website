@@ -102,10 +102,12 @@ export default {
         </div>
       </template>
       <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
-
     </div>
 
     <div class="right_section">
+      <template v-if="!userStore.isLoggedIn && userID">
+        <UserInfo :user="userPage" />
+      </template>
       <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
       <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
         <Following />
@@ -114,7 +116,6 @@ export default {
 
     <RouterView />
   </div>
-
 </template>
 
 

@@ -14,6 +14,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import Login from './components/Login.vue';
 import WhoToFollow from './components/whoToFollow.vue';
 import Following from './components/Following.vue';
+import ProfileSettings from './components/ProfileSettings.vue';
 
 
 export default {
@@ -24,7 +25,8 @@ export default {
     LoginView,
     Login,
     WhoToFollow,
-    Following
+    Following,
+    ProfileSettings
   }
 }
 </script>

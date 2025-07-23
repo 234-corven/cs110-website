@@ -4,6 +4,7 @@ import LoginView from "../views/LoginView.vue";
 import App from "../App.vue";
 import SignupView from "../views/SignupView.vue";
 import UserProfileView from "../views/UserProfileView.vue";
+import ProfileSettings from "../components/ProfileSettings.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
       path: "/profile/self",
       name: "Profile",
       component: UserProfileView,
+    },
+    {
+      path: "/profile/self/settings",
+      name: "ProfileSettings",
+      component: ProfileSettings,
     },
     {
       path: "/profile/:id",
