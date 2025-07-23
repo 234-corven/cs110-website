@@ -5,7 +5,7 @@
         <RouterLink class="user-email" v-if="user && user.id" :to="`/profile/${user.id}`">{{ user.email }}</RouterLink>
         <span v-if="user && user.email">'s Timeline</span>
       </span>
-      <div v-if="filteredSortedPosts.length > 0" class="timeline-controls">
+      <div class="timeline-controls">
         <div class="timeline-filter-description">
           <span>Filter date order:</span>
         </div>
@@ -27,7 +27,10 @@
       </div>
     </div>
     <div class="timeline-posts-row">
-      <template v-if="!isPrivate || canViewPrivatePosts">
+      <div v-if="filteredSortedPosts.length === 0" class="timeline-empty">
+          No posts to show.
+      </div>
+      <template v-else-if="!isPrivate || canViewPrivatePosts">
         <div class="posts-scroll">
           <Post
             v-for="post in filteredSortedPosts"
@@ -46,11 +49,8 @@
             class="timeline-post"
           />
         </div>
-        <div v-if="filteredSortedPosts.length === 0" class="timeline-empty">
-          No posts yet.
-        </div>
       </template>
-      <template v-else>
+     <template v-else>
         <div class="private-feed-message">
           This user's posts are private and only visible to followers.
         </div>
@@ -279,7 +279,7 @@ export default {
 .timeline-empty {
   font-size: 18px;
   color: var(--text-secondary);
-  text-align: center;
+  text-align: left;
   margin-top: 0px;
 }
 

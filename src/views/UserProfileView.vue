@@ -181,8 +181,8 @@ export default {
   min-height: 80px !important;
 }
 
-.profile-post-button .checkbox-input {
-  width: 100% !important;
+.center_section .profile-post-button .important-checkbox {
+  width: 97% !important;
 }
 
 .center_section .postBox{
