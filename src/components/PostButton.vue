@@ -10,7 +10,7 @@ export default {
       content: '',
       title: '',
       userDate: '', // User-specified date
-      isImportant: false, // New important flag
+      isImportant: false, 
       activeCommands: [],
     }
   },
