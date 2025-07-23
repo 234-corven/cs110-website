@@ -390,5 +390,6 @@ export default {
   font-weight: bold;
   color: var(--text-primary);
   cursor: pointer;
+  user-select: none;
 }
 </style>
