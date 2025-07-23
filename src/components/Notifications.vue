@@ -7,8 +7,9 @@
           <div class="notif-content notif-inline">
             <template v-if="note.followerId && note.followerEmail">
               <RouterLink :to="`/profile/${note.followerId}`" class="notif-link">
-                {{ note.followerEmail }} followed you.
+                {{ note.followerEmail }}
               </RouterLink>
+              <span>followed you.</span>
             </template>
             <template v-else-if="note.authorId && note.authorEmail">
               <RouterLink :to="`/profile/${note.authorId}`" class="notif-link">
@@ -210,6 +211,8 @@ export default {
   flex-direction: column;
   align-items: stretch;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .notifications-list li:last-child {
@@ -220,6 +223,7 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .notif-content {
@@ -228,11 +232,9 @@ export default {
   gap: 4px;
   flex: 1;
   flex-wrap: wrap;
-}
-
-.notif-inline {
-  flex-wrap: nowrap;
-  white-space: nowrap;
+  word-break: break-word;
+  white-space: normal;
+  min-width: 0; 
 }
 
 .notification-time {
