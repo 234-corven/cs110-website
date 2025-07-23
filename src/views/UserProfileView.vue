@@ -6,6 +6,7 @@ import Following from '../components/Following.vue';
 import Feed from '../components/Feed.vue';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
+import Notifications from '../components/Notifications.vue';
 import { useUserStore } from '../stores/user';
 
 export default {
@@ -17,7 +18,8 @@ export default {
     Following,
     Feed,
     UserInfo,
-    PostButton
+    PostButton,
+    Notifications
   },
   data() {
     return {
@@ -92,6 +94,7 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
+        <Notifications :userId="userPage?.id" />
       </template>
     </div>
 
