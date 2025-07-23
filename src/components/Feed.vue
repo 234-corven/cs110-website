@@ -131,14 +131,12 @@ export default {
       if (this.userId) {
         return this.getUserPosts();
       }
-
-      if (this.isLoggedIn) {
-        // If logged in and on home feed, show posts from followed users only
-        return this.getFeedPosts();
+      // If not logged in, always show recent public posts
+      if (!this.isLoggedIn) {
+        return this.getRecentPosts();
       }
-
-      // If not logged in, show recent posts from everyone
-      return this.getRecentPosts();
+      // If logged in and not viewing a specific user, show feed
+      return this.getFeedPosts();
     },
 
     async getRecentPosts() {
@@ -146,33 +144,40 @@ export default {
       const recentPosts = query(
         postsCollection,
         orderBy("timestamp", "desc"),
-        limit(30) 
+        limit(30)
       );
 
       const grabPost = await getDocs(recentPosts);
       const posts = [];
+      const authorIds = [];
       for (const document of grabPost.docs) {
         const postData = document.data();
-        if (!postData.author) continue;
-        const authorRef = doc(firestore, "users", postData.author);
-        const authorDoc = await getDoc(authorRef);
-        let authorData = {};
-        if (authorDoc.exists()) {
-          authorData = authorDoc.data();
-        }
-        const isPrivate = !!authorData.isPrivate;
-        const isOwner = this.userStore.user && authorDoc.id === this.userStore.user.id;
-        const isFollower = this.userStore.user && authorData.followers && authorData.followers.includes(this.userStore.user.id);
-
-        // Show public accounts, or private accounts if owner or follower
-        if (!isPrivate || isOwner || isFollower) {
+        if (postData.author) {
+          authorIds.push(postData.author);
           posts.push({
             id: document.id,
             ...postData,
           });
         }
       }
-      return posts.slice(0, 10);
+
+      const authorPromises = authorIds.map(authorId => {
+        const authorRef = doc(firestore, "users", authorId);
+        return getDoc(authorRef).then(docSnap => docSnap.exists() ? docSnap.data() : null);
+      });
+      const authors = await Promise.all(authorPromises);
+
+      // Filter posts by privacy
+      const filteredPosts = posts.filter((post, idx) => {
+        const authorData = authors[idx];
+        if (!authorData) return false;
+        const isPrivate = !!authorData.isPrivate;
+        const isOwner = this.userStore.user && authorIds[idx] === this.userStore.user.id;
+        const isFollower = this.userStore.user && authorData.followers && authorData.followers.includes(this.userStore.user.id);
+        return !isPrivate || isOwner || isFollower;
+      });
+
+      return filteredPosts.slice(0, 10);
     },
 
     async getFeedPosts() {

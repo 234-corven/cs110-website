@@ -94,10 +94,9 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
-        <Notifications :userId="userPage?.id" />
+        <Notifications v-if="userPage && userPage.id" :userId="userPage.id" />
       </template>
     </div>
-
     <div class="center_section">
       <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
         <div class="profile-post-button">
@@ -106,7 +105,6 @@ export default {
       </template>
       <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
     </div>
-
     <div class="right_section">
       <template v-if="!userStore.isLoggedIn && userID">
         <UserInfo :user="userPage" />
@@ -116,7 +114,6 @@ export default {
         <Following />
       </template>
     </div>
-
     <RouterView />
   </div>
 </template>
