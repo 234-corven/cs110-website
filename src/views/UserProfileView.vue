@@ -123,13 +123,14 @@ export default {
 .center_section {
   flex-direction: column;
   display: flex;
-  align-items: center;
+  align-items: flex-start; 
   margin-top: 50px;
 }
 
 .profile-post-button {
   margin-bottom: 0;
   width: 760px !important;
+  margin-left: 3px !important;
 }
 
 .profile-post-button .createPostBox {
@@ -139,6 +140,10 @@ export default {
 .profile-post-button .post-input {
   width: 100% !important;
   min-height: 80px !important;
+}
+
+.profile-post-button .checkbox-input {
+  width: 100% !important;
 }
 
 .center_section .postBox{
