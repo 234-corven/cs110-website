@@ -136,7 +136,7 @@ export default {
       const recentPosts = query(
         postsCollection,
         orderBy("timestamp", "desc"),
-        limit(30) // get more posts to filter for public/private logic
+        limit(30) 
       );
 
       const grabPost = await getDocs(recentPosts);
