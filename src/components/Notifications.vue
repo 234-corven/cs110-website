@@ -61,6 +61,7 @@ export default {
     userId: {
       handler(newId) {
         this.setupListener(newId);
+        this.checkAnniversaries(newId); 
       },
       immediate: true
     }
@@ -102,19 +103,19 @@ export default {
         for (const docSnap of snapshot.docs) {
           const note = { id: docSnap.id, ...docSnap.data() };
           if (note.followerId && !note.followerEmail) {
-            // Fetch follower email if not present
             const userDoc = await getDoc(doc(firestore, "users", note.followerId));
             note.followerEmail = userDoc.exists() ? userDoc.data().email : "Unknown";
           }
           notes.push(note);
         }
         this.notifications = notes;
-        // After loading notifications, check for post anniversaries
-        this.checkAnniversaries(userId);
       });
     },
     async checkAnniversaries(userId) {
-      // Fetch user's posts
+      if (!userId) {
+        this.anniversaryNotifications = [];
+        return;
+      }
       const userDoc = await getDoc(doc(firestore, "users", userId));
       if (!userDoc.exists()) {
         this.anniversaryNotifications = [];
@@ -127,14 +128,23 @@ export default {
         const postDoc = await getDoc(doc(firestore, "posts", postId));
         if (postDoc.exists()) {
           const post = postDoc.data();
-          const postDate = new Date(post.timestamp);
-          if (
-            postDate.getDate() === today.getDate() &&
-            postDate.getMonth() === today.getMonth() &&
-            postDate.getFullYear() !== today.getFullYear()
+          let anniversaryDate = null;
+          if (post.userDate) {
+            anniversaryDate = new Date(post.userDate);
+          } else if (post.timestamp) {
+            if (post.timestamp.seconds) {
+              anniversaryDate = new Date(post.timestamp.seconds * 1000);
+            } else {
+              anniversaryDate = new Date(post.timestamp);
+            }
+          }
+          if (anniversaryDate &&
+            anniversaryDate.getDate() === today.getDate() &&
+            anniversaryDate.getMonth() === today.getMonth() &&
+            anniversaryDate.getFullYear() !== today.getFullYear()
           ) {
             anniversaryNotes.push({
-              message: `It's the anniversary of your post "${post.title || 'Untitled'}"!`,
+              message: `🎉 It's the anniversary of your post "${post.title || 'Untitled'}"!`,
               timestamp: today.getTime()
             });
           }
