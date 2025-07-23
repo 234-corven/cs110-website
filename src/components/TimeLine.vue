@@ -5,12 +5,22 @@
         <RouterLink class="user-email" v-if="user && user.id" :to="`/profile/${user.id}`">{{ user.email }}</RouterLink>
         <span v-if="user && user.email">'s Timeline</span>
       </span>
+      <div class="timeline-controls">
+        <select v-model="sortOrder" class="timeline-sort-dropdown">
+          <option value="desc">Newest First</option>
+          <option value="asc">Oldest First</option>
+        </select>
+        <label class="important-filter-label">
+          <input type="checkbox" v-model="importantOnly" class="important-filter-checkbox" />
+          Only Important
+        </label>
+      </div>
     </div>
     <div class="timeline-posts-row">
       <template v-if="!isPrivate || canViewPrivatePosts">
         <div class="posts-scroll">
           <Post
-            v-for="post in posts"
+            v-for="post in filteredSortedPosts"
             :key="post.id"
             :id="post.id"
             :username="user.email"
@@ -25,7 +35,7 @@
             class="timeline-post"
           />
         </div>
-        <div v-if="posts.length === 0" class="timeline-empty">
+        <div v-if="filteredSortedPosts.length === 0" class="timeline-empty">
           No posts yet.
         </div>
       </template>
@@ -58,12 +68,27 @@ export default {
     return {
       posts: [],
       isPrivate: false,
-      canViewPrivatePosts: false
+      canViewPrivatePosts: false,
+      sortOrder: 'desc',
+      importantOnly: false
     }
   },
   computed: {
     userStore() {
       return useUserStore();
+    },
+    filteredSortedPosts() {
+      let filtered = this.posts;
+      if (this.importantOnly) {
+        filtered = filtered.filter(post => post.isImportant);
+      }
+      return [...filtered].sort((a, b) => {
+        const aTime = a.timestamp?.seconds || a.timestamp || 0;
+        const bTime = b.timestamp?.seconds || b.timestamp || 0;
+        return this.sortOrder === 'desc'
+          ? bTime - aTime
+          : aTime - bTime;
+      });
     }
   },
   watch: {
@@ -148,6 +173,39 @@ export default {
   margin-bottom: 18px;
   color: var(--text-header);
   text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.timeline-sort-dropdown {
+  font-size: 16px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-white);
+  color: var(--text-header);
+}
+
+.important-filter-label {
+  font-size: 16px;
+  font-weight: normal;
+  color: var(--text-header);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.important-filter-checkbox {
+  margin-right: 4px;
+  transform: scale(1.2);
 }
 
 .timeline-posts-row {
