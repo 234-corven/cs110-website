@@ -14,6 +14,9 @@
 </template>
 
 <script>
+import { firestore } from '../firebaseResources.js'
+import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore'
+
 export default {
   name: "Notifications",
   props: {
@@ -24,22 +27,42 @@ export default {
   },
   data() {
     return {
-      notifications: []
+      notifications: [],
+      unsubscribe: null
     }
   },
-  mounted() {
-    this.loadNotifications();
+  watch: {
+    userId: {
+      handler(newId) {
+        this.setupListener(newId);
+      },
+      immediate: true
+    }
+  },
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   },
   methods: {
-    async loadNotifications() {
-      if (!this.userId) {
+    setupListener(userId) {
+      if (this.unsubscribe) {
+        this.unsubscribe();
+        this.unsubscribe = null;
+      }
+      if (!userId) {
         this.notifications = [];
         return;
       }
-      this.notifications = [
-        { message: "Welcome to your profile!", timestamp: Date.now() },
-        { message: "You have a new follower.", timestamp: Date.now() - 3600000 }
-      ];
+      const notificationsRef = collection(firestore, "notifications");
+      const q = query(
+        notificationsRef,
+        where("userId", "==", userId),
+        orderBy("timestamp", "desc")
+      );
+      this.unsubscribe = onSnapshot(q, (snapshot) => {
+        this.notifications = snapshot.docs.map(doc => doc.data());
+      });
     },
     formatTime(ts) {
       return new Date(ts).toLocaleString();
