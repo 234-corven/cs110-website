@@ -1,8 +1,8 @@
 <template>
   <div class="notifications">
     <h2>Notifications</h2>
-    <ul v-if="notifications.length > 0" class="notifications-list">
-      <li v-for="(note, idx) in notifications" :key="idx">
+    <ul v-if="allNotifications.length > 0" class="notifications-list">
+      <li v-for="(note, idx) in allNotifications" :key="idx">
         <div class="notif-row">
           <div class="notif-content notif-inline">
             <template v-if="note.followerId && note.followerEmail">
@@ -48,7 +48,13 @@ export default {
   data() {
     return {
       notifications: [],
-      unsubscribe: null
+      unsubscribe: null,
+      anniversaryNotifications: []
+    }
+  },
+  computed: {
+    allNotifications() {
+      return [...this.notifications, ...this.anniversaryNotifications];
     }
   },
   watch: {
@@ -103,7 +109,38 @@ export default {
           notes.push(note);
         }
         this.notifications = notes;
+        // After loading notifications, check for post anniversaries
+        this.checkAnniversaries(userId);
       });
+    },
+    async checkAnniversaries(userId) {
+      // Fetch user's posts
+      const userDoc = await getDoc(doc(firestore, "users", userId));
+      if (!userDoc.exists()) {
+        this.anniversaryNotifications = [];
+        return;
+      }
+      const posts = userDoc.data().posts || [];
+      const today = new Date();
+      const anniversaryNotes = [];
+      for (const postId of posts) {
+        const postDoc = await getDoc(doc(firestore, "posts", postId));
+        if (postDoc.exists()) {
+          const post = postDoc.data();
+          const postDate = new Date(post.timestamp);
+          if (
+            postDate.getDate() === today.getDate() &&
+            postDate.getMonth() === today.getMonth() &&
+            postDate.getFullYear() !== today.getFullYear()
+          ) {
+            anniversaryNotes.push({
+              message: `It's the anniversary of your post "${post.title || 'Untitled'}"!`,
+              timestamp: today.getTime()
+            });
+          }
+        }
+      }
+      this.anniversaryNotifications = anniversaryNotes;
     },
     formatTime(ts) {
       return new Date(ts).toLocaleString();
