@@ -199,6 +199,11 @@ export default {
   justify-content: space-between;
 }
 
+.timeline-header a {
+  color: var(--link-color);
+}
+
+
 .timeline-controls {
   display: flex;
   align-items: center;

@@ -80,6 +80,7 @@ export default {
   flex-direction: column;
   gap: 5px;
   margin-top: 50px;
+  margin-right: 15px;
 }
 
 .center_section {
@@ -95,6 +96,7 @@ export default {
   flex-direction: column;
   gap: 5px;
   margin-top: 50px;
+  margin-left: 15px;
 }
 
 .frontLoginBox {

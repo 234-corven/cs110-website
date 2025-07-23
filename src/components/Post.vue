@@ -3,12 +3,15 @@
     <div v-if="isAnniversary" class="anniversary-banner">
       🎉 It's the anniversary of this post!
     </div>
+    <div v-if="isImportant" class="important-indicator-row">
+      <span class="important-star">⭐</span>
+      <span class="important-badge">Important Event</span>
+      <span class="important-star">⭐</span>
+    </div>
     <div class="post-header">
       <h3 class="post_title" v-if="title">
-        <span v-if="isImportant" class="important-star">⭐</span>
         {{ title }}
       </h3>
-      <div v-if="isImportant" class="important-badge">Important Event</div>
     </div>
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
@@ -392,7 +395,8 @@ export default {
 
 .important-star {
   color: #ffd700;
-  margin-right: 6px;
+  font-size: 22px;
+  margin-right: 0;
 }
 
 .important-badge {
@@ -400,7 +404,7 @@ export default {
   color: white;
   padding: 3px 8px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -517,5 +521,14 @@ export default {
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: normal;
+}
+
+.important-indicator-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  justify-content: flex-start;
 }
 </style>

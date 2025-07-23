@@ -168,8 +168,7 @@ export default {
 
 .center_section .profile-post-button {
   margin-bottom: 0;
-  width: 760px !important;
-  margin-left: 3px !important;
+  width: 766px !important;
   margin-bottom: 3px !important;
 }
 
