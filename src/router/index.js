@@ -5,6 +5,7 @@ import App from "../App.vue";
 import SignupView from "../views/SignupView.vue";
 import UserProfileView from "../views/UserProfileView.vue";
 import ProfileSettings from "../components/ProfileSettings.vue";
+import TimeLineView from "../views/TimeLineView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,11 @@ const router = createRouter({
       path: "/profile/:id",
       name: "user",
       component: UserProfileView,
+    },
+    {
+      path: "/profile/:id/timeline",
+      name: "timeline",
+      component: TimeLineView,
     },
   ],
 });

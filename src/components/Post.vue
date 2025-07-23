@@ -3,43 +3,42 @@
     <div v-if="isAnniversary" class="anniversary-banner">
       🎉 It's the anniversary of this post!
     </div>
+    <div v-if="isImportant" class="important-indicator-row">
+      <span class="important-star">⭐</span>
+      <span class="important-badge">Important Event</span>
+      <span class="important-star">⭐</span>
+    </div>
     <div class="post-header">
       <h3 class="post_title" v-if="title">
-        <span v-if="isImportant" class="important-star">⭐</span>
         {{ title }}
       </h3>
-      <div v-if="isImportant" class="important-badge">Important Event</div>
     </div>
     <div class="post_info">
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
-      <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
-      <span v-if="editedAt" class="edit-info">• Edited at {{ formatEditTimestamp(editedAt) }}</span>
+      <div class="post_dates">
+        <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
+        <span v-if="editedAt" class="edit-info">• Edited at {{ formatEditTimestamp(editedAt) }}</span>
+      </div>
+    </div>
+    <div v-if="timestamp || userDate" class="tracker-info-row">
+      <span v-if="timestamp && yearsSinceTimestamp !== ''" class="tracker-info">
+        •{{ yearsSinceTimestamp }} years since post creation
+      </span>
+      <span v-if="userDate && yearsSinceUserDate !== ''" class="tracker-info">
+        •{{ yearsSinceUserDate }} years since date of event
+      </span>
     </div>
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
-      <input 
-        v-model="editUserDate" 
-        type="date" 
-        class="edit-date-input"
-        title="Edit the user-specified date"
-      />
+      <input v-model="editUserDate" type="date" class="edit-date-input" title="Edit the user-specified date" />
       <div class="edit-important-checkbox">
-        <input 
-          v-model="editIsImportant" 
-          type="checkbox" 
-          id="edit-important-check"
-          class="checkbox-input"
-        />
+        <input v-model="editIsImportant" type="checkbox" id="edit-important-check" class="checkbox-input" />
         <label for="edit-important-check" class="checkbox-label">
           ⭐ Mark as Important Event
         </label>
       </div>
-      <RichTextEditor
-        v-model="editContent"
-        :placeholder="'Edit your post...'"
-        :editorClass="'rich-editor'"
-      />
+      <RichTextEditor v-model="editContent" :placeholder="'Edit your post...'" :editorClass="'rich-editor'" />
       <div class="edit-button-group">
         <button class="edit-button" @click="saveEdit">Save</button>
         <button class="edit-button" @click="cancelEdit">Cancel</button>
@@ -78,7 +77,8 @@ export default {
     title: { type: String, default: '' },
     userDate: { type: String, default: null },
     isImportant: { type: Boolean, default: false },
-    editedAt: { type: [Object, String, Number], default: null }
+    editedAt: { type: [Object, String, Number], default: null },
+    timestamp: { type: [Object, String, Number], required: false }
   },
   data() {
     return {
@@ -112,6 +112,36 @@ export default {
         date.getMonth() === today.getMonth() &&
         date.getFullYear() !== today.getFullYear()
       );
+    },
+    yearsSinceTimestamp() {
+      if (!this.timestamp) return '';
+      let date;
+      if (typeof this.timestamp === 'object' && this.timestamp.seconds) {
+        date = new Date(this.timestamp.seconds * 1000);
+      } else if (typeof this.timestamp === 'string' || typeof this.timestamp === 'number') {
+        date = new Date(this.timestamp);
+      } else {
+        return '';
+      }
+      if (!(date instanceof Date) || isNaN(date.getTime())) return '';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
+      return diffYears >= 0 ? diffYears.toFixed(2) : '0.00';
+    },
+    yearsSinceUserDate() {
+      if (!this.userDate) return '';
+      let date;
+      if (typeof this.userDate === 'object' && this.userDate.seconds) {
+        date = new Date(this.userDate.seconds * 1000);
+      } else {
+        date = new Date(this.userDate);
+      }
+      if (!(date instanceof Date) || isNaN(date.getTime())) return '';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
+      return diffYears >= 0 ? diffYears.toFixed(2) : '0.00';
     }
   },
   methods: {
@@ -194,9 +224,9 @@ export default {
           isImportant: this.editIsImportant || false,
           editedAt: serverTimestamp()
         });
-        this.$emit('post-edited', { 
-          id: this.id, 
-          title: this.editTitle, 
+        this.$emit('post-edited', {
+          id: this.id,
+          title: this.editTitle,
           content: this.editContent,
           userDate: this.editUserDate,
           isImportant: this.editIsImportant,
@@ -209,6 +239,20 @@ export default {
     },
     cancelEdit() {
       this.isEditing = false
+    },
+    yearsSince(dateInput) {
+      if (!dateInput) return '';
+      let date;
+      if (typeof dateInput === 'object' && dateInput.seconds) {
+        date = new Date(dateInput.seconds * 1000);
+      } else {
+        date = new Date(dateInput);
+      }
+      if (isNaN(date.getTime())) return '';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
+      return diffYears >= 0 ? diffYears.toFixed(2) : '0.00';
     },
   }
 }
@@ -232,7 +276,7 @@ export default {
 .post_info {
   font-size: 12px;
   color: var(--text-header);
-  margin-bottom: 6px;
+  margin-bottom: 0px; 
   font-weight: bold;
 }
 
@@ -254,6 +298,11 @@ export default {
   font-style: italic;
   font-weight: normal;
   margin-left: 4px;
+  margin-bottom: 0;
+}
+
+.post_dates {
+  margin-bottom: 0px;
 }
 
 .username-link {
@@ -346,7 +395,8 @@ export default {
 
 .important-star {
   color: #ffd700;
-  margin-right: 6px;
+  font-size: 22px;
+  margin-right: 0;
 }
 
 .important-badge {
@@ -354,7 +404,7 @@ export default {
   color: white;
   padding: 3px 8px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -451,11 +501,34 @@ export default {
   background: #ffe082;
   color: #6d4c00;
   font-weight: bold;
-  font-size: 12px; 
-  padding: 2px 6px; 
+  font-size: 12px;
+  padding: 2px 6px;
   border-radius: 6px;
   margin-bottom: 6px;
   text-align: center;
 }
 
+.tracker-info-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 0px;
+  margin-bottom: 6px;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.tracker-info {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.important-indicator-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  justify-content: flex-start;
+}
 </style>

@@ -7,6 +7,7 @@ import Feed from '../components/Feed.vue';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
 import Notifications from '../components/Notifications.vue';
+import TimelineButton from '../components/TimelineButton.vue';
 import { useUserStore } from '../stores/user';
 
 export default {
@@ -19,7 +20,8 @@ export default {
     Feed,
     UserInfo,
     PostButton,
-    Notifications
+    Notifications,
+    TimelineButton
   },
   data() {
     return {
@@ -94,10 +96,8 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
-        <Notifications
-          v-if="userStore.user && userPage && userStore.user.id === userPage.id"
-          :userId="userPage.id"
-        />
+        <TimelineButton :userId="userPage?.id" />
+        <Notifications v-if="userStore.user && userPage && userStore.user.id === userPage.id" :userId="userPage.id" />
       </template>
     </div>
     <div class="center_section">
@@ -111,6 +111,7 @@ export default {
     <div class="right_section">
       <template v-if="!userStore.isLoggedIn && userID">
         <UserInfo :user="userPage" />
+        <TimelineButton :userId="userPage?.id" />
       </template>
       <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
       <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
@@ -136,7 +137,7 @@ export default {
   z-index: 1;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .left_section {
@@ -158,14 +159,13 @@ export default {
 .center_section {
   flex-direction: column;
   display: flex;
-  align-items: flex-start; 
+  align-items: flex-start;
   margin-top: 50px;
 }
 
 .center_section .profile-post-button {
   margin-bottom: 0;
-  width: 760px !important;
-  margin-left: 3px !important;
+  width: 766px !important;
   margin-bottom: 3px !important;
 }
 
@@ -178,14 +178,13 @@ export default {
   min-height: 80px !important;
 }
 
-.profile-post-button .checkbox-input {
-  width: 100% !important;
+.center_section .profile-post-button .important-checkbox {
+  width: 97% !important;
 }
 
-.center_section .postBox{
+.center_section .postBox {
   margin-top: 0px !important;
 }
-
 
 .loading {
   position: fixed;
