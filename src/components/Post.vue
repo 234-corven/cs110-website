@@ -14,6 +14,23 @@
     </div>
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
+      <input 
+        v-model="editUserDate" 
+        type="date" 
+        class="edit-date-input"
+        title="Edit the user-specified date"
+      />
+      <div class="edit-important-checkbox">
+        <input 
+          v-model="editIsImportant" 
+          type="checkbox" 
+          id="edit-important-check"
+          class="checkbox-input"
+        />
+        <label for="edit-important-check" class="checkbox-label">
+          ⭐ Mark as Important Event
+        </label>
+      </div>
       <RichTextEditor
         v-model="editContent"
         :placeholder="'Edit your post...'"
@@ -63,6 +80,8 @@ export default {
       isEditing: false,
       editTitle: this.title,
       editContent: this.content,
+      editUserDate: this.userDate,
+      editIsImportant: this.isImportant,
       activeCommands: [],
     }
   },
@@ -132,6 +151,8 @@ export default {
       this.isEditing = true;
       this.editTitle = this.title;
       this.editContent = this.content;
+      this.editUserDate = this.userDate;
+      this.editIsImportant = this.isImportant;
       this.$nextTick(() => {
         if (this.$refs.editor) {
           this.$refs.editor.innerHTML = this.editContent;
@@ -144,9 +165,17 @@ export default {
         const postRef = doc(firestore, "posts", this.id);
         await updateDoc(postRef, {
           title: this.editTitle,
-          content: this.editContent
+          content: this.editContent,
+          userDate: this.editUserDate || null,
+          isImportant: this.editIsImportant || false
         });
-        this.$emit('post-edited', { id: this.id, title: this.editTitle, content: this.editContent });
+        this.$emit('post-edited', { 
+          id: this.id, 
+          title: this.editTitle, 
+          content: this.editContent,
+          userDate: this.editUserDate,
+          isImportant: this.editIsImportant
+        });
         this.isEditing = false;
       } catch (error) {
         alert("Failed to save changes.");
@@ -334,6 +363,38 @@ export default {
   padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid var(--border-primary);
+}
+
+.edit-date-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--border-primary);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.edit-important-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.edit-important-checkbox .checkbox-input {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
+
+.edit-important-checkbox .checkbox-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-primary);
+  cursor: pointer;
 }
 
 .edit-text {
