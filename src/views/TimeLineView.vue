@@ -3,10 +3,6 @@
     <Navigation />
   </header>
   <div class="timeline-page">
-    <div class="timeline-left">
-      <UserInfo :user="timelineUser" />
-      <TimelineButton v-if="timelineUser && timelineUser.id" :userId="timelineUser.id" />
-    </div>
     <div class="timeline-center">
       <template v-if="timelineUser">
         <TimeLine :user="timelineUser">
