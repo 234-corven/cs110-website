@@ -11,6 +11,7 @@
       <span v-if="userDate" class="user-date">{{ formatUserDate(userDate) }} • </span>
       @<RouterLink :to="`/profile/${userId}`" class="username-link">{{ username }}</RouterLink>
       <span class="submission-info"> • Posted {{ date }} at {{ time }}</span>
+      <span v-if="editedAt" class="edit-info">• Edited at {{ formatEditTimestamp(editedAt) }}</span>
     </div>
     <div v-if="isEditing" class="edit-content">
       <input v-model="editTitle" class="edit-title" />
@@ -52,7 +53,7 @@
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { firestore } from '../firebaseResources.js'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import RichTextEditor from './RichTextEditor.vue'
 
 export default {
@@ -73,7 +74,8 @@ export default {
     content: { type: String, required: true },
     title: { type: String, default: '' },
     userDate: { type: String, default: null },
-    isImportant: { type: Boolean, default: false }
+    isImportant: { type: Boolean, default: false },
+    editedAt: { type: [Object, String, Number], default: null }
   },
   data() {
     return {
@@ -159,6 +161,15 @@ export default {
         }
       });
     },
+    formatEditTimestamp(ts) {
+      if (!ts) return '';
+      // Firestore timestamp object or ISO string
+      if (typeof ts === 'object' && ts.seconds) {
+        const d = new Date(ts.seconds * 1000);
+        return d.toLocaleString();
+      }
+      return new Date(ts).toLocaleString();
+    },
     async saveEdit() {
       if (!this.id) return;
       try {
@@ -167,14 +178,16 @@ export default {
           title: this.editTitle,
           content: this.editContent,
           userDate: this.editUserDate || null,
-          isImportant: this.editIsImportant || false
+          isImportant: this.editIsImportant || false,
+          editedAt: serverTimestamp()
         });
         this.$emit('post-edited', { 
           id: this.id, 
           title: this.editTitle, 
           content: this.editContent,
           userDate: this.editUserDate,
-          isImportant: this.editIsImportant
+          isImportant: this.editIsImportant,
+          editedAt: new Date()
         });
         this.isEditing = false;
       } catch (error) {
@@ -220,6 +233,14 @@ export default {
   color: var(--text-secondary);
   font-weight: normal;
   font-size: 10px;
+}
+
+.edit-info {
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 4px;
 }
 
 .username-link {

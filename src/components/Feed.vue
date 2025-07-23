@@ -21,6 +21,7 @@
       :userDate="current_post.userDate"
       :isImportant="current_post.isImportant"
       :content="current_post.content"
+      :editedAt="current_post.editedAt"
       @post-edited="loadPosts"
     />
     <div v-if="displayPosts.length === 0">
