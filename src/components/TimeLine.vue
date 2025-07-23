@@ -10,6 +10,10 @@
           <option value="desc">Newest First</option>
           <option value="asc">Oldest First</option>
         </select>
+        <select v-model="sortField" class="timeline-sort-dropdown">
+          <option value="timestamp">Post Date</option>
+          <option value="userDate">User Date</option>
+        </select>
         <label class="important-filter-label">
           <input type="checkbox" v-model="importantOnly" class="important-filter-checkbox" />
           Only Important
@@ -70,6 +74,7 @@ export default {
       isPrivate: false,
       canViewPrivatePosts: false,
       sortOrder: 'desc',
+      sortField: 'timestamp',
       importantOnly: false
     }
   },
@@ -83,11 +88,17 @@ export default {
         filtered = filtered.filter(post => post.isImportant);
       }
       return [...filtered].sort((a, b) => {
-        const aTime = a.timestamp?.seconds || a.timestamp || 0;
-        const bTime = b.timestamp?.seconds || b.timestamp || 0;
+        let aValue, bValue;
+        if (this.sortField === 'userDate') {
+          aValue = a.userDate ? new Date(a.userDate).getTime() : 0;
+          bValue = b.userDate ? new Date(b.userDate).getTime() : 0;
+        } else {
+          aValue = a.timestamp?.seconds ? a.timestamp.seconds * 1000 : (a.timestamp || 0);
+          bValue = b.timestamp?.seconds ? b.timestamp.seconds * 1000 : (b.timestamp || 0);
+        }
         return this.sortOrder === 'desc'
-          ? bTime - aTime
-          : aTime - bTime;
+          ? bValue - aValue
+          : aValue - bValue;
       });
     }
   },
@@ -159,7 +170,7 @@ export default {
 <style scoped>
 .timeline-header-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   background: var(--bg-primary);
   border-radius: 10px;
@@ -226,10 +237,9 @@ export default {
 
 .timeline-post {
   min-width: 350px;
-  max-width: 500px;
+  max-width: 600px;
   flex: 0 0 auto;
 }
-
 
 .user-email a,
 .user-email a:visited {
