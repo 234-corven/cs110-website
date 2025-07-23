@@ -63,7 +63,7 @@ export default {
     },
     headerText() {
       if (this.userId && this.userEmail) {
-        return this.userEmail;
+        return `${this.userEmail}'s posts`;
       }
       return 'Recent Posts';
     },
