@@ -5,18 +5,24 @@
         <RouterLink class="user-email" v-if="user && user.id" :to="`/profile/${user.id}`">{{ user.email }}</RouterLink>
         <span v-if="user && user.email">'s Timeline</span>
       </span>
-      <div class="timeline-controls">
+      <div v-if="filteredSortedPosts.length > 0" class="timeline-controls">
+        <div class="timeline-filter-description">
+          <span>Filter date order:</span>
+        </div>
         <select v-model="sortOrder" class="timeline-sort-dropdown">
           <option value="desc">Newest First</option>
           <option value="asc">Oldest First</option>
         </select>
+        <div class="timeline-filter-description">
+          <span>Filter by date:</span>
+        </div>
         <select v-model="sortField" class="timeline-sort-dropdown">
           <option value="timestamp">Post Date</option>
           <option value="userDate">User Date</option>
         </select>
         <label class="important-filter-label">
           <input type="checkbox" v-model="importantOnly" class="important-filter-checkbox" />
-          Only Important
+          Show only important events
         </label>
       </div>
     </div>
@@ -87,6 +93,10 @@ export default {
       let filtered = this.posts;
       if (this.importantOnly) {
         filtered = filtered.filter(post => post.isImportant);
+      }
+      // If sorting by userDate, only include posts with a valid userDate
+      if (this.sortField === 'userDate') {
+        filtered = filtered.filter(post => !!post.userDate);
       }
       return [...filtered].sort((a, b) => {
         let aValue, bValue;
@@ -182,10 +192,9 @@ export default {
 .timeline-header {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   color: var(--text-header);
   text-align: left;
-  display: flex;
   align-items: center;
   justify-content: space-between;
 }
@@ -193,7 +202,16 @@ export default {
 .timeline-controls {
   display: flex;
   align-items: center;
-  gap: 18px;
+  margin-top: 10px;
+  margin-right: 10px;
+  gap: 0px;
+}
+
+.timeline-filter-description {
+  font-size: 15px;
+  color: var(--text-header);
+  margin-right: 0px;
+  margin-left: 10px;
 }
 
 .timeline-sort-dropdown {
