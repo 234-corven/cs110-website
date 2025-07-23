@@ -1,7 +1,7 @@
 <template>
   <div class="post" :class="{ 'important-post': isImportant }">
     <div v-if="isAnniversary" class="anniversary-banner">
-      🎉 It's the anniversary of this post!
+      🎉 It's the anniversary of this event!
     </div>
     <div v-if="isImportant" class="important-indicator-row">
       <span class="important-star">⭐</span>
