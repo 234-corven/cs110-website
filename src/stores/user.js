@@ -65,6 +65,8 @@ export const useUserStore = defineStore("user", {
         const notificationsRef = collection(firestore, "notifications");
         await addDoc(notificationsRef, {
           userId: targetUserId,
+          followerId: this.user.id,
+          followerEmail: this.user.email,
           message: `${this.user.email} followed you.`,
           timestamp: Date.now()
         });

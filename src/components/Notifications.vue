@@ -7,9 +7,8 @@
           <div class="notif-content notif-inline">
             <template v-if="note.followerId && note.followerEmail">
               <RouterLink :to="`/profile/${note.followerId}`" class="notif-link">
-                {{ note.followerEmail }}
+                {{ note.followerEmail }} followed you.
               </RouterLink>
-              <span> followed you.</span>
             </template>
             <template v-else-if="note.authorId && note.authorEmail">
               <RouterLink :to="`/profile/${note.authorId}`" class="notif-link">
@@ -34,7 +33,7 @@
 
 <script>
 import { firestore } from '../firebaseResources.js'
-import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
+import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { RouterLink } from 'vue-router'
 
 export default {
@@ -77,7 +76,7 @@ export default {
         this.notifications.splice(idx, 1);
       }
     },
-    setupListener(userId) {
+    async setupListener(userId) {
       if (this.unsubscribe) {
         this.unsubscribe();
         this.unsubscribe = null;
@@ -92,8 +91,18 @@ export default {
         where("userId", "==", userId),
         orderBy("timestamp", "desc")
       );
-      this.unsubscribe = onSnapshot(q, (snapshot) => {
-        this.notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.unsubscribe = onSnapshot(q, async (snapshot) => {
+        const notes = [];
+        for (const docSnap of snapshot.docs) {
+          const note = { id: docSnap.id, ...docSnap.data() };
+          if (note.followerId && !note.followerEmail) {
+            // Fetch follower email if not present
+            const userDoc = await getDoc(doc(firestore, "users", note.followerId));
+            note.followerEmail = userDoc.exists() ? userDoc.data().email : "Unknown";
+          }
+          notes.push(note);
+        }
+        this.notifications = notes;
       });
     },
     formatTime(ts) {
