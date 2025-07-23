@@ -7,6 +7,7 @@ import Feed from '../components/Feed.vue';
 import UserInfo from '../components/UserInfo.vue';
 import PostButton from '../components/PostButton.vue';
 import Notifications from '../components/Notifications.vue';
+import TimelineButton from '../components/TimelineButton.vue';
 import { useUserStore } from '../stores/user';
 
 export default {
@@ -19,7 +20,8 @@ export default {
     Feed,
     UserInfo,
     PostButton,
-    Notifications
+    Notifications,
+    TimelineButton
   },
   data() {
     return {
@@ -94,6 +96,7 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
+        <TimelineButton />
         <Notifications
           v-if="userStore.user && userPage && userStore.user.id === userPage.id"
           :userId="userPage.id"
