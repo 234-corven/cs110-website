@@ -94,7 +94,10 @@ export default {
       </template>
       <template v-else>
         <UserInfo :user="userPage" />
-        <Notifications v-if="userPage && userPage.id" :userId="userPage.id" />
+        <Notifications
+          v-if="userStore.user && userPage && userStore.user.id === userPage.id"
+          :userId="userPage.id"
+        />
       </template>
     </div>
     <div class="center_section">
