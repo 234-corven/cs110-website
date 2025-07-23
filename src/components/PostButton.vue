@@ -26,12 +26,9 @@ export default {
     document.removeEventListener('selectionchange', this.updateActiveCommands);
   },
   methods: {
-    updateContent() {
-   
-    },
-
     updateActiveCommands() {
-      if (!this.$refs.editor || document.activeElement !== this.$refs.editor) return;
+      if (!this.$refs.editor) return;
+      if (document.activeElement !== this.$refs.editor) return;
       const commands = [
         'bold', 'italic', 'underline', 'strikeThrough',
         'justifyLeft', 'justifyCenter', 'justifyRight',
@@ -45,9 +42,10 @@ export default {
     },
 
     formatText(command, value = null) {
+      if (!this.$refs.editor) return;
       document.execCommand(command, false, value);
       this.$refs.editor.focus();
-      this.updateContent();
+   
       this.updateActiveCommands();
     },
 
@@ -173,12 +171,14 @@ export default {
         title="Optional: Specify a date for this post"
         placeholder="Post date (optional)"
       />
-     
-      <RichTextEditor
+     <div class = "post-input-div">
+        <RichTextEditor 
         v-model="content"
         :placeholder="'What are you pondering?'"
         :editorClass="'rich-editor'"
+        class = "post-input"
       />
+     </div>
       <div class="important-checkbox">
         <input 
           v-model="isImportant" 
@@ -254,34 +254,15 @@ export default {
 }
 
 /** Post Input */
-.rich-editor {
-  width: 90% !important;
-  max-width: 600px !important;
+.post-input-div {
+  width: 100%;
   min-height: 80px !important;
-  background-color: #fffbe6 !important;
 }
 
 .separator {
   color: var(--border-primary);
   margin: 0 3px;
   font-size: 12px;
-}
-
-.rich-editor img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin: 4px 0;
-}
-
-.rich-editor a {
-  color: var(--link-color);
-  text-decoration: underline;
-}
-
-.rich-editor ul, .rich-editor ol {
-  margin: 8px 0;
-  padding-left: 20px;
 }
 
 .post_button {

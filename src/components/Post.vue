@@ -413,7 +413,4 @@ export default {
   font-size: 12px;
 }
 
-.rich-editor {
-
-}
 </style>

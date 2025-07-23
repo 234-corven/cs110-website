@@ -1,49 +1,3 @@
-<template>
-  <header>
-    <div class="navBar">
-      <nav>
-        <Navigation />
-      </nav>
-    </div>
-  </header>
-
-  <div class="page_flex_box">
-    <div class="left_section">
-      <template v-if="!userStore.isLoggedIn">
-        <div class="frontLoginBox">
-          <RouterLink to="/login">Log In</RouterLink>
-        </div>
-      </template>
-      <template v-else-if="loading">
-        <div class="loading">Loading user profile...</div>
-      </template>
-      <template v-else>
-        <UserInfo :user="userPage" />
-      </template>
-    </div>
-
-    <div class="center_section">
-      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
-        <div class="profile-post-button">
-          <PostButton />
-        </div>
-      </template>
-      <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
-
-    </div>
-
-    <div class="right_section">
-      <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
-      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
-        <Following />
-      </template>
-    </div>
-
-    <RouterView />
-  </div>
-
-</template>
-
 <script>
 import { RouterLink, RouterView } from 'vue-router';
 import Navigation from '../components/Navigation.vue';
@@ -117,6 +71,54 @@ export default {
 };
 </script>
 
+<template>
+  <header>
+    <div class="navBar">
+      <nav>
+        <Navigation />
+      </nav>
+    </div>
+  </header>
+
+  <div class="page_flex_box">
+    <div class="left_section">
+      <template v-if="!userStore.isLoggedIn">
+        <div class="frontLoginBox">
+          <RouterLink to="/login">Log In</RouterLink>
+        </div>
+      </template>
+      <template v-else-if="loading">
+        <div class="loading">Loading user profile...</div>
+      </template>
+      <template v-else>
+        <UserInfo :user="userPage" />
+      </template>
+    </div>
+
+    <div class="center_section">
+      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
+        <div class="profile-post-button">
+          <PostButton />
+        </div>
+      </template>
+      <Feed :userId="userPage?.id" :userEmail="userPage?.email" @user-follow-changed="handleFollowChange" />
+
+    </div>
+
+    <div class="right_section">
+      <whoToFollow v-if="userID && userStore.user && userID !== userStore.user.id" />
+      <template v-if="userStore.isLoggedIn && (!userID || (userStore.user && userID === userStore.user.id))">
+        <Following />
+      </template>
+    </div>
+
+    <RouterView />
+  </div>
+
+</template>
+
+
+
 <style scoped>
 .center_section {
   flex-direction: column;
@@ -127,18 +129,16 @@ export default {
 
 .profile-post-button {
   margin-bottom: 0;
+  width: 760px !important;
 }
 
 .profile-post-button .createPostBox {
-  width: 765px !important;
+  width: 100% !important;
 }
 
-.profile-post-button .rich-editor {
-  width: 650px !important;
-}
-
-.profile-post-button .post_button {
-  width: 80px !important;
+.profile-post-button .post-input {
+  width: 100% !important;
+  min-height: 80px !important;
 }
 
 .center_section .postBox{
