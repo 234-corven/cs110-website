@@ -120,36 +120,6 @@ export default {
 
 
 <style scoped>
-.center_section {
-  flex-direction: column;
-  display: flex;
-  align-items: flex-start; 
-  margin-top: 50px;
-}
-
-.profile-post-button {
-  margin-bottom: 0;
-  width: 760px !important;
-  margin-left: 3px !important;
-}
-
-.profile-post-button .createPostBox {
-  width: 100% !important;
-}
-
-.profile-post-button .post-input {
-  width: 100% !important;
-  min-height: 80px !important;
-}
-
-.profile-post-button .checkbox-input {
-  width: 100% !important;
-}
-
-.center_section .postBox{
-  margin-top: 5px !important;
-}
-
 .page_flex_box {
   display: flex;
   justify-content: center;
@@ -162,6 +132,7 @@ export default {
   z-index: 1;
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: auto; 
 }
 
 .left_section {
@@ -179,6 +150,38 @@ export default {
   gap: 5px;
   margin-top: 50px;
 }
+
+.center_section {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start; 
+  margin-top: 50px;
+}
+
+.center_section .profile-post-button {
+  margin-bottom: 0;
+  width: 760px !important;
+  margin-left: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+.center_section .profile-post-button .createPostBox {
+  width: 100% !important;
+}
+
+.profile-post-button .post-input {
+  width: 100% !important;
+  min-height: 80px !important;
+}
+
+.profile-post-button .checkbox-input {
+  width: 100% !important;
+}
+
+.center_section .postBox{
+  margin-top: 0px !important;
+}
+
 
 .loading {
   position: fixed;
