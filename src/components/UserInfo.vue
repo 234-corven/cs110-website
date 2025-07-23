@@ -1,7 +1,7 @@
 <template>
     <div class="userInfo">
         <h1 class="userEmail">
-            {{ userToShow.email }}
+            <RouterLink :to="`/profile/${userToShow.id}`">{{ userToShow.email }}</RouterLink>
         </h1>
         <div class="profileValues">
             <div class="userValue">
@@ -22,8 +22,10 @@
 
 <script>
 import { useUserStore } from '../stores/user'
+import { RouterLink } from 'vue-router'
 
 export default {
+    components: { RouterLink },
     props: {
         user: {
             type: Object,
@@ -94,6 +96,17 @@ export default {
     padding-bottom: 8px;
     color: var(--text-header); 
     border-bottom: 2px solid var(--text-header);
+}
+
+.userEmail a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.userEmail a:hover {
+    color: var(--link-hover);
+    text-decoration: none;
 }
 
 .userValue {
