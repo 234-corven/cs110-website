@@ -1,15 +1,46 @@
 <template>
   <div class="postBox">
-    <div class="feed_header">{{ headerText }}</div>
-    <Post v-for="current_post in displayPosts" :key="current_post.id" 
-      :username="current_post.authorEmail"
-      :userId="current_post.authorId" 
-      :date="formatDate(current_post.timestamp)" 
-      :time="formatTime(current_post.timestamp)"
-      :content="current_post.content" />
-    <div v-if="displayPosts.length === 0">
-      {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
+    <div class="feed_header">
+      <span>{{ headerText }}</span>
+      <button 
+        v-if="isViewingOtherUser" 
+        @click="toggleFollow"
+        class="follow-button"
+        :class="{ 'following': isFollowing }"
+      >
+        {{ isFollowing ? 'Unfollow' : 'Follow' }}
+      </button>
     </div>
+    <template v-if="!userId || !isUserPrivate || canViewPrivatePosts">
+      <Post v-for="current_post in displayPosts" :key="current_post.id" 
+        :id="current_post.id"
+        :username="current_post.authorEmail"
+        :userId="current_post.authorId" 
+        :title="current_post.title"
+        :date="formatDate(current_post.timestamp)" 
+        :time="formatTime(current_post.timestamp)"
+        :userDate="current_post.userDate"
+        :isImportant="current_post.isImportant"
+        :content="current_post.content"
+        :editedAt="current_post.editedAt"
+        @post-edited="loadPosts"
+      />
+      <div v-if="displayPosts.length === 0">
+        <template v-if="userId && isUserPrivate">
+          <div class="private-feed-message">
+            This user's posts are private and only visible to followers.
+          </div>
+          </template>
+        <template v-else>
+          {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
+        </template>
+      </div>
+    </template>
+    <template v-else>
+      <div class="private-feed-message">
+        This user's posts are private and only visible to followers.
+      </div>
+    </template>
   </div>
 </template>
 
@@ -35,7 +66,9 @@ export default {
   },
   data() {
     return {
-      displayPosts: []
+      displayPosts: [],
+      isUserPrivate: false,
+      canViewPrivatePosts: false
     }
   },
   computed: {
@@ -47,9 +80,16 @@ export default {
     },
     headerText() {
       if (this.userId && this.userEmail) {
-        return this.userEmail;
+        return `${this.userEmail}'s posts`;
       }
       return 'Recent Posts';
+    },
+    isViewingOtherUser() {
+      return this.userId && this.userStore.user && this.userId !== this.userStore.user.id;
+    },
+    isFollowing() {
+      if (!this.userStore.user || !this.userId) return false;
+      return this.userStore.user.following && this.userStore.user.following.includes(this.userId);
     }
   },
   mounted() {
@@ -101,19 +141,115 @@ export default {
       return this.getRecentPosts();
     },
 
-    getFeedPosts() {
+    async getRecentPosts() {
+      const postsCollection = collection(firestore, "posts");
+      const recentPosts = query(
+        postsCollection,
+        orderBy("timestamp", "desc"),
+        limit(30) 
+      );
+
+      const grabPost = await getDocs(recentPosts);
+      const posts = [];
+      for (const document of grabPost.docs) {
+        const postData = document.data();
+        if (!postData.author) continue;
+        const authorRef = doc(firestore, "users", postData.author);
+        const authorDoc = await getDoc(authorRef);
+        let authorData = {};
+        if (authorDoc.exists()) {
+          authorData = authorDoc.data();
+        }
+        const isPrivate = !!authorData.isPrivate;
+        const isOwner = this.userStore.user && authorDoc.id === this.userStore.user.id;
+        const isFollower = this.userStore.user && authorData.followers && authorData.followers.includes(this.userStore.user.id);
+
+        // Show public accounts, or private accounts if owner or follower
+        if (!isPrivate || isOwner || isFollower) {
+          posts.push({
+            id: document.id,
+            ...postData,
+          });
+        }
+      }
+      return posts.slice(0, 10);
+    },
+
+    async getFeedPosts() {
       if (!this.userStore.user || !this.userStore.user.feed) {
         return this.getEmptyArray();
       }
 
       const feedPostIds = this.userStore.user.feed || [];
-
       if (feedPostIds.length === 0) {
         return this.getEmptyArray();
       }
 
-      // Get all posts in parallel
-      const postToShow = feedPostIds.map(postId => {
+      const postToShow = feedPostIds.map(async postId => {
+        const postRef = doc(firestore, "posts", postId);
+        const postDoc = await getDoc(postRef);
+        if (!postDoc.exists()) return null;
+        const postData = postDoc.data();
+        if (!postData.author) return null;
+        const authorRef = doc(firestore, "users", postData.author);
+        const authorDoc = await getDoc(authorRef);
+        let authorData = {};
+        if (authorDoc.exists()) {
+          authorData = authorDoc.data();
+        }
+        const isPrivate = !!authorData.isPrivate;
+        const isOwner = this.userStore.user && authorDoc.exists() && authorDoc.id === this.userStore.user.id;
+        const isFollower = this.userStore.user && authorData.followers && authorData.followers.includes(this.userStore.user.id);
+
+        if (!isPrivate || isOwner || isFollower) {
+          return {
+            id: postDoc.id,
+            ...postData,
+          };
+        }
+        return null;
+      });
+
+      const posts = await Promise.all(postToShow);
+      return posts.filter(post => post !== null && post.timestamp).sort((a, b) => {
+        const aTime = a.timestamp.seconds || a.timestamp;
+        const bTime = b.timestamp.seconds || b.timestamp;
+        return bTime - aTime;
+      }).slice(0, 10);
+    },
+
+    async getUserPosts() {
+      if (!this.userId) {
+        return Promise.resolve([]);
+      }
+
+      const userRef = doc(firestore, "users", this.userId);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) {
+        this.isUserPrivate = false;
+        this.canViewPrivatePosts = false;
+        return [];
+      }
+      const userData = userDoc.data();
+
+      // Check privacy
+      const isPrivate = !!userData.isPrivate;
+      this.isUserPrivate = isPrivate;
+      const isOwner = this.userStore.user && this.userStore.user.id === this.userId;
+      const isFollower = this.userStore.user && userData.followers && userData.followers.includes(this.userStore.user.id);
+      this.canViewPrivatePosts = isOwner || isFollower;
+
+      if (isPrivate && !isOwner && !isFollower) {
+        // Not allowed to see posts
+        return [];
+      }
+
+      const userPostIds = userData.posts || [];
+      if (userPostIds.length === 0) {
+        return [];
+      }
+
+      const userPosts = userPostIds.map(postId => {
         const postRef = doc(firestore, "posts", postId);
         return getDoc(postRef)
           .then((postDoc) => {
@@ -128,90 +264,8 @@ export default {
           .catch(() => null);
       });
 
-      return Promise.all(postToShow)
-        .then((posts) => {
-          const validPosts = posts
-            .filter(post => post !== null && post.timestamp)
-            .sort((a, b) => {
-              const aTime = a.timestamp.seconds || a.timestamp;
-              const bTime = b.timestamp.seconds || b.timestamp;
-              return bTime - aTime;
-            });
-
-          return validPosts.slice(0, 10);
-        })
-        .catch(() => {
-          return [];
-        });
-    },
-
-    getRecentPosts() {
-      const postsCollection = collection(firestore, "posts");
-      const recentPosts = query(
-        postsCollection,
-        orderBy("timestamp", "desc"),
-        limit(10)
-      );
-
-      return getDocs(recentPosts)
-        .then((grabPost) => {
-          const posts = [];
-          grabPost.docs.forEach((document) => {
-            posts.push({
-              id: document.id,
-              ...document.data(),
-            });
-          });
-          return posts;
-        })
-        .catch((error) => {
-          return [];
-        });
-    },
-
-    getUserPosts() {
-      if (!this.userId) {
-        return Promise.resolve([]);
-      }
-
-      const userRef = doc(firestore, "users", this.userId);
-
-      return getDoc(userRef)
-        .then((userDoc) => {
-          if (!userDoc.exists()) {
-            return [];
-          }
-
-          const userData = userDoc.data();
-          const userPostIds = userData.posts || [];
-
-          if (userPostIds.length === 0) {
-            return [];
-          }
-
-          const userPosts = userPostIds.map(postId => {
-            const postRef = doc(firestore, "posts", postId);
-            return getDoc(postRef)
-              .then((postDoc) => {
-                if (postDoc.exists()) {
-                  return {
-                    id: postDoc.id,
-                    ...postDoc.data(),
-                  };
-                }
-                return null;
-              })
-              .catch(() => null);
-          });
-
-          return Promise.all(userPosts)
-            .then((posts) => {
-              return posts.filter(post => post !== null);
-            });
-        })
-        .catch(() => {
-          return [];
-        });
+      return Promise.all(userPosts)
+        .then((posts) => posts.filter(post => post !== null));
     },
 
     addAuthor(posts) {
@@ -278,6 +332,26 @@ export default {
         return new Date(timestamp.seconds * 1000).toLocaleTimeString('en-US');
       }
       return new Date(timestamp).toLocaleTimeString('en-US');
+    },
+
+    async toggleFollow() {
+      if (!this.userStore.user || !this.userId) return;
+      
+      try {
+        if (this.isFollowing) {
+          await this.userStore.unfollowUser(this.userId);
+        } else {
+          await this.userStore.followUser(this.userId);
+        }
+        
+        // notifies UserProfileView to update the follow status
+        this.$emit('user-follow-changed', this.userId);
+        window.dispatchEvent(new CustomEvent('userFollowChanged', { 
+          detail: { userId: this.userId } 
+        }));
+      } catch (error) {
+        console.error('Error toggling follow status:', error);
+      }
     }
   }
 }
@@ -302,6 +376,9 @@ export default {
   margin-top: 0;
   margin-bottom: 10px;
   color: var(--text-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .postBox .post {
@@ -320,5 +397,43 @@ export default {
 
 .postBox .post:last-child {
   margin-bottom: 0; 
+}
+
+.follow-button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background-color: var(--btn-follow);
+  color: var(--text-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  font-size: 16px;
+}
+
+.follow-button:hover {
+  background-color: var(--btn-follow-hover);
+}
+
+/*Unfollow button*/
+.follow-button.following {
+  padding: 6x 12px;
+  background-color: var(--btn-unfollow);
+  color: var(--bg-white);
+  min-width: auto;
+  width: auto;
+
+  font-size: 16px;
+}
+
+.follow-button.following:hover {
+  background-color: var(--btn-unfollow-hover);
+}
+
+.private-feed-message {
+  color: var(--text-primary);
+  font-style: italic;
+  text-align: left;
+  font-size: 16px;
 }
 </style>

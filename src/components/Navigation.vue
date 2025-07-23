@@ -16,12 +16,16 @@ export default {
 
 <template>
 <div class="navigation">
-  <div class="logo-section">
-    <img class="logo" src="../components/icons/250x250.jpg">
-  </div>
-  
   <div class="nav-links">
     <RouterLink to="/">Home</RouterLink>
+
+    <div class="logo-section">
+    <RouterLink v-if="userStore.isLoggedIn" to="/profile/self">
+      <img class="logo" src="../components/icons/250x250.jpg">
+    </RouterLink>
+    <img v-else class="logo" src="../components/icons/250x250.jpg">
+  </div>
+
     <div v-if="!userStore.isLoggedIn">
       <RouterLink to="/login">Log In</RouterLink>
     </div>
@@ -55,6 +59,14 @@ export default {
   align-items: center;
 }
 
+.logo-section a {
+  padding: 0;
+}
+
+.logo-section a:hover {
+  background-color: transparent !important;
+}
+
 .logo {
   height: 60px; 
   width: auto; 
@@ -69,6 +81,11 @@ export default {
   flex: 1; 
   justify-content: center; 
 }
+
+.nav-links a{
+  user-select: none;
+  outline: none;
+}
  
 .navigation a {
   text-decoration: none;
@@ -82,5 +99,25 @@ export default {
 
 .navigation a:hover {
   background-color: var(--primary-hover);
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:focus {
+  outline: none;
+  background-color: transparent;
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:active {
+  outline: none;
+  background-color: transparent;
+  user-select: none;
+  outline: none;
+}
+
+.navigation a:visited {
+  color: var(--text-header);
 }
 </style>

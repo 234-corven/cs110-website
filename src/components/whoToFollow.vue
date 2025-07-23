@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { firestore } from '../firebaseResources.js';
-import { collection, getDocs, query, limit, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { collection, getDocs, query, limit } from 'firebase/firestore';
 
 export default {
   components: {
@@ -96,80 +96,18 @@ export default {
       return shuffledUsers.slice(0, 5);
     },
 
-    followUser(userId) {
+    async followUser(userId) {
       if (this.userStore.isLoggedIn) {
-        this.follow(userId);
-        // Remove the followed user from suggestions instead of reloading
-        this.suggestedUsers = this.suggestedUsers.filter(user => user.id !== userId);
-
+        try {
+          await this.userStore.followUser(userId);
+          // Remove the followed user from suggestions
+          this.suggestedUsers = this.suggestedUsers.filter(user => user.id !== userId);
+        } catch (error) {
+          console.error('Error following user:', error);
+        }
       } else {
         alert('Please log in to follow users.');
       }
-    },
-
-
-    follow(userId) {
-      if (!this.userStore.user) {
-        return;
-      }
-
-      const currentUserId = this.userStore.user.id;
-
-      if (currentUserId === userId) {
-        return;
-      }
-
-      const currentUserRef = doc(firestore, "users", currentUserId);
-      const targetUserRef = doc(firestore, "users", userId);
-
-      getDoc(targetUserRef)
-        .then((targetUserDoc) => {
-          if (!targetUserDoc.exists()) {
-            return;
-          }
-
-          const targetUserData = targetUserDoc.data();
-          const targetUserPosts = targetUserData.posts || [];
-
-          const currentUserUpdates = {
-            following: arrayUnion(userId),
-            feed: arrayUnion(...targetUserPosts),
-          };
-
-          const targetUserUpdates = {
-            followers: arrayUnion(currentUserId),
-          };
-
-          // Update current user first, then target user
-          updateDoc(currentUserRef, currentUserUpdates)
-            .then(() => {
-              return updateDoc(targetUserRef, targetUserUpdates);
-            })
-            .then(() => {
-              // Update the store state - ensure arrays exist and avoid duplicates
-              if (!this.userStore.user.following) {
-                this.userStore.user.following = [];
-              }
-              if (!this.userStore.user.following.includes(userId)) {
-                this.userStore.user.following.push(userId);
-              }
-
-              if (!this.userStore.user.feed) {
-                this.userStore.user.feed = [];
-              }
-              // Add new posts to feed, avoiding duplicates
-              targetUserPosts.forEach(postId => {
-                if (!this.userStore.user.feed.includes(postId)) {
-                  this.userStore.user.feed.push(postId);
-                }
-              });
-
-            })
-            .catch((error) => {
-            });
-        })
-        .catch((error) => {
-        });
     }
   }
 }
