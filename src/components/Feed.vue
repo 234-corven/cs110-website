@@ -342,6 +342,21 @@ export default {
       return new Date(timestamp).toLocaleTimeString('en-US');
     },
 
+    getYearsSince(dateInput) {
+      if (!dateInput) return '';
+      let date;
+      if (typeof dateInput === 'object' && dateInput.seconds) {
+        date = new Date(dateInput.seconds * 1000);
+      } else {
+        date = new Date(dateInput);
+      }
+      if (isNaN(date.getTime())) return '';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
+      return diffYears >= 0 ? diffYears.toFixed(2) : '0.00';
+    },
+
     async toggleFollow() {
       if (!this.userStore.user || !this.userId) return;
       
