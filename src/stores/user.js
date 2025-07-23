@@ -6,6 +6,9 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  setDoc,
+  collection,
+  addDoc
 } from "firebase/firestore";
 
 export const useUserStore = defineStore("user", {
@@ -58,6 +61,15 @@ export const useUserStore = defineStore("user", {
 
         await updateDoc(currentUserRef, currentUserUpdates);
         await updateDoc(targetUserRef, targetUserUpdates);
+
+        const notificationsRef = collection(firestore, "notifications");
+        await addDoc(notificationsRef, {
+          userId: targetUserId,
+          followerId: this.user.id,
+          followerEmail: this.user.email,
+          message: `${this.user.email} followed you.`,
+          timestamp: Date.now()
+        });
 
         // Update local state
         if (!this.user.following) this.user.following = [];

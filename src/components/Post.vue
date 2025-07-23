@@ -1,5 +1,8 @@
 <template>
   <div class="post" :class="{ 'important-post': isImportant }">
+    <div v-if="isAnniversary" class="anniversary-banner">
+      🎉 It's the anniversary of this post!
+    </div>
     <div class="post-header">
       <h3 class="post_title" v-if="title">
         <span v-if="isImportant" class="important-star">⭐</span>
@@ -99,6 +102,16 @@ export default {
     },
     canEdit() {
       return this.userStore.user && this.userStore.user.id === this.userId
+    },
+    isAnniversary() {
+      if (!this.userDate) return false;
+      const date = new Date(this.userDate);
+      const today = new Date();
+      return (
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() !== today.getFullYear()
+      );
     }
   },
   methods: {
@@ -432,6 +445,17 @@ export default {
   color: var(--border-primary);
   margin: 0 3px;
   font-size: 12px;
+}
+
+.anniversary-banner {
+  background: #ffe082;
+  color: #6d4c00;
+  font-weight: bold;
+  font-size: 12px; 
+  padding: 2px 6px; 
+  border-radius: 6px;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
 </style>
