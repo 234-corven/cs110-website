@@ -11,27 +11,36 @@
         {{ isFollowing ? 'Unfollow' : 'Follow' }}
       </button>
     </div>
-    <Post v-for="current_post in displayPosts" :key="current_post.id" 
-      :id="current_post.id"
-      :username="current_post.authorEmail"
-      :userId="current_post.authorId" 
-      :title="current_post.title"
-      :date="formatDate(current_post.timestamp)" 
-      :time="formatTime(current_post.timestamp)"
-      :userDate="current_post.userDate"
-      :isImportant="current_post.isImportant"
-      :content="current_post.content"
-      :editedAt="current_post.editedAt"
-      @post-edited="loadPosts"
-    />
-    <div v-if="displayPosts.length === 0">
-      <template v-if="userId && isUserPrivate">
+    <template v-if="!userId || !isUserPrivate || canViewPrivatePosts">
+      <Post v-for="current_post in displayPosts" :key="current_post.id" 
+        :id="current_post.id"
+        :username="current_post.authorEmail"
+        :userId="current_post.authorId" 
+        :title="current_post.title"
+        :date="formatDate(current_post.timestamp)" 
+        :time="formatTime(current_post.timestamp)"
+        :userDate="current_post.userDate"
+        :isImportant="current_post.isImportant"
+        :content="current_post.content"
+        :editedAt="current_post.editedAt"
+        @post-edited="loadPosts"
+      />
+      <div v-if="displayPosts.length === 0">
+        <template v-if="userId && isUserPrivate">
+          <div class="private-feed-message">
+            This user's posts are private and only visible to followers.
+          </div>
+          </template>
+        <template v-else>
+          {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
+        </template>
+      </div>
+    </template>
+    <template v-else>
+      <div class="private-feed-message">
         This user's posts are private and only visible to followers.
-      </template>
-      <template v-else>
-        {{ userId ? 'This user hasn\'t posted anything yet.' : 'No posts available.' }}
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -58,7 +67,8 @@ export default {
   data() {
     return {
       displayPosts: [],
-      isUserPrivate: false
+      isUserPrivate: false,
+      canViewPrivatePosts: false
     }
   },
   computed: {
@@ -217,6 +227,7 @@ export default {
       const userDoc = await getDoc(userRef);
       if (!userDoc.exists()) {
         this.isUserPrivate = false;
+        this.canViewPrivatePosts = false;
         return [];
       }
       const userData = userDoc.data();
@@ -226,6 +237,7 @@ export default {
       this.isUserPrivate = isPrivate;
       const isOwner = this.userStore.user && this.userStore.user.id === this.userId;
       const isFollower = this.userStore.user && userData.followers && userData.followers.includes(this.userStore.user.id);
+      this.canViewPrivatePosts = isOwner || isFollower;
 
       if (isPrivate && !isOwner && !isFollower) {
         // Not allowed to see posts
@@ -416,5 +428,12 @@ export default {
 
 .follow-button.following:hover {
   background-color: var(--btn-unfollow-hover);
+}
+
+.private-feed-message {
+  color: var(--text-primary);
+  font-style: italic;
+  text-align: left;
+  font-size: 16px;
 }
 </style>
