@@ -3,8 +3,19 @@
     <h2>Notifications</h2>
     <ul v-if="notifications.length > 0" class="notifications-list">
       <li v-for="(note, idx) in notifications" :key="idx">
-        {{ note.message }}
-        <span class="notification-time">{{ formatTime(note.timestamp) }}</span>
+        <div class="notif-content">
+          <template v-if="note.followerId && note.followerEmail">
+            <router-link :to="`/profile/${note.followerId}`" class="notif-link">
+              {{ note.followerEmail }}
+            </router-link>
+            <span> followed you.</span>
+          </template>
+          <template v-else>
+            {{ note.message }}
+          </template>
+          <span class="notification-time">{{ formatTime(note.timestamp) }}</span>
+        </div>
+        <button class="close-btn" @click="removeNotification(note, idx)">✖</button>
       </li>
     </ul>
     <div v-else class="no-notifications">
@@ -15,10 +26,12 @@
 
 <script>
 import { firestore } from '../firebaseResources.js'
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
+import { RouterLink } from 'vue-router'
 
 export default {
   name: "Notifications",
+  components: { RouterLink },
   props: {
     userId: {
       type: String,
@@ -45,6 +58,17 @@ export default {
     }
   },
   methods: {
+    async removeNotification(note, idx) {
+      if (note.id) {
+        try {
+          await deleteDoc(doc(firestore, "notifications", note.id));
+        } catch (e) {
+          this.notifications.splice(idx, 1);
+        }
+      } else {
+        this.notifications.splice(idx, 1);
+      }
+    },
     setupListener(userId) {
       if (this.unsubscribe) {
         this.unsubscribe();
@@ -61,7 +85,7 @@ export default {
         orderBy("timestamp", "desc")
       );
       this.unsubscribe = onSnapshot(q, (snapshot) => {
-        this.notifications = snapshot.docs.map(doc => doc.data());
+        this.notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       });
     },
     formatTime(ts) {
@@ -106,10 +130,18 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .notifications-list li:last-child {
   border-bottom: none;
+}
+
+.notif-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
 }
 
 .notification-time {
@@ -118,10 +150,37 @@ export default {
   margin-left: 12px;
 }
 
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: color 0.2s;
+  padding: 0 4px;
+}
+
+.close-btn:hover {
+  color: #d32f2f;
+}
+
 .no-notifications {
   color: var(--text-secondary);
   font-style: italic;
   text-align: left;
   padding: 8px 0;
+}
+
+.notif-link {
+  color: var(--link-color);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 2px;
+}
+
+.notif-link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
 }
 </style>
