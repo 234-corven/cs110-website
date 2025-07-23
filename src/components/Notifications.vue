@@ -77,11 +77,15 @@ export default {
       if (note.id) {
         try {
           await deleteDoc(doc(firestore, "notifications", note.id));
+          this.notifications = this.notifications.filter(n => n.id !== note.id);
         } catch (e) {
-          this.notifications.splice(idx, 1);
+          this.notifications = this.notifications.filter(n => n.id !== note.id);
         }
       } else {
-        this.notifications.splice(idx, 1);
+        const anniversaryIdx = idx - this.notifications.length;
+        if (anniversaryIdx >= 0 && anniversaryIdx < this.anniversaryNotifications.length) {
+          this.anniversaryNotifications.splice(anniversaryIdx, 1);
+        }
       }
     },
     async setupListener(userId) {
