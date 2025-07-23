@@ -5,10 +5,20 @@
       <li v-for="(note, idx) in notifications" :key="idx">
         <div class="notif-content">
           <template v-if="note.followerId && note.followerEmail">
-            <router-link :to="`/profile/${note.followerId}`" class="notif-link">
+            <RouterLink :to="`/profile/${note.followerId}`" class="notif-link">
               {{ note.followerEmail }}
-            </router-link>
+            </RouterLink>
             <span> followed you.</span>
+          </template>
+          <template v-else-if="note.authorId && note.authorEmail && note.postId">
+            <RouterLink :to="`/profile/${note.authorId}`" class="notif-link">
+              {{ note.authorEmail }}
+            </RouterLink>
+            <span> made a new </span>
+            <RouterLink :to="`/post/${note.postId}`" class="notif-link">
+              post
+            </RouterLink>
+            <span>.</span>
           </template>
           <template v-else>
             {{ note.message }}
