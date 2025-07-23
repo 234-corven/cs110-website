@@ -114,10 +114,9 @@ export default {
 </script>
 
 <style scoped>
-/* Only include the shared toolbar styles here. Each parent can pass its own editorClass for editor box styling. */
 .editor-toolbar button.active {
-  background-color: var(--primary-hover);
-  color: var(--primary-color);
+  background-color: var(--rte-bg-active-color);
+  color: var(--rte-active-color);
   border-color: var(--primary);
 }
 .separator {

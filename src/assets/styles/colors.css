@@ -59,6 +59,11 @@
   --post-margin: 15px;
   --post-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   --post-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  /*Rich Text Editor Colors*/
+  --rte-active-color: #000;
+  --rte-bg-active-color: #999;
+
 }
 
 body,
