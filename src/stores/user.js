@@ -13,7 +13,14 @@ import {
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: null,
+    user: {
+      id: "test-user-123",
+      email: "test@example.com",
+      following: [],
+      feed: [],
+      posts: [],
+      followers: []
+    },
   }),
   getters: {
     isLoggedIn: (state) => state.user !== null,
